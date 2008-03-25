@@ -1,0 +1,819 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1F01291D0A27F8D600B0A401 /* libdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F01291B0A27F8D600B0A401 /* libdb.dylib */; };
+		1F21108109FD254800B5C0AB /* AcceptanceVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0305E5E87E00994248 /* AcceptanceVotePickOne.cpp */; };
+		1F21108209FD254900B5C0AB /* Condorcet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0505E5E87E00994248 /* Condorcet.cpp */; };
+		1F21108409FD254C00B5C0AB /* FuzzyVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0905E5E87E00994248 /* FuzzyVotePickOne.cpp */; };
+		1F21108509FD254D00B5C0AB /* InstantRunoffVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0B05E5E87E00994248 /* InstantRunoffVotePickOne.cpp */; };
+		1F21108609FD254E00B5C0AB /* IRNR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0D05E5E87E00994248 /* IRNR.cpp */; };
+		1F21108B09FD256A00B5C0AB /* spacegraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F21108A09FD256A00B5C0AB /* spacegraph.cpp */; };
+		1F21108D09FD259800B5C0AB /* OneVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0F05E5E87E00994248 /* OneVotePickOne.cpp */; };
+		1F21108E09FD259B00B5C0AB /* RandomElection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1105E5E87E00994248 /* RandomElection.cpp */; };
+		1F21108F09FD259C00B5C0AB /* RankedVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1305E5E87E00994248 /* RankedVotePickOne.cpp */; };
+		1F21109009FD259D00B5C0AB /* ResultFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1505E5E87E00994248 /* ResultFile.cpp */; };
+		1F21109209FD25AC00B5C0AB /* voter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1905E5E87E00994248 /* voter.cpp */; };
+		1F21109309FD25B400B5C0AB /* VoterArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1B05E5E87E00994248 /* VoterArray.cpp */; };
+		1F21109409FD25B500B5C0AB /* VoterSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1D05E5E87E00994248 /* VoterSim.cpp */; };
+		1F21109509FD25B800B5C0AB /* WorkQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE2005E5E87E00994248 /* WorkQueue.cpp */; };
+		1F2AAFC70B339C8200AFA56C /* VoteForAndAgainst.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F2AAFC50B339C8200AFA56C /* VoteForAndAgainst.cpp */; };
+		1F2AAFC80B339C8200AFA56C /* VoteForAndAgainst.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F2AAFC50B339C8200AFA56C /* VoteForAndAgainst.cpp */; };
+		1F2AAFC90B339C8200AFA56C /* VoteForAndAgainst.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2AAFC60B339C8200AFA56C /* VoteForAndAgainst.h */; };
+		1F2AAFCA0B339C8200AFA56C /* VoteForAndAgainst.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F2AAFC50B339C8200AFA56C /* VoteForAndAgainst.cpp */; };
+		1F2AAFCB0B339C8200AFA56C /* VoteForAndAgainst.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2AAFC60B339C8200AFA56C /* VoteForAndAgainst.h */; };
+		1F5ECE2205E5E87E00994248 /* AcceptanceVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0305E5E87E00994248 /* AcceptanceVotePickOne.cpp */; };
+		1F5ECE2305E5E87E00994248 /* AcceptanceVotePickOne.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0405E5E87E00994248 /* AcceptanceVotePickOne.h */; };
+		1F5ECE2405E5E87E00994248 /* Condorcet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0505E5E87E00994248 /* Condorcet.cpp */; };
+		1F5ECE2505E5E87E00994248 /* Condorcet.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0605E5E87E00994248 /* Condorcet.h */; };
+		1F5ECE2605E5E87E00994248 /* DBResultFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0705E5E87E00994248 /* DBResultFile.cpp */; };
+		1F5ECE2705E5E87E00994248 /* DBResultFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0805E5E87E00994248 /* DBResultFile.h */; };
+		1F5ECE2805E5E87E00994248 /* FuzzyVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0905E5E87E00994248 /* FuzzyVotePickOne.cpp */; };
+		1F5ECE2905E5E87E00994248 /* FuzzyVotePickOne.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0A05E5E87E00994248 /* FuzzyVotePickOne.h */; };
+		1F5ECE2A05E5E87E00994248 /* InstantRunoffVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0B05E5E87E00994248 /* InstantRunoffVotePickOne.cpp */; };
+		1F5ECE2B05E5E87E00994248 /* InstantRunoffVotePickOne.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0C05E5E87E00994248 /* InstantRunoffVotePickOne.h */; };
+		1F5ECE2C05E5E87E00994248 /* IRNR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0D05E5E87E00994248 /* IRNR.cpp */; };
+		1F5ECE2D05E5E87E00994248 /* IRNR.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0E05E5E87E00994248 /* IRNR.h */; };
+		1F5ECE2E05E5E87E00994248 /* OneVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0F05E5E87E00994248 /* OneVotePickOne.cpp */; };
+		1F5ECE2F05E5E87E00994248 /* OneVotePickOne.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1005E5E87E00994248 /* OneVotePickOne.h */; };
+		1F5ECE3005E5E87E00994248 /* RandomElection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1105E5E87E00994248 /* RandomElection.cpp */; };
+		1F5ECE3105E5E87E00994248 /* RandomElection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1205E5E87E00994248 /* RandomElection.h */; };
+		1F5ECE3205E5E87E00994248 /* RankedVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1305E5E87E00994248 /* RankedVotePickOne.cpp */; };
+		1F5ECE3305E5E87E00994248 /* RankedVotePickOne.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1405E5E87E00994248 /* RankedVotePickOne.h */; };
+		1F5ECE3405E5E87E00994248 /* ResultFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1505E5E87E00994248 /* ResultFile.cpp */; };
+		1F5ECE3505E5E87E00994248 /* ResultFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1605E5E87E00994248 /* ResultFile.h */; };
+		1F5ECE3605E5E87E00994248 /* ThreadSafeDBRF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1705E5E87E00994248 /* ThreadSafeDBRF.cpp */; };
+		1F5ECE3705E5E87E00994248 /* ThreadSafeDBRF.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1805E5E87E00994248 /* ThreadSafeDBRF.h */; };
+		1F5ECE3805E5E87E00994248 /* voter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1905E5E87E00994248 /* voter.cpp */; };
+		1F5ECE3905E5E87E00994248 /* Voter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1A05E5E87E00994248 /* Voter.h */; };
+		1F5ECE3A05E5E87E00994248 /* VoterArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1B05E5E87E00994248 /* VoterArray.cpp */; };
+		1F5ECE3B05E5E87E00994248 /* VoterSim_run.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1C05E5E87E00994248 /* VoterSim_run.h */; };
+		1F5ECE3C05E5E87E00994248 /* VoterSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1D05E5E87E00994248 /* VoterSim.cpp */; };
+		1F5ECE3D05E5E87E00994248 /* VoterSim.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1E05E5E87E00994248 /* VoterSim.h */; };
+		1F5ECE3E05E5E87E00994248 /* VotingSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1F05E5E87E00994248 /* VotingSystem.h */; };
+		1F5ECE3F05E5E87E00994248 /* WorkQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE2005E5E87E00994248 /* WorkQueue.cpp */; };
+		1F5ECE4005E5E87E00994248 /* WorkQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE2105E5E87E00994248 /* WorkQueue.h */; };
+		1F5ECE5D05E5EFB100994248 /* NNStrategicVoter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE5B05E5EFB100994248 /* NNStrategicVoter.cpp */; };
+		1F5ECE5E05E5EFB100994248 /* NNStrategicVoter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE5C05E5EFB100994248 /* NNStrategicVoter.h */; };
+		1FB5A12405F00074009ACE7D /* NNSVSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB5A12305F00074009ACE7D /* NNSVSim.cpp */; };
+		1FB5A12E05F0174A009ACE7D /* AcceptanceVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0305E5E87E00994248 /* AcceptanceVotePickOne.cpp */; };
+		1FB5A13205F01BDA009ACE7D /* nnsv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB5A13105F01BDA009ACE7D /* nnsv.cpp */; };
+		1FB5A13305F01BEE009ACE7D /* AcceptanceVotePickOne.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0405E5E87E00994248 /* AcceptanceVotePickOne.h */; };
+		1FB5A13405F01BEE009ACE7D /* Condorcet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0505E5E87E00994248 /* Condorcet.cpp */; };
+		1FB5A13505F01BEF009ACE7D /* Condorcet.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0605E5E87E00994248 /* Condorcet.h */; };
+		1FB5A13605F01BEF009ACE7D /* DBResultFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0805E5E87E00994248 /* DBResultFile.h */; };
+		1FB5A13705F01BF0009ACE7D /* DBResultFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0705E5E87E00994248 /* DBResultFile.cpp */; };
+		1FB5A13805F01BF1009ACE7D /* FuzzyVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0905E5E87E00994248 /* FuzzyVotePickOne.cpp */; };
+		1FB5A13905F01BF2009ACE7D /* FuzzyVotePickOne.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0A05E5E87E00994248 /* FuzzyVotePickOne.h */; };
+		1FB5A13A05F01BF2009ACE7D /* InstantRunoffVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0B05E5E87E00994248 /* InstantRunoffVotePickOne.cpp */; };
+		1FB5A13B05F01BF2009ACE7D /* InstantRunoffVotePickOne.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0C05E5E87E00994248 /* InstantRunoffVotePickOne.h */; };
+		1FB5A13C05F01BF3009ACE7D /* IRNR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0D05E5E87E00994248 /* IRNR.cpp */; };
+		1FB5A13D05F01BF7009ACE7D /* IRNR.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0E05E5E87E00994248 /* IRNR.h */; };
+		1FB5A13F05F01BF8009ACE7D /* NNStrategicVoter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE5B05E5EFB100994248 /* NNStrategicVoter.cpp */; };
+		1FB5A14005F01BFA009ACE7D /* NNStrategicVoter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE5C05E5EFB100994248 /* NNStrategicVoter.h */; };
+		1FB5A14105F01BFE009ACE7D /* NNSVSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB5A12305F00074009ACE7D /* NNSVSim.cpp */; };
+		1FB5A14205F01BFE009ACE7D /* OneVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0F05E5E87E00994248 /* OneVotePickOne.cpp */; };
+		1FB5A14305F01C00009ACE7D /* OneVotePickOne.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1005E5E87E00994248 /* OneVotePickOne.h */; };
+		1FB5A14405F01C06009ACE7D /* RandomElection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1105E5E87E00994248 /* RandomElection.cpp */; };
+		1FB5A14505F01C06009ACE7D /* RandomElection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1205E5E87E00994248 /* RandomElection.h */; };
+		1FB5A14605F01C07009ACE7D /* RankedVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1305E5E87E00994248 /* RankedVotePickOne.cpp */; };
+		1FB5A14705F01C07009ACE7D /* RankedVotePickOne.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1405E5E87E00994248 /* RankedVotePickOne.h */; };
+		1FB5A14805F01C09009ACE7D /* ResultFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1505E5E87E00994248 /* ResultFile.cpp */; };
+		1FB5A14905F01C0A009ACE7D /* ResultFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1605E5E87E00994248 /* ResultFile.h */; };
+		1FB5A14A05F01C0B009ACE7D /* ThreadSafeDBRF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1705E5E87E00994248 /* ThreadSafeDBRF.cpp */; };
+		1FB5A14B05F01C0C009ACE7D /* ThreadSafeDBRF.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1805E5E87E00994248 /* ThreadSafeDBRF.h */; };
+		1FB5A14C05F01C0D009ACE7D /* Voter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1A05E5E87E00994248 /* Voter.h */; };
+		1FB5A14D05F01C0E009ACE7D /* VoterArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1B05E5E87E00994248 /* VoterArray.cpp */; };
+		1FB5A14E05F01C0E009ACE7D /* VoterSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1D05E5E87E00994248 /* VoterSim.cpp */; };
+		1FB5A14F05F01C0F009ACE7D /* VoterSim.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1E05E5E87E00994248 /* VoterSim.h */; };
+		1FB5A15005F01C10009ACE7D /* VoterSim_run.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1C05E5E87E00994248 /* VoterSim_run.h */; };
+		1FB5A15105F01C10009ACE7D /* VotingSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE1F05E5E87E00994248 /* VotingSystem.h */; };
+		1FB5A15205F01C12009ACE7D /* WorkQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE2005E5E87E00994248 /* WorkQueue.cpp */; };
+		1FB5A15305F01C13009ACE7D /* WorkQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE2105E5E87E00994248 /* WorkQueue.h */; };
+		1FB5A15705F01C60009ACE7D /* NNSVSim.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB5A15605F01C60009ACE7D /* NNSVSim.h */; };
+		1FB5A15C05F022B4009ACE7D /* voter_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB5A15B05F022B4009ACE7D /* voter_main.cpp */; };
+		1FB5A15D05F022BC009ACE7D /* voter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1905E5E87E00994248 /* voter.cpp */; };
+		1FF4BB660B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */; };
+		1FF4BB670B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */; };
+		1FF4BB680B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */; };
+		1FF4BB730B33763C00B5D49D /* ApprovalNoInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF4BB720B33763C00B5D49D /* ApprovalNoInfo.h */; };
+		1FF4BB740B33763C00B5D49D /* ApprovalNoInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF4BB720B33763C00B5D49D /* ApprovalNoInfo.h */; };
+		1FF4BB9E0B33961700B5D49D /* ApprovalWithPoll.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF4BB9D0B33961700B5D49D /* ApprovalWithPoll.h */; };
+		1FF4BB9F0B33961700B5D49D /* ApprovalWithPoll.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF4BB9D0B33961700B5D49D /* ApprovalWithPoll.h */; };
+		1FF4BBA10B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */; };
+		1FF4BBA20B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */; };
+		1FF4BBA30B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */; };
+		32E9DA2F0D651BD900EC3419 /* libpng.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E9DA2E0D651BD900EC3419 /* libpng.dylib */; };
+		32E9DA340D651C3600EC3419 /* gauss.c in Sources */ = {isa = PBXBuildFile; fileRef = 32E9DA330D651C3600EC3419 /* gauss.c */; };
+		8DD76F6A0486A84900D96B5E /* v2.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6859E8B029090EE04C91782 /* v2.1 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8DD76F690486A84900D96B5E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				8DD76F6A0486A84900D96B5E /* v2.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1F01291B0A27F8D600B0A401 /* libdb.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libdb.dylib; path = /usr/local/BerkeleyDB.4.4/lib/libdb.dylib; sourceTree = "<absolute>"; };
+		1F21107B09FD250100B5C0AB /* spacegraph */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = spacegraph; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F21108A09FD256A00B5C0AB /* spacegraph.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = spacegraph.cpp; sourceTree = "<group>"; };
+		1F2AAFC50B339C8200AFA56C /* VoteForAndAgainst.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = VoteForAndAgainst.cpp; sourceTree = "<group>"; };
+		1F2AAFC60B339C8200AFA56C /* VoteForAndAgainst.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = VoteForAndAgainst.h; sourceTree = "<group>"; };
+		1F5ECE0305E5E87E00994248 /* AcceptanceVotePickOne.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = AcceptanceVotePickOne.cpp; sourceTree = SOURCE_ROOT; };
+		1F5ECE0405E5E87E00994248 /* AcceptanceVotePickOne.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AcceptanceVotePickOne.h; sourceTree = SOURCE_ROOT; };
+		1F5ECE0505E5E87E00994248 /* Condorcet.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Condorcet.cpp; sourceTree = SOURCE_ROOT; };
+		1F5ECE0605E5E87E00994248 /* Condorcet.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Condorcet.h; sourceTree = SOURCE_ROOT; };
+		1F5ECE0705E5E87E00994248 /* DBResultFile.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = DBResultFile.cpp; sourceTree = SOURCE_ROOT; };
+		1F5ECE0805E5E87E00994248 /* DBResultFile.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = DBResultFile.h; sourceTree = SOURCE_ROOT; };
+		1F5ECE0905E5E87E00994248 /* FuzzyVotePickOne.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = FuzzyVotePickOne.cpp; sourceTree = SOURCE_ROOT; };
+		1F5ECE0A05E5E87E00994248 /* FuzzyVotePickOne.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FuzzyVotePickOne.h; sourceTree = SOURCE_ROOT; };
+		1F5ECE0B05E5E87E00994248 /* InstantRunoffVotePickOne.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = InstantRunoffVotePickOne.cpp; sourceTree = SOURCE_ROOT; };
+		1F5ECE0C05E5E87E00994248 /* InstantRunoffVotePickOne.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = InstantRunoffVotePickOne.h; sourceTree = SOURCE_ROOT; };
+		1F5ECE0D05E5E87E00994248 /* IRNR.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = IRNR.cpp; sourceTree = SOURCE_ROOT; };
+		1F5ECE0E05E5E87E00994248 /* IRNR.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IRNR.h; sourceTree = SOURCE_ROOT; };
+		1F5ECE0F05E5E87E00994248 /* OneVotePickOne.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OneVotePickOne.cpp; sourceTree = SOURCE_ROOT; };
+		1F5ECE1005E5E87E00994248 /* OneVotePickOne.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OneVotePickOne.h; sourceTree = SOURCE_ROOT; };
+		1F5ECE1105E5E87E00994248 /* RandomElection.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = RandomElection.cpp; sourceTree = SOURCE_ROOT; };
+		1F5ECE1205E5E87E00994248 /* RandomElection.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RandomElection.h; sourceTree = SOURCE_ROOT; };
+		1F5ECE1305E5E87E00994248 /* RankedVotePickOne.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = RankedVotePickOne.cpp; sourceTree = SOURCE_ROOT; };
+		1F5ECE1405E5E87E00994248 /* RankedVotePickOne.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RankedVotePickOne.h; sourceTree = SOURCE_ROOT; };
+		1F5ECE1505E5E87E00994248 /* ResultFile.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ResultFile.cpp; sourceTree = SOURCE_ROOT; };
+		1F5ECE1605E5E87E00994248 /* ResultFile.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ResultFile.h; sourceTree = SOURCE_ROOT; };
+		1F5ECE1705E5E87E00994248 /* ThreadSafeDBRF.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadSafeDBRF.cpp; sourceTree = SOURCE_ROOT; };
+		1F5ECE1805E5E87E00994248 /* ThreadSafeDBRF.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ThreadSafeDBRF.h; sourceTree = SOURCE_ROOT; };
+		1F5ECE1905E5E87E00994248 /* voter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = voter.cpp; sourceTree = SOURCE_ROOT; };
+		1F5ECE1A05E5E87E00994248 /* Voter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Voter.h; sourceTree = SOURCE_ROOT; };
+		1F5ECE1B05E5E87E00994248 /* VoterArray.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = VoterArray.cpp; sourceTree = SOURCE_ROOT; };
+		1F5ECE1C05E5E87E00994248 /* VoterSim_run.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = VoterSim_run.h; sourceTree = SOURCE_ROOT; };
+		1F5ECE1D05E5E87E00994248 /* VoterSim.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = VoterSim.cpp; sourceTree = SOURCE_ROOT; };
+		1F5ECE1E05E5E87E00994248 /* VoterSim.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = VoterSim.h; sourceTree = SOURCE_ROOT; };
+		1F5ECE1F05E5E87E00994248 /* VotingSystem.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = VotingSystem.h; sourceTree = SOURCE_ROOT; };
+		1F5ECE2005E5E87E00994248 /* WorkQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = WorkQueue.cpp; sourceTree = SOURCE_ROOT; };
+		1F5ECE2105E5E87E00994248 /* WorkQueue.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = WorkQueue.h; sourceTree = SOURCE_ROOT; };
+		1F5ECE5B05E5EFB100994248 /* NNStrategicVoter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = NNStrategicVoter.cpp; sourceTree = SOURCE_ROOT; };
+		1F5ECE5C05E5EFB100994248 /* NNStrategicVoter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = NNStrategicVoter.h; sourceTree = SOURCE_ROOT; };
+		1FB5A12305F00074009ACE7D /* NNSVSim.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = NNSVSim.cpp; sourceTree = "<group>"; };
+		1FB5A12A05F016E5009ACE7D /* nnsv */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = nnsv; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FB5A13105F01BDA009ACE7D /* nnsv.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = nnsv.cpp; sourceTree = "<group>"; };
+		1FB5A15605F01C60009ACE7D /* NNSVSim.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = NNSVSim.h; sourceTree = "<group>"; };
+		1FB5A15B05F022B4009ACE7D /* voter_main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = voter_main.cpp; sourceTree = "<group>"; };
+		1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ApprovalNoInfo.cpp; sourceTree = "<group>"; };
+		1FF4BB720B33763C00B5D49D /* ApprovalNoInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ApprovalNoInfo.h; sourceTree = "<group>"; };
+		1FF4BB9D0B33961700B5D49D /* ApprovalWithPoll.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ApprovalWithPoll.h; sourceTree = "<group>"; };
+		1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ApprovalWithPoll.cpp; sourceTree = "<group>"; };
+		32E9DA2E0D651BD900EC3419 /* libpng.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng.dylib; path = /usr/local/lib64/libpng.dylib; sourceTree = "<absolute>"; };
+		32E9DA330D651C3600EC3419 /* gauss.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gauss.c; sourceTree = "<group>"; };
+		8DD76F6C0486A84900D96B5E /* v2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = v2; sourceTree = BUILT_PRODUCTS_DIR; };
+		C6859E8B029090EE04C91782 /* v2.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = v2.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1F21107909FD250100B5C0AB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				32E9DA2F0D651BD900EC3419 /* libpng.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8DD76F660486A84900D96B5E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F01291D0A27F8D600B0A401 /* libdb.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0249A662FF388D9811CA2CEA /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				32E9DA2E0D651BD900EC3419 /* libpng.dylib */,
+				1F01291B0A27F8D600B0A401 /* libdb.dylib */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		08FB7794FE84155DC02AAC07 /* v2 */ = {
+			isa = PBXGroup;
+			children = (
+				08FB7795FE84155DC02AAC07 /* Source */,
+				C6859E8C029090F304C91782 /* Documentation */,
+				0249A662FF388D9811CA2CEA /* External Frameworks and Libraries */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = v2;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				1F5ECE0305E5E87E00994248 /* AcceptanceVotePickOne.cpp */,
+				1F5ECE0405E5E87E00994248 /* AcceptanceVotePickOne.h */,
+				1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */,
+				1FF4BB720B33763C00B5D49D /* ApprovalNoInfo.h */,
+				1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */,
+				1FF4BB9D0B33961700B5D49D /* ApprovalWithPoll.h */,
+				1F5ECE0505E5E87E00994248 /* Condorcet.cpp */,
+				1F5ECE0605E5E87E00994248 /* Condorcet.h */,
+				1F5ECE0705E5E87E00994248 /* DBResultFile.cpp */,
+				1F5ECE0805E5E87E00994248 /* DBResultFile.h */,
+				1F5ECE0905E5E87E00994248 /* FuzzyVotePickOne.cpp */,
+				1F5ECE0A05E5E87E00994248 /* FuzzyVotePickOne.h */,
+				32E9DA330D651C3600EC3419 /* gauss.c */,
+				1F5ECE0B05E5E87E00994248 /* InstantRunoffVotePickOne.cpp */,
+				1F5ECE0C05E5E87E00994248 /* InstantRunoffVotePickOne.h */,
+				1F5ECE0D05E5E87E00994248 /* IRNR.cpp */,
+				1F5ECE0E05E5E87E00994248 /* IRNR.h */,
+				1F5ECE5B05E5EFB100994248 /* NNStrategicVoter.cpp */,
+				1F5ECE5C05E5EFB100994248 /* NNStrategicVoter.h */,
+				1FB5A12305F00074009ACE7D /* NNSVSim.cpp */,
+				1FB5A15605F01C60009ACE7D /* NNSVSim.h */,
+				1FB5A13105F01BDA009ACE7D /* nnsv.cpp */,
+				1FB5A15B05F022B4009ACE7D /* voter_main.cpp */,
+				1F5ECE0F05E5E87E00994248 /* OneVotePickOne.cpp */,
+				1F5ECE1005E5E87E00994248 /* OneVotePickOne.h */,
+				1F5ECE1105E5E87E00994248 /* RandomElection.cpp */,
+				1F5ECE1205E5E87E00994248 /* RandomElection.h */,
+				1F5ECE1305E5E87E00994248 /* RankedVotePickOne.cpp */,
+				1F5ECE1405E5E87E00994248 /* RankedVotePickOne.h */,
+				1F5ECE1505E5E87E00994248 /* ResultFile.cpp */,
+				1F5ECE1605E5E87E00994248 /* ResultFile.h */,
+				1F21108A09FD256A00B5C0AB /* spacegraph.cpp */,
+				1F5ECE1705E5E87E00994248 /* ThreadSafeDBRF.cpp */,
+				1F5ECE1805E5E87E00994248 /* ThreadSafeDBRF.h */,
+				1F5ECE1905E5E87E00994248 /* voter.cpp */,
+				1F5ECE1A05E5E87E00994248 /* Voter.h */,
+				1F5ECE1B05E5E87E00994248 /* VoterArray.cpp */,
+				1F2AAFC50B339C8200AFA56C /* VoteForAndAgainst.cpp */,
+				1F2AAFC60B339C8200AFA56C /* VoteForAndAgainst.h */,
+				1F5ECE1C05E5E87E00994248 /* VoterSim_run.h */,
+				1F5ECE1D05E5E87E00994248 /* VoterSim.cpp */,
+				1F5ECE1E05E5E87E00994248 /* VoterSim.h */,
+				1F5ECE1F05E5E87E00994248 /* VotingSystem.h */,
+				1F5ECE2005E5E87E00994248 /* WorkQueue.cpp */,
+				1F5ECE2105E5E87E00994248 /* WorkQueue.h */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DD76F6C0486A84900D96B5E /* v2 */,
+				1FB5A12A05F016E5009ACE7D /* nnsv */,
+				1F21107B09FD250100B5C0AB /* spacegraph */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C6859E8C029090F304C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				C6859E8B029090EE04C91782 /* v2.1 */,
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		1FB5A12705F016E5009ACE7D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FB5A13305F01BEE009ACE7D /* AcceptanceVotePickOne.h in Headers */,
+				1FB5A13505F01BEF009ACE7D /* Condorcet.h in Headers */,
+				1FB5A13605F01BEF009ACE7D /* DBResultFile.h in Headers */,
+				1FB5A13905F01BF2009ACE7D /* FuzzyVotePickOne.h in Headers */,
+				1FB5A13B05F01BF2009ACE7D /* InstantRunoffVotePickOne.h in Headers */,
+				1FB5A13D05F01BF7009ACE7D /* IRNR.h in Headers */,
+				1FB5A14005F01BFA009ACE7D /* NNStrategicVoter.h in Headers */,
+				1FB5A14305F01C00009ACE7D /* OneVotePickOne.h in Headers */,
+				1FB5A14505F01C06009ACE7D /* RandomElection.h in Headers */,
+				1FB5A14705F01C07009ACE7D /* RankedVotePickOne.h in Headers */,
+				1FB5A14905F01C0A009ACE7D /* ResultFile.h in Headers */,
+				1FB5A14B05F01C0C009ACE7D /* ThreadSafeDBRF.h in Headers */,
+				1FB5A14C05F01C0D009ACE7D /* Voter.h in Headers */,
+				1FB5A14F05F01C0F009ACE7D /* VoterSim.h in Headers */,
+				1FB5A15005F01C10009ACE7D /* VoterSim_run.h in Headers */,
+				1FB5A15105F01C10009ACE7D /* VotingSystem.h in Headers */,
+				1FB5A15305F01C13009ACE7D /* WorkQueue.h in Headers */,
+				1FB5A15705F01C60009ACE7D /* NNSVSim.h in Headers */,
+				1FF4BB740B33763C00B5D49D /* ApprovalNoInfo.h in Headers */,
+				1FF4BB9F0B33961700B5D49D /* ApprovalWithPoll.h in Headers */,
+				1F2AAFCB0B339C8200AFA56C /* VoteForAndAgainst.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8DD76F630486A84900D96B5E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F5ECE2305E5E87E00994248 /* AcceptanceVotePickOne.h in Headers */,
+				1F5ECE2505E5E87E00994248 /* Condorcet.h in Headers */,
+				1F5ECE2705E5E87E00994248 /* DBResultFile.h in Headers */,
+				1F5ECE2905E5E87E00994248 /* FuzzyVotePickOne.h in Headers */,
+				1F5ECE2B05E5E87E00994248 /* InstantRunoffVotePickOne.h in Headers */,
+				1F5ECE2D05E5E87E00994248 /* IRNR.h in Headers */,
+				1F5ECE2F05E5E87E00994248 /* OneVotePickOne.h in Headers */,
+				1F5ECE3105E5E87E00994248 /* RandomElection.h in Headers */,
+				1F5ECE3305E5E87E00994248 /* RankedVotePickOne.h in Headers */,
+				1F5ECE3505E5E87E00994248 /* ResultFile.h in Headers */,
+				1F5ECE3705E5E87E00994248 /* ThreadSafeDBRF.h in Headers */,
+				1F5ECE3905E5E87E00994248 /* Voter.h in Headers */,
+				1F5ECE3B05E5E87E00994248 /* VoterSim_run.h in Headers */,
+				1F5ECE3D05E5E87E00994248 /* VoterSim.h in Headers */,
+				1F5ECE3E05E5E87E00994248 /* VotingSystem.h in Headers */,
+				1F5ECE4005E5E87E00994248 /* WorkQueue.h in Headers */,
+				1F5ECE5E05E5EFB100994248 /* NNStrategicVoter.h in Headers */,
+				1FF4BB730B33763C00B5D49D /* ApprovalNoInfo.h in Headers */,
+				1FF4BB9E0B33961700B5D49D /* ApprovalWithPoll.h in Headers */,
+				1F2AAFC90B339C8200AFA56C /* VoteForAndAgainst.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		1F21107A09FD250100B5C0AB /* spacegraph */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F0129080A27F7E000B0A401 /* Build configuration list for PBXNativeTarget "spacegraph" */;
+			buildPhases = (
+				1F21107809FD250100B5C0AB /* Sources */,
+				1F21107909FD250100B5C0AB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = spacegraph;
+			productName = spacegraph;
+			productReference = 1F21107B09FD250100B5C0AB /* spacegraph */;
+			productType = "com.apple.product-type.tool";
+		};
+		1FB5A12905F016E5009ACE7D /* nnsv */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F0129040A27F7E000B0A401 /* Build configuration list for PBXNativeTarget "nnsv" */;
+			buildPhases = (
+				1FB5A12705F016E5009ACE7D /* Headers */,
+				1FB5A12805F016E5009ACE7D /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = nnsv;
+			productName = nnsv;
+			productReference = 1FB5A12A05F016E5009ACE7D /* nnsv */;
+			productType = "com.apple.product-type.tool";
+		};
+		8DD76F620486A84900D96B5E /* v2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F0129000A27F7E000B0A401 /* Build configuration list for PBXNativeTarget "v2" */;
+			buildPhases = (
+				8DD76F630486A84900D96B5E /* Headers */,
+				8DD76F640486A84900D96B5E /* Sources */,
+				8DD76F660486A84900D96B5E /* Frameworks */,
+				8DD76F680486A84900D96B5E /* Rez */,
+				8DD76F690486A84900D96B5E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = v2;
+			productInstallPath = "$(HOME)/bin";
+			productName = v2;
+			productReference = 8DD76F6C0486A84900D96B5E /* v2 */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1F01290C0A27F7E000B0A401 /* Build configuration list for PBXProject "v2" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* v2 */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8DD76F620486A84900D96B5E /* v2 */,
+				1FB5A12905F016E5009ACE7D /* nnsv */,
+				1F21107A09FD250100B5C0AB /* spacegraph */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXRezBuildPhase section */
+		8DD76F680486A84900D96B5E /* Rez */ = {
+			isa = PBXRezBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXRezBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1F21107809FD250100B5C0AB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F21108109FD254800B5C0AB /* AcceptanceVotePickOne.cpp in Sources */,
+				1F21108209FD254900B5C0AB /* Condorcet.cpp in Sources */,
+				1F21108409FD254C00B5C0AB /* FuzzyVotePickOne.cpp in Sources */,
+				1F21108509FD254D00B5C0AB /* InstantRunoffVotePickOne.cpp in Sources */,
+				1F21108609FD254E00B5C0AB /* IRNR.cpp in Sources */,
+				1F21108B09FD256A00B5C0AB /* spacegraph.cpp in Sources */,
+				1F21108D09FD259800B5C0AB /* OneVotePickOne.cpp in Sources */,
+				1F21108E09FD259B00B5C0AB /* RandomElection.cpp in Sources */,
+				1F21108F09FD259C00B5C0AB /* RankedVotePickOne.cpp in Sources */,
+				1F21109009FD259D00B5C0AB /* ResultFile.cpp in Sources */,
+				1F21109209FD25AC00B5C0AB /* voter.cpp in Sources */,
+				1F21109309FD25B400B5C0AB /* VoterArray.cpp in Sources */,
+				1F21109409FD25B500B5C0AB /* VoterSim.cpp in Sources */,
+				1F21109509FD25B800B5C0AB /* WorkQueue.cpp in Sources */,
+				1FF4BB660B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */,
+				1FF4BBA10B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */,
+				1F2AAFC70B339C8200AFA56C /* VoteForAndAgainst.cpp in Sources */,
+				32E9DA340D651C3600EC3419 /* gauss.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FB5A12805F016E5009ACE7D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FB5A12E05F0174A009ACE7D /* AcceptanceVotePickOne.cpp in Sources */,
+				1FB5A13205F01BDA009ACE7D /* nnsv.cpp in Sources */,
+				1FB5A13405F01BEE009ACE7D /* Condorcet.cpp in Sources */,
+				1FB5A13705F01BF0009ACE7D /* DBResultFile.cpp in Sources */,
+				1FB5A13805F01BF1009ACE7D /* FuzzyVotePickOne.cpp in Sources */,
+				1FB5A13A05F01BF2009ACE7D /* InstantRunoffVotePickOne.cpp in Sources */,
+				1FB5A13C05F01BF3009ACE7D /* IRNR.cpp in Sources */,
+				1FB5A13F05F01BF8009ACE7D /* NNStrategicVoter.cpp in Sources */,
+				1FB5A14105F01BFE009ACE7D /* NNSVSim.cpp in Sources */,
+				1FB5A14205F01BFE009ACE7D /* OneVotePickOne.cpp in Sources */,
+				1FB5A14405F01C06009ACE7D /* RandomElection.cpp in Sources */,
+				1FB5A14605F01C07009ACE7D /* RankedVotePickOne.cpp in Sources */,
+				1FB5A14805F01C09009ACE7D /* ResultFile.cpp in Sources */,
+				1FB5A14A05F01C0B009ACE7D /* ThreadSafeDBRF.cpp in Sources */,
+				1FB5A14D05F01C0E009ACE7D /* VoterArray.cpp in Sources */,
+				1FB5A14E05F01C0E009ACE7D /* VoterSim.cpp in Sources */,
+				1FB5A15205F01C12009ACE7D /* WorkQueue.cpp in Sources */,
+				1FB5A15D05F022BC009ACE7D /* voter.cpp in Sources */,
+				1FF4BB680B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */,
+				1FF4BBA30B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */,
+				1F2AAFCA0B339C8200AFA56C /* VoteForAndAgainst.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8DD76F640486A84900D96B5E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F5ECE2205E5E87E00994248 /* AcceptanceVotePickOne.cpp in Sources */,
+				1F5ECE2405E5E87E00994248 /* Condorcet.cpp in Sources */,
+				1F5ECE2605E5E87E00994248 /* DBResultFile.cpp in Sources */,
+				1F5ECE2805E5E87E00994248 /* FuzzyVotePickOne.cpp in Sources */,
+				1F5ECE2A05E5E87E00994248 /* InstantRunoffVotePickOne.cpp in Sources */,
+				1F5ECE2C05E5E87E00994248 /* IRNR.cpp in Sources */,
+				1F5ECE2E05E5E87E00994248 /* OneVotePickOne.cpp in Sources */,
+				1F5ECE3005E5E87E00994248 /* RandomElection.cpp in Sources */,
+				1F5ECE3205E5E87E00994248 /* RankedVotePickOne.cpp in Sources */,
+				1F5ECE3405E5E87E00994248 /* ResultFile.cpp in Sources */,
+				1F5ECE3605E5E87E00994248 /* ThreadSafeDBRF.cpp in Sources */,
+				1F5ECE3805E5E87E00994248 /* voter.cpp in Sources */,
+				1F5ECE3A05E5E87E00994248 /* VoterArray.cpp in Sources */,
+				1F5ECE3C05E5E87E00994248 /* VoterSim.cpp in Sources */,
+				1F5ECE3F05E5E87E00994248 /* WorkQueue.cpp in Sources */,
+				1F5ECE5D05E5EFB100994248 /* NNStrategicVoter.cpp in Sources */,
+				1FB5A12405F00074009ACE7D /* NNSVSim.cpp in Sources */,
+				1FB5A15C05F022B4009ACE7D /* voter_main.cpp in Sources */,
+				1FF4BB670B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */,
+				1FF4BBA20B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */,
+				1F2AAFC80B339C8200AFA56C /* VoteForAndAgainst.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1F0129010A27F7E000B0A401 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				GENERATE_PROFILING_CODE = YES;
+				HEADER_SEARCH_PATHS = "";
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/BerkeleyDB.4.4/lib,
+				);
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = v2;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		1F0129020A27F7E000B0A401 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = "";
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/BerkeleyDB.4.4/lib,
+				);
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = v2;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		1F0129030A27F7E000B0A401 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = "";
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/BerkeleyDB.4.4/lib,
+				);
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = v2;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+		1F0129050A27F7E000B0A401 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INSTALL_PATH = /usr/local/bin;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = nnsv;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		1F0129060A27F7E000B0A401 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = nnsv;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		1F0129070A27F7E000B0A401 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = nnsv;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+			};
+			name = Default;
+		};
+		1F0129090A27F7E000B0A401 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/BerkeleyDB.4.4/lib,
+					/usr/local/lib64,
+				);
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = spacegraph;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		1F01290A0A27F7E000B0A401 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/BerkeleyDB.4.4/lib,
+					/usr/local/lib64,
+				);
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = spacegraph;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		1F01290B0A27F7E000B0A401 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/BerkeleyDB.4.4/lib,
+					/usr/local/lib64,
+				);
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = spacegraph;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+		1F01290D0A27F7E000B0A401 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-I/usr/local/BerkeleyDB.4.4/include",
+				);
+			};
+			name = Development;
+		};
+		1F01290E0A27F7E000B0A401 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Deployment;
+		};
+		1F01290F0A27F7E000B0A401 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1F0129000A27F7E000B0A401 /* Build configuration list for PBXNativeTarget "v2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F0129010A27F7E000B0A401 /* Development */,
+				1F0129020A27F7E000B0A401 /* Deployment */,
+				1F0129030A27F7E000B0A401 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		1F0129040A27F7E000B0A401 /* Build configuration list for PBXNativeTarget "nnsv" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F0129050A27F7E000B0A401 /* Development */,
+				1F0129060A27F7E000B0A401 /* Deployment */,
+				1F0129070A27F7E000B0A401 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		1F0129080A27F7E000B0A401 /* Build configuration list for PBXNativeTarget "spacegraph" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F0129090A27F7E000B0A401 /* Development */,
+				1F01290A0A27F7E000B0A401 /* Deployment */,
+				1F01290B0A27F7E000B0A401 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		1F01290C0A27F7E000B0A401 /* Build configuration list for PBXProject "v2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F01290D0A27F7E000B0A401 /* Development */,
+				1F01290E0A27F7E000B0A401 /* Deployment */,
+				1F01290F0A27F7E000B0A401 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

@@ -20,6 +20,7 @@
 #include "InstantRunoffVotePickOne.h"
 #include "Condorcet.h"
 #include "IRNR.h"
+#include "IteratedNormalizedRatings.h"
 #include "RandomElection.h"
 
 #include "gauss.h"

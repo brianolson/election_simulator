@@ -17,8 +17,14 @@ class IteratedNormalizedRatings : public VotingSystem {
 public:
     IteratedNormalizedRatings( const char* name );
     IteratedNormalizedRatings( const char* name, double offsetIn );
+    IteratedNormalizedRatings( const char* name,
+        int (*decr)(double*,double*,bool*,int,double));
+    virtual void init( const char** envp );
     virtual void runElection( int* winnerR, const VoterArray& they );
-	double offset;
+
+protected:
+    double offset;
+    int (*decrement)(double*,double*,bool*,int,double);
 };
 
 #endif

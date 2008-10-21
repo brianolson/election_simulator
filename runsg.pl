@@ -70,8 +70,8 @@ if ( -f "method_list" ) {
 	close FIN;
 	$d = join("",@l);
 	@methods = split( /\s+/, $d );
-	print "read method_list: \"" . join("\", \"", @methods ) . "\"\n";
-	exit 1;
+#	print "read method_list: \"" . join("\", \"", @methods ) . "\"\n";
+#	exit 1;
 }
 if ( -f "global_options" ) {
 	open FIN, '<', "global_options";
@@ -138,6 +138,11 @@ foreach $cs ( @candsets ) {
   }
 }
 
+if ( ! $quiet ) {
+	print <<EOF;
+# ToDo: $numToDo
+EOF
+}
 $doing = 0;
 
 foreach $cs ( @candsets ) {

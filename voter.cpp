@@ -19,6 +19,7 @@
 #include "InstantRunoffVotePickOne.h"
 #include "Condorcet.h"
 #include "IRNR.h"
+#include "IteratedNormalizedRatings.h"
 #include "RandomElection.h"
 
 #include "WorkQueue.h"
@@ -386,6 +387,7 @@ VSConfig* VSConfig::defaultList( const char** a, VSConfig* n ) {
 	toret = new VSConfig( new Condorcet(), toret );
 	toret = new VSConfig( new IRNR("IRNR"), toret );
 	toret = new VSConfig( new IRNR("IRNR, positive shifted", 1.0), toret );
+	toret = new VSConfig( new IteratedNormalizedRatings("INR"), toret );
 	toret = new VSConfig( new RandomElection("Random"), toret );
 #else
 	VSFactory* cur = VSFactory::root;

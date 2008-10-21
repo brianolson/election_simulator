@@ -10,6 +10,7 @@
 #include "IteratedNormalizedRatings.h"
 #include "Voter.h"
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 #include <assert.h>
 
@@ -20,14 +21,27 @@
 #define TRACK_DQ 0
 #endif
 
+static int decrementSliding( double* candDeWeight, double* tally, bool* active, int numc, double epsilon );
+static int decrementLowest( double* candDeWeight, double* tally, bool* active, int numc, double epsilon );
+static int decrementProportional( double* candDeWeight, double* tally, bool* active, int numc, double epsilon );
+
 IteratedNormalizedRatings::IteratedNormalizedRatings( const char* nameIn )
 : VotingSystem( nameIn ),
-  offset( 0.0 )
+  offset( 0.0 ),
+  decrement(decrementSliding)
+{
+}
+IteratedNormalizedRatings::IteratedNormalizedRatings( const char* nameIn,
+    int (*decr)(double*,double*,bool*,int,double) )
+: VotingSystem( nameIn ),
+  offset( 0.0 ),
+  decrement(decr)
 {
 }
 IteratedNormalizedRatings::IteratedNormalizedRatings( const char* nameIn, double offsetIn )
 : VotingSystem( nameIn ),
-  offset( offsetIn )
+  offset( offsetIn ),
+  decrement(decrementSliding)
 {
 }
 
@@ -149,6 +163,28 @@ struct INR_decrOptionsType {
     { decrementLowest, "decrementLowest" },
     { NULL, NULL }
 };
+
+void IteratedNormalizedRatings::init( const char** envp ) {
+	if ( envp == NULL ) {
+		return;
+	}
+	int i = 0;
+	while ( envp[i] != NULL ) {
+		for (int j = 0; INR_decrOptions[j].fun != NULL; j++ ) {
+			if ( !strcmp( envp[i], INR_decrOptions[j].name ) ) {
+				decrement = INR_decrOptions[j].fun;
+				j = i + 1;
+				while ( envp[j] != NULL ) {
+					envp[j-1] = envp[j];
+				}
+				i--; // keep i at a standstill
+				break;
+			}
+		}
+		i++;
+	}
+	VotingSystem::init(envp);
+}
 
 #define rmsnorm 0
 void IteratedNormalizedRatings::runElection( int* winnerR, const VoterArray& they ) {
@@ -279,6 +315,16 @@ void IteratedNormalizedRatings::runElection( int* winnerR, const VoterArray& the
 }
 
 VotingSystem* newIteratedNormalizedRatings( const char* n ) {
-	return new IteratedNormalizedRatings( n );
+	return new IteratedNormalizedRatings( n, decrementSliding );
 }
-VSFactory* IteratedNormalizedRatings_f = new VSFactory( newIteratedNormalizedRatings, "IteratedNormalizedRatings" );
+VSFactory* IteratedNormalizedRatings_s_f = new VSFactory( newIteratedNormalizedRatings, "IteratedNormalizedRatings_Sliding_Decrement" );
+
+VotingSystem* newIteratedNormalizedRatings_prop( const char* n ) {
+	return new IteratedNormalizedRatings( n, decrementProportional );
+}
+VSFactory* IteratedNormalizedRatings_p_f = new VSFactory( newIteratedNormalizedRatings_prop, "IteratedNormalizedRatings_Proportional_Decrement" );
+
+VotingSystem* newIteratedNormalizedRatings_lowest( const char* n ) {
+	return new IteratedNormalizedRatings( n, decrementLowest );
+}
+VSFactory* IteratedNormalizedRatings_l_f = new VSFactory( newIteratedNormalizedRatings_lowest, "IteratedNormalizedRatings_Decrement_Lowest" );

@@ -32,11 +32,15 @@ SGOBJS += ResultFile.o voter.o gauss.o
 SGOBJS += VoterSim.o WorkQueue.o
 #SGOBJS += DBResultFile.o ThreadSafeDBRF.o
 
+STOBJS := ResultFile.o DBResultFile.o VoterArray.o VoterSim.o WorkQueue.o
+STOBJS += ThreadSafeDBRF.o voter.o speed_test.o
+STOBJS += ${EMOBJS}
+
 UNAME := $(shell uname)
 
 include ${UNAME}.make
 
-all:	spacegraph
+all:	spacegraph speedtest
 #all:	voter frob resultDBToGnuplot nnsv spacegraph
 
 voter:	$(OBJS)
@@ -54,6 +58,9 @@ spacegraph: LDFLAGS+=-lpng -lz -g
 spacegraph:	${SGOBJS}
 	${CXX} ${CXXFLAGS} ${SGOBJS} ${LDFLAGS} -o spacegraph
 #spacegraph: CC=${CXX}
+
+speedtest:	${STOBJS}
+	${CXX} ${CXXFLAGS} ${STOBJS} ${LDFLAGS} -o speedtest
 
 METHODS := Max OneVote IRV IRNR Condorcet Rated
 FOURCORNERS := $(METHODS:%=fourcorners_%.png)

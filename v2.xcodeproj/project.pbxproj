@@ -539,7 +539,6 @@
 					"$(inherited)",
 					/usr/local/BerkeleyDB.4.4/lib,
 				);
-				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = v2;
 				WARNING_CFLAGS = (
@@ -618,7 +617,6 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INSTALL_PATH = /usr/local/bin;
-				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -679,7 +677,6 @@
 					/usr/local/BerkeleyDB.4.4/lib,
 					/usr/local/lib64,
 				);
-				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";

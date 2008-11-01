@@ -32,8 +32,7 @@ SGOBJS += ResultFile.o voter.o gauss.o
 SGOBJS += VoterSim.o WorkQueue.o
 #SGOBJS += DBResultFile.o ThreadSafeDBRF.o
 
-STOBJS := ResultFile.o DBResultFile.o VoterArray.o VoterSim.o WorkQueue.o
-STOBJS += ThreadSafeDBRF.o voter.o speed_test.o
+STOBJS := VoterArray.o WorkQueue.o voter.o speed_test.o
 STOBJS += ${EMOBJS}
 
 UNAME := $(shell uname)

@@ -529,7 +529,7 @@ void PlaneSim::gaussTest( const char* filename ) {
 	for ( y = 0; y < py; y++ ) {
 		for ( x = 0; x < px; x++ ) {
 			uint8_t value;
-			value = (uint8_t)((255.0 * getAccum(x,y,0)) / max);
+			value = 255 - (uint8_t)((255.0 * getAccum(x,y,0)) / max);
 			uint8_t* p;
 			p = getpxp( x, y );
 			*p += value;
@@ -680,7 +680,7 @@ int main( int argc, char** argv ) {
 		exit(1);
 	}
 	if ( testgauss != NULL ) {
-	    sim.candcount = 1;
+		sim.addCandidateArg("0,0");
 		sim.build( 1 );
 		sim.gaussTest( testgauss );
 		return 0;

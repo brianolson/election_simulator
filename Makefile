@@ -53,7 +53,7 @@ frob:	$(FROBOB)
 resultDBToGnuplot:	$(TOPLOTOB)
 resultDBToGnuplot:	CC=${CXX}
 
-spacegraph: LDFLAGS+=-lpng -lz -g
+spacegraph: LDFLAGS+=-lpng12 -lz -g
 spacegraph:	${SGOBJS}
 	${CXX} ${CXXFLAGS} ${SGOBJS} ${LDFLAGS} -o spacegraph
 #spacegraph: CC=${CXX}

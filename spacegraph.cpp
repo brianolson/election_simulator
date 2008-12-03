@@ -154,7 +154,7 @@ public:
 		p++;color++;
 		*p = *color;
 	}
-	void gaussTest( const char* filename );
+	void gaussTest( const char* filename, int nvoters );
 	void writePNG( const char* filename );
 
 	void drawDiamond( int x, int y, const uint8_t* color );
@@ -489,12 +489,12 @@ void PlaneSim::writePNG( const char* filename ) {
 	delete [] pix;
 	pix = NULL;
 }
-void PlaneSim::gaussTest( const char* filename ) {
+void PlaneSim::gaussTest( const char* filename, int nvoters ) {
 	int i;
 	double dy, dx;
 	int x, y;
-	printf("generating %d random positions...\n", px*py*10 );
-	for ( i = 0; i < px*py*10; i++ ) {
+	printf("generating %d random positions...\n", nvoters );
+	for ( i = 0; i < nvoters; i++ ) {
 		dy = random_gaussian() * 0.5;
 		dx = random_gaussian() * 0.5;
 		y = yCoordToIndex( dy );
@@ -503,9 +503,11 @@ void PlaneSim::gaussTest( const char* filename ) {
 		if ( y >= 0 && y < py && x >= 0 && x < px ) {
 			incAccum( x, y, 0 );
 		}
+#if 0
 		if ( i % (px*py/10) == 0 ) {
 			printf("%d ", i );
 		}
+#endif
 	}
 	printf("stored %d random positions\n", i );
 	pix = new uint8_t[px*py*3];
@@ -682,7 +684,7 @@ int main( int argc, char** argv ) {
 	if ( testgauss != NULL ) {
 		sim.addCandidateArg("0,0");
 		sim.build( 1 );
-		sim.gaussTest( testgauss );
+		sim.gaussTest( testgauss, nvoters );
 		return 0;
 	}
 	if ( vs == NULL ) {

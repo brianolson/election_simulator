@@ -50,10 +50,6 @@ public:
     
     void randomize();
     void randomizeWithFirstChoice( int first );
-	// place the voter in N-dimensional space, uniformly distributed within a -1..1 N-cube.
-	// choicePositions is interpreted as 2D, [choice one x, y, z, ...][choice two x, y, z, ...]...
-	// prefenece for a choice is (offset - voter_choice_distance)
-	void randomizeNSpace(int dimensions, float* choicePositions, double offset = 0.5);
 
 	// random position within -1..1 N-cube
 	static void randomUniformCoord(float* coord, int dimensions);
@@ -102,10 +98,39 @@ public:
     inline Voter& operator[]( int i ) const {
 	return *(they + i);
     };
+	
+	// place the voters in N-dimensional space, uniformly distributed within a -1..1 N-cube.
+	// choicePositions is interpreted as 2D, [choice one x, y, z, ...][choice two x, y, z, ...]...
+	// center can be NULL or double[dimensions] defining the center of the N-cube.
+	// scale multiplies each position to change the size of the N-cube.
+	// prefenece for a choice is (approvalDistance - voter_choice_distance)
+	void randomizeNSpace(int dimensions, double* choicePositions, double* center, double scale, double approvalDistance);
+
+	// place the voters in N-dimensional space, uniformly distributed within a gaussian distribution.
+	// choicePositions is interpreted as 2D, [choice one x, y, z, ...][choice two x, y, z, ...]...
+	// center can be NULL or double[dimensions] defining the center of the N-cube.
+	// prefenece for a choice is (sigma - voter_choice_distance)
+	void randomizeGaussianNSpace(int dimensions, double* choicePositions, double* center, double sigma);
 };
 
 void voterDump( char* voteDumpFilename, const VoterArray& they, int numv, int numc );
 void voterDump( FILE* voteDumpFile, const VoterArray& they, int numv, int numc );
 void voterBinDump( char* voteDumpFilename, const VoterArray& they, int numv, int numc );
+
+extern "C" long random(void);
+
+// [-1.0 .. 1.0]
+inline double uniformOneOneRandom() {
+#if 1
+	// random() returns [0..2147483647]
+	return
+	(random() * (2.0/2147483647.0)) // [0..2.0]
+	- 1.0;
+#else
+	// drand48 only available on some systems? deprecated?
+	return (drand48() - 0.5) * 2.0;
+#endif
+}
+
 
 #endif

@@ -143,19 +143,6 @@ inline double biasedRandom( double bias ) {
     return (pow( (random() / ((double)LONG_MAX)), tan( bias ) ) - 0.5) * 2.0;
 }
 
-// [-1.0 .. 1.0]
-inline double uniformOneOneRandom() {
-#if 1
-	// random() returns [0..2147483647]
-	return
-	(random() * (2.0/2147483647.0)) // [0..2.0]
-	- 1.0;
-#else
-	// drand48 only available on some systems? deprecated?
-	return (drand48() - 0.5) * 2.0;
-#endif
-}
-
 void Voter::randomize() {
     for ( int i = 0; i < preflen; i++ ) {
 		preference[i] = uniformOneOneRandom();
@@ -190,29 +177,6 @@ void Voter::randomGaussianCoord(float* coord, int dimensions, double sigma) {
 	struct random_gaussian_context gc = INITIAL_GAUSSIAN_CONTEXT;
 	for (int i = 0; i < dimensions; ++i) {
 		coord[i] = random_gaussian_r(&gc);
-	}
-}
-
-// place the voter in N-dimensional space, uniformly distributed within a -1..1 N-cube.
-void Voter::randomizeNSpace(int dimensions, float* choicePositions, double offset) {
-	static float* dimholder = NULL;
-	static int dimholderlen = 0;
-	if (dimholderlen < dimensions) {
-		if (dimholder != NULL) {
-			delete dimholder;
-		}
-		dimholder = new float[dimensions];
-		dimholderlen = dimensions;
-	}
-	randomUniformCoord(dimholder, dimensions);
-	for (int c = 0; c < preflen; ++c) {
-		double rsquared = 0.0;
-		float* choiceCoods = choicePositions + (c*dimensions);
-		for (int d = 0; d < dimensions; ++d) {
-			double x = choiceCoods[d] - dimholder[d];
-			rsquared += x * x;
-		}
-		preference[c] = offset - sqrt(rsquared);
 	}
 }
 

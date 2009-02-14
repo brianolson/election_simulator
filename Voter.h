@@ -50,7 +50,16 @@ public:
     
     void randomize();
     void randomizeWithFirstChoice( int first );
+	// place the voter in N-dimensional space, uniformly distributed within a -1..1 N-cube.
+	// choicePositions is interpreted as 2D, [choice one x, y, z, ...][choice two x, y, z, ...]...
+	// prefenece for a choice is (offset - voter_choice_distance)
+	void randomizeNSpace(int dimensions, float* choicePositions, double offset = 0.5);
 
+	// random position within -1..1 N-cube
+	static void randomUniformCoord(float* coord, int dimensions);
+	// random gaussian position centered at 0
+	static void randomGaussianCoord(float* coord, int dimensions, double sigma);
+	
     void setStorage( float* p, int pl );
     void clearStorage();
 

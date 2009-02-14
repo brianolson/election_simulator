@@ -19,7 +19,7 @@ OBJS += ${EMOBJS}
 #OBJS += voter.o
 
 VSMALLOBJS := ResultFile.o VoterArray.o VoterSim.o WorkQueue.o voter.o
-VSMALLOBJS += voter_main_sm.o
+VSMALLOBJS += voter_main_sm.o gauss.o
 VSMALLOBJS += ${EMOBJS}
 
 FROBOB := ResultFile.o DBResultFile.o resultFileFrob.o
@@ -38,7 +38,7 @@ SGOBJS += ResultFile.o voter.o gauss.o
 SGOBJS += VoterSim.o WorkQueue.o
 #SGOBJS += DBResultFile.o ThreadSafeDBRF.o
 
-STOBJS := VoterArray.o WorkQueue.o voter.o speed_test.o
+STOBJS := VoterArray.o WorkQueue.o voter.o speed_test.o gauss.o
 STOBJS += ${EMOBJS}
 
 UNAME := $(shell uname)

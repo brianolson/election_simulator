@@ -1,7 +1,9 @@
+#GO2=-O2
+GO2=-g
 #CXXFLAGS=-Wall -g
-CXXFLAGS=-Wall -O2 -m64
+CXXFLAGS=-Wall ${GO2} -m64
 #CXXFLAGS+=-pg -g
-CFLAGS=-Wall -O2 -m64
+CFLAGS=-Wall ${GO2} -m64
 #LDFLAGS+=-pg
 LDFLAGS+=-L/usr/local/lib64
 EMOBJS := AcceptanceVotePickOne.o FuzzyVotePickOne.o InstantRunoffVotePickOne.o
@@ -15,6 +17,10 @@ OBJS := ResultFile.o DBResultFile.o VoterArray.o VoterSim.o WorkQueue.o
 OBJS += ThreadSafeDBRF.o voter_main.o
 OBJS += ${EMOBJS}
 #OBJS += voter.o
+
+VSMALLOBJS := ResultFile.o VoterArray.o VoterSim.o WorkQueue.o voter.o
+VSMALLOBJS += voter_main_sm.o
+VSMALLOBJS += ${EMOBJS}
 
 FROBOB := ResultFile.o DBResultFile.o resultFileFrob.o
 
@@ -39,11 +45,17 @@ UNAME := $(shell uname)
 
 include ${UNAME}.make
 
-all:	spacegraph speedtest
+all:	spacegraph speedtest vsmall
 #all:	voter frob resultDBToGnuplot nnsv spacegraph
 
 voter:	$(OBJS)
 voter:	CC=${CXX}
+
+voter_main_sm.o:	voter_main.cpp
+	${CXX} ${CXXFLAGS} voter_main.cpp -c -o voter_main_sm.o -DNO_DB
+
+vsmall:	${VSMALLOBJS}
+	${CXX} -o vsmall ${VSMALLOBJS} ${CXXFLAGS} ${LDFLAGS}
 
 nnsv:   ${NNSVOBJS}
 

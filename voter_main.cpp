@@ -23,8 +23,11 @@
 #include "RandomElection.h"
 
 #include "ResultFile.h"
+#if NO_DB
+#else
 #include "DBResultFile.h"
 #include "ThreadSafeDBRF.h"
+#endif
 #include "WorkQueue.h"
 #include "workQThread.h"
 
@@ -76,8 +79,10 @@ int main( int argc, char** argv ) {
     Steps* stepq = NULL;
     VoterSim* s;
     workQThread** wqts;
-    DBResultFile* drf = NULL;
+    ResultFile* drf = NULL;
+#if !NO_DB
     char* drfname = NULL;
+#endif
     NameBlock nb;
     int j = 0, i;
     int nsys;
@@ -96,8 +101,20 @@ int main( int argc, char** argv ) {
 			argv[j] = argv[i];
 		}
 		if ( ! strcmp( argv[i], "-F" ) ) {
+#if NO_DB
+			fprintf(stderr, "database result file compiled out\n");
+			exit(1);
+#else
 			i++;
 			drfname = argv[i];
+#endif
+		} else if ( ! strcmp( argv[i], "--textout" ) ) {
+			i++;
+			drf = TextDumpResultFile::open(argv[i]);
+			if (drf == NULL) {
+				fprintf(stderr, "error: could not process \"--textout %s\"\n", argv[i]);
+				exit(1);
+			}
 		} else if ( ! strcmp( argv[i], "-Mef" ) ) {
 			i++;
 			systemList = systemsFromDescFile( argv[i], methodArgs, MAX_METHOD_ARGS, systemList );
@@ -187,6 +204,7 @@ int main( int argc, char** argv ) {
 	}
 	votingSystemArrayToNameBlock( &nb, systems, nsys );
 	
+#if !NO_DB
     if ( drfname != NULL ) {
 		printf("opening result db \"%s\"...", drfname );
 		if ( numThreads == 1 ) {
@@ -196,11 +214,16 @@ int main( int argc, char** argv ) {
 		}
 		if ( drf ) {
 			printf("success\n");
-			drf->useNames( &nb );
 		} else {
 			printf("failed\n");
 		}
     }
+#endif
+    if (drf == NULL) {
+      fprintf(stderr, "error, no result output configured\n");
+      exit(1);
+    }
+	drf->useNames( &nb );
     
     signal( SIGINT, mysigint );
     
@@ -254,5 +277,10 @@ int main( int argc, char** argv ) {
 		goGently = 0;
 		while ( ! goGently ) {}
     }
+#if 1
+	fprintf(stderr, "%d Condorcet elections run, %d without cycle (%f%% have cycles)\n",
+			Condorcet::electionsRun, Condorcet::simpleElections,
+			100.0 - ((Condorcet::simpleElections * 100.0) / Condorcet::electionsRun));
+#endif
     return 0;
 }

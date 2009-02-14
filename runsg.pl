@@ -15,6 +15,15 @@ $world = "-px 400 -py 400 -n 4 -minx -1 -miny -1 -maxx 1 -maxy 1 -Z 1.0 -v 10000
 ["4c","-c -0.20,0.14 -c -0.68,0.08 -c -0.90,0.24 -c 0.82,0.40"],
 );
 
+if ( -f "candlist" ) {
+  open FIN, '<', "candlist";
+  @candsets = ();
+  while ($line = <FIN>) {
+    $line =~ s/[\r\n]*$//g;
+    @a = split( /\t/, $line );
+    push @candsets, [@a];
+  }
+}
 $noreplace = 0;
 
 # true if a newerthan b, or b doesn't exist

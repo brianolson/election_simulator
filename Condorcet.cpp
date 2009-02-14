@@ -96,6 +96,9 @@ void runBeatpath( const unsigned int* talley, unsigned int* bpm, int numc, int d
 #endif
 }
 
+int Condorcet::electionsRun = 0;
+int Condorcet::simpleElections = 0;
+
 void Condorcet::runElection( int* winnerR, const VoterArray& they ) {
     int i;
     unsigned int* talley;
@@ -103,6 +106,8 @@ void Condorcet::runElection( int* winnerR, const VoterArray& they ) {
     int numc = they.numc;
     int numv = they.numv;
     
+	electionsRun++;
+	
     // init things
     // talley is a matrix of who beats who
     talley = new unsigned int[numc*numc];
@@ -164,6 +169,7 @@ void Condorcet::runElection( int* winnerR, const VoterArray& they ) {
         for ( j = 0; j < numc; j++ ) {
 	    if ( defeatCount[j] == 0 ) {
 		winner = j;
+			simpleElections++;
 		break;
 	    }
 	}

@@ -13,6 +13,7 @@ class NameBlock;
 class VotingSystem;
 class WorkSource;
 class Strategy;
+class ResultFile;
 
 class VoterSim {
 public:
@@ -28,6 +29,8 @@ public:
 #endif
     void run( Result* );
     void runNoPrintcrap( Result* r );
+    void run( ResultFile* drf, NameBlock& nb );
+    void runFromWorkQueue( ResultFile* drf, NameBlock& nb, WorkSource* q );
 
     double** happiness;	// double[nsys][trials]
     double* happisum;	// double[nsys]

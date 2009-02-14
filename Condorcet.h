@@ -10,6 +10,9 @@ public:
     Condorcet( const char* n )
      : RankedVotePickOne( n ){};
     virtual void runElection( int* winnerR, const VoterArray& they );
+	
+	static int electionsRun;
+	static int simpleElections;
 };
 
 #endif

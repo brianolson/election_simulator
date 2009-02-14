@@ -287,8 +287,7 @@ void VoterSim::runSteps( DBResultFile* drf, NameBlock& nb ) {
 }
 #endif
 
-#ifndef NO_DB
-void VoterSim::runFromWorkQueue( DBResultFile* drf, NameBlock& nb, WorkSource* q ) {
+void VoterSim::runFromWorkQueue( ResultFile* drf, NameBlock& nb, WorkSource* q ) {
     WorkUnit* wu;
     while ( (wu = q->newWorkUnit()) != NULL ) {
 	numv = wu->numv;
@@ -308,7 +307,7 @@ void VoterSim::runFromWorkQueue( DBResultFile* drf, NameBlock& nb, WorkSource* q
     }
 }
 
-void VoterSim::run( DBResultFile* drf, NameBlock& nb ) {
+void VoterSim::run( ResultFile* drf, NameBlock& nb ) {
     Result* r = NULL;
     Result* nr = NULL;
 
@@ -389,7 +388,6 @@ void VoterSim::run( DBResultFile* drf, NameBlock& nb ) {
     }
     free( nr );
 }
-#endif /* ! NO_DB */
 
 #if 0
 /* This "optimization" of running all the happinesses at once turns out to be slower. */

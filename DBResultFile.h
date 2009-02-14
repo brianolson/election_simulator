@@ -11,7 +11,7 @@
 
 #include <sys/types.h>
 
-class DBResultFile {
+class DBResultFile : public ResultFile {
 public:
     static DBResultFile* open( const char* filename );
     static DBResultFile* open( const char* filename, int flags );

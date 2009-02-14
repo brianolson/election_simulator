@@ -71,5 +71,51 @@ void votingSystemArrayToNameBlock( NameBlock* ret, VotingSystem** systems, int n
 void parseNameBlock( NameBlock* it );
 void makeBlock( NameBlock* names );
 
-#endif
+class ResultFile {
+ public:
+    virtual ~ResultFile();
 
+    /**
+     * malloc()s. caller's responsibility.
+     */
+    virtual Result* get( int choices, int voters, float error ) = 0;
+
+  // Does not take ownership of it, copies if needed.
+    virtual int put( Result* it, int choices, int voters, float error ) = 0;
+
+    virtual int close() = 0;
+    virtual int flush() = 0;
+
+    virtual int useNames( const NameBlock* namesIn ) = 0;
+
+    virtual int useStrategyNames( const NameBlock* namesIn ) = 0;
+};
+
+class TextDumpResultFile : public ResultFile {
+ protected:
+    TextDumpResultFile();
+
+  // secretly FILE*
+    void* f;
+	const NameBlock* names;
+ public:
+    static TextDumpResultFile* open(const char* filename);
+    virtual ~TextDumpResultFile();
+
+    /**
+     * This implementation always returns NULL. put-only.
+     */
+    virtual Result* get( int choices, int voters, float error );
+
+  // Does not take ownership of it, copies if needed.
+    virtual int put( Result* it, int choices, int voters, float error );
+
+    virtual int close();
+    virtual int flush();
+
+    virtual int useNames( const NameBlock* namesIn );
+
+    virtual int useStrategyNames( const NameBlock* namesIn );
+};
+
+#endif

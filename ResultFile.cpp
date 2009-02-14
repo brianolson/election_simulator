@@ -145,3 +145,62 @@ void printResultFooter( void* file, u_int32_t numc, u_int32_t numv, u_int32_t tr
         fprintf( f, "<tr><th>Name</th><th>Avg. Happiness<br>(higher better)</th><th>Reliability Std.<br>(lower better)</th><th>Consensus Std.<br>(lower better)</th><th>Gini Index<br>(lower better)</th></tr></table>\n" );
     }
 }
+
+ResultFile::~ResultFile() {
+}
+
+TextDumpResultFile::TextDumpResultFile() : f(NULL), names(NULL) {
+}
+TextDumpResultFile* TextDumpResultFile::open(const char* filename) {
+	FILE* f = fopen(filename, "a");
+	if (f == NULL) {
+		perror(filename);
+		return NULL;
+	}
+	TextDumpResultFile* out = new TextDumpResultFile();
+	out->f = f;
+	return out;
+}
+TextDumpResultFile::~TextDumpResultFile() {
+	close();
+}
+
+/**
+ * This implementation always returns NULL. put-only.
+ */
+Result* TextDumpResultFile::get( int choices, int voters, float error ) {
+	return NULL;
+}
+
+// Does not take ownership of it, copies if needed.
+int TextDumpResultFile::put(Result* it, int choices, int voters, float error) {
+	printResultHeader(f, choices, voters, it->trials, error, /*nsys*/0, smallBasic);
+	printResult(f, it, (names == NULL) ? NULL : names->names, smallBasic);
+	return 0;
+}
+
+int TextDumpResultFile::close() {
+	int err = 0;
+	if (f != NULL) {
+		err = fclose((FILE*)f);
+		f = NULL;
+		if (err < 0) {
+			perror("TextDumpResultFile::~TextDumpResultFile");
+		}
+	}
+	return err;
+}
+int TextDumpResultFile::flush() {
+	fflush((FILE*)f);
+	return 0;
+}
+
+int TextDumpResultFile::useNames( const NameBlock* namesIn ) {
+	names = namesIn;
+	return 0;
+}
+
+int TextDumpResultFile::useStrategyNames( const NameBlock* namesIn ) {
+	fprintf(stderr, "%s:%d %s\n", __FILE__, __LINE__, __FUNCTION__);
+	return -1;
+}

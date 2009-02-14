@@ -2,7 +2,7 @@
 #define WORK_QTHREAD_H
 
 class VoterSim;
-class DBResultFile;
+class ResultFile;
 class NameBlock;
 class WorkSource;
 
@@ -12,19 +12,19 @@ class WorkSource;
 class workQThread {
 public:
     VoterSim* sim;
-    DBResultFile* drf;
+    ResultFile* drf;
     NameBlock* nb;
     WorkSource* q;
     pthread_t thread;
     
-    workQThread( VoterSim* s, DBResultFile* d, NameBlock* n, WorkSource* q );
+    workQThread( VoterSim* s, ResultFile* d, NameBlock* n, WorkSource* q );
 };
 static void* workQThreadProc( void* a ) {
     workQThread* me = (workQThread*)a;
     me->sim->runFromWorkQueue( me->drf, *(me->nb), me->q );
     return NULL;
 }
-workQThread::workQThread( VoterSim* s, DBResultFile* d, NameBlock* n, WorkSource* qIn )
+workQThread::workQThread( VoterSim* s, ResultFile* d, NameBlock* n, WorkSource* qIn )
 : sim( s ), drf( d ), nb( n ), q( qIn )
 {
     pthread_create( &thread, NULL, workQThreadProc, this );

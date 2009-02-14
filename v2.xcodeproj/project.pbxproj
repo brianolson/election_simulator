@@ -31,8 +31,6 @@
 		1F5ECE2305E5E87E00994248 /* AcceptanceVotePickOne.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0405E5E87E00994248 /* AcceptanceVotePickOne.h */; };
 		1F5ECE2405E5E87E00994248 /* Condorcet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0505E5E87E00994248 /* Condorcet.cpp */; };
 		1F5ECE2505E5E87E00994248 /* Condorcet.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0605E5E87E00994248 /* Condorcet.h */; };
-		1F5ECE2605E5E87E00994248 /* DBResultFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0705E5E87E00994248 /* DBResultFile.cpp */; };
-		1F5ECE2705E5E87E00994248 /* DBResultFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0805E5E87E00994248 /* DBResultFile.h */; };
 		1F5ECE2805E5E87E00994248 /* FuzzyVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0905E5E87E00994248 /* FuzzyVotePickOne.cpp */; };
 		1F5ECE2905E5E87E00994248 /* FuzzyVotePickOne.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0A05E5E87E00994248 /* FuzzyVotePickOne.h */; };
 		1F5ECE2A05E5E87E00994248 /* InstantRunoffVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0B05E5E87E00994248 /* InstantRunoffVotePickOne.cpp */; };
@@ -108,6 +106,29 @@
 		1FF4BBA10B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */; };
 		1FF4BBA20B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */; };
 		1FF4BBA30B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */; };
+		3286DBF20F4688E00059D26D /* DBResultFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0805E5E87E00994248 /* DBResultFile.h */; };
+		3286DBF30F4688E10059D26D /* DBResultFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0705E5E87E00994248 /* DBResultFile.cpp */; };
+		3286DBF40F4688E70059D26D /* AcceptanceVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0305E5E87E00994248 /* AcceptanceVotePickOne.cpp */; };
+		3286DBF50F4688EF0059D26D /* ApprovalNoInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */; };
+		3286DBF60F4688EF0059D26D /* ApprovalWithPoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */; };
+		3286DBF70F4688F10059D26D /* Condorcet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0505E5E87E00994248 /* Condorcet.cpp */; };
+		3286DBF80F4688F20059D26D /* FuzzyVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0905E5E87E00994248 /* FuzzyVotePickOne.cpp */; };
+		3286DBF90F4688F70059D26D /* InstantRunoffVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0B05E5E87E00994248 /* InstantRunoffVotePickOne.cpp */; };
+		3286DBFA0F4688F90059D26D /* IRNR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0D05E5E87E00994248 /* IRNR.cpp */; };
+		3286DBFB0F4689050059D26D /* OneVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0F05E5E87E00994248 /* OneVotePickOne.cpp */; };
+		3286DBFC0F4689080059D26D /* RandomElection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1105E5E87E00994248 /* RandomElection.cpp */; };
+		3286DBFD0F46890B0059D26D /* RankedVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1305E5E87E00994248 /* RankedVotePickOne.cpp */; };
+		3286DBFE0F46890E0059D26D /* ResultFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1505E5E87E00994248 /* ResultFile.cpp */; };
+		3286DBFF0F4689170059D26D /* VoteForAndAgainst.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F2AAFC50B339C8200AFA56C /* VoteForAndAgainst.cpp */; };
+		3286DC000F46891B0059D26D /* voter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1905E5E87E00994248 /* voter.cpp */; };
+		3286DC010F46891D0059D26D /* voter_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB5A15B05F022B4009ACE7D /* voter_main.cpp */; settings = {COMPILER_FLAGS = "-DNO_DB"; }; };
+		3286DC020F4689250059D26D /* VoterArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1B05E5E87E00994248 /* VoterArray.cpp */; };
+		3286DC030F4689260059D26D /* VoterSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1D05E5E87E00994248 /* VoterSim.cpp */; };
+		3286DC040F4689280059D26D /* WorkQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE2005E5E87E00994248 /* WorkQueue.cpp */; };
+		3286DC0A0F46896C0059D26D /* IteratedNormalizedRatings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3286DC090F46896C0059D26D /* IteratedNormalizedRatings.cpp */; };
+		3286DC0B0F46896C0059D26D /* IteratedNormalizedRatings.h in Headers */ = {isa = PBXBuildFile; fileRef = 3286DC080F46896C0059D26D /* IteratedNormalizedRatings.h */; };
+		3286DC0C0F46896C0059D26D /* IteratedNormalizedRatings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3286DC090F46896C0059D26D /* IteratedNormalizedRatings.cpp */; };
+		3286DC0D0F46896C0059D26D /* IteratedNormalizedRatings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3286DC090F46896C0059D26D /* IteratedNormalizedRatings.cpp */; };
 		32E9DA2F0D651BD900EC3419 /* libpng.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E9DA2E0D651BD900EC3419 /* libpng.dylib */; };
 		32E9DA340D651C3600EC3419 /* gauss.c in Sources */ = {isa = PBXBuildFile; fileRef = 32E9DA330D651C3600EC3419 /* gauss.c */; };
 		8DD76F6A0486A84900D96B5E /* v2.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6859E8B029090EE04C91782 /* v2.1 */; };
@@ -174,6 +195,9 @@
 		1FF4BB720B33763C00B5D49D /* ApprovalNoInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ApprovalNoInfo.h; sourceTree = "<group>"; };
 		1FF4BB9D0B33961700B5D49D /* ApprovalWithPoll.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ApprovalWithPoll.h; sourceTree = "<group>"; };
 		1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ApprovalWithPoll.cpp; sourceTree = "<group>"; };
+		3286DBE70F4636010059D26D /* vsmall */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = vsmall; sourceTree = BUILT_PRODUCTS_DIR; };
+		3286DC080F46896C0059D26D /* IteratedNormalizedRatings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IteratedNormalizedRatings.h; sourceTree = "<group>"; };
+		3286DC090F46896C0059D26D /* IteratedNormalizedRatings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IteratedNormalizedRatings.cpp; sourceTree = "<group>"; };
 		32E9DA2E0D651BD900EC3419 /* libpng.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng.dylib; path = /usr/local/lib64/libpng.dylib; sourceTree = "<absolute>"; };
 		32E9DA330D651C3600EC3419 /* gauss.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gauss.c; sourceTree = "<group>"; };
 		8DD76F6C0486A84900D96B5E /* v2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = v2; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -186,6 +210,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				32E9DA2F0D651BD900EC3419 /* libpng.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3286DBE50F4636010059D26D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +267,8 @@
 				1F5ECE0905E5E87E00994248 /* FuzzyVotePickOne.cpp */,
 				1F5ECE0A05E5E87E00994248 /* FuzzyVotePickOne.h */,
 				32E9DA330D651C3600EC3419 /* gauss.c */,
+				3286DC080F46896C0059D26D /* IteratedNormalizedRatings.h */,
+				3286DC090F46896C0059D26D /* IteratedNormalizedRatings.cpp */,
 				1F5ECE0B05E5E87E00994248 /* InstantRunoffVotePickOne.cpp */,
 				1F5ECE0C05E5E87E00994248 /* InstantRunoffVotePickOne.h */,
 				1F5ECE0D05E5E87E00994248 /* IRNR.cpp */,
@@ -278,6 +311,7 @@
 				8DD76F6C0486A84900D96B5E /* v2 */,
 				1FB5A12A05F016E5009ACE7D /* nnsv */,
 				1F21107B09FD250100B5C0AB /* spacegraph */,
+				3286DBE70F4636010059D26D /* vsmall */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -327,7 +361,6 @@
 			files = (
 				1F5ECE2305E5E87E00994248 /* AcceptanceVotePickOne.h in Headers */,
 				1F5ECE2505E5E87E00994248 /* Condorcet.h in Headers */,
-				1F5ECE2705E5E87E00994248 /* DBResultFile.h in Headers */,
 				1F5ECE2905E5E87E00994248 /* FuzzyVotePickOne.h in Headers */,
 				1F5ECE2B05E5E87E00994248 /* InstantRunoffVotePickOne.h in Headers */,
 				1F5ECE2D05E5E87E00994248 /* IRNR.h in Headers */,
@@ -345,6 +378,8 @@
 				1FF4BB730B33763C00B5D49D /* ApprovalNoInfo.h in Headers */,
 				1FF4BB9E0B33961700B5D49D /* ApprovalWithPoll.h in Headers */,
 				1F2AAFC90B339C8200AFA56C /* VoteForAndAgainst.h in Headers */,
+				3286DBF20F4688E00059D26D /* DBResultFile.h in Headers */,
+				3286DC0B0F46896C0059D26D /* IteratedNormalizedRatings.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,6 +418,22 @@
 			productReference = 1FB5A12A05F016E5009ACE7D /* nnsv */;
 			productType = "com.apple.product-type.tool";
 		};
+		3286DBE60F4636010059D26D /* vsmall */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3286DBEF0F4636060059D26D /* Build configuration list for PBXNativeTarget "vsmall" */;
+			buildPhases = (
+				3286DBE40F4636010059D26D /* Sources */,
+				3286DBE50F4636010059D26D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = vsmall;
+			productName = vsmall;
+			productReference = 3286DBE70F4636010059D26D /* vsmall */;
+			productType = "com.apple.product-type.tool";
+		};
 		8DD76F620486A84900D96B5E /* v2 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F0129000A27F7E000B0A401 /* Build configuration list for PBXNativeTarget "v2" */;
@@ -418,6 +469,7 @@
 				8DD76F620486A84900D96B5E /* v2 */,
 				1FB5A12905F016E5009ACE7D /* nnsv */,
 				1F21107A09FD250100B5C0AB /* spacegraph */,
+				3286DBE60F4636010059D26D /* vsmall */,
 			);
 		};
 /* End PBXProject section */
@@ -455,6 +507,7 @@
 				1FF4BBA10B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */,
 				1F2AAFC70B339C8200AFA56C /* VoteForAndAgainst.cpp in Sources */,
 				32E9DA340D651C3600EC3419 /* gauss.c in Sources */,
+				3286DC0D0F46896C0059D26D /* IteratedNormalizedRatings.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -486,13 +539,37 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3286DBE40F4636010059D26D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3286DBF40F4688E70059D26D /* AcceptanceVotePickOne.cpp in Sources */,
+				3286DBF50F4688EF0059D26D /* ApprovalNoInfo.cpp in Sources */,
+				3286DBF60F4688EF0059D26D /* ApprovalWithPoll.cpp in Sources */,
+				3286DBF70F4688F10059D26D /* Condorcet.cpp in Sources */,
+				3286DBF80F4688F20059D26D /* FuzzyVotePickOne.cpp in Sources */,
+				3286DBF90F4688F70059D26D /* InstantRunoffVotePickOne.cpp in Sources */,
+				3286DBFA0F4688F90059D26D /* IRNR.cpp in Sources */,
+				3286DBFB0F4689050059D26D /* OneVotePickOne.cpp in Sources */,
+				3286DBFC0F4689080059D26D /* RandomElection.cpp in Sources */,
+				3286DBFD0F46890B0059D26D /* RankedVotePickOne.cpp in Sources */,
+				3286DBFE0F46890E0059D26D /* ResultFile.cpp in Sources */,
+				3286DBFF0F4689170059D26D /* VoteForAndAgainst.cpp in Sources */,
+				3286DC000F46891B0059D26D /* voter.cpp in Sources */,
+				3286DC010F46891D0059D26D /* voter_main.cpp in Sources */,
+				3286DC020F4689250059D26D /* VoterArray.cpp in Sources */,
+				3286DC030F4689260059D26D /* VoterSim.cpp in Sources */,
+				3286DC040F4689280059D26D /* WorkQueue.cpp in Sources */,
+				3286DC0A0F46896C0059D26D /* IteratedNormalizedRatings.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DD76F640486A84900D96B5E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				1F5ECE2205E5E87E00994248 /* AcceptanceVotePickOne.cpp in Sources */,
 				1F5ECE2405E5E87E00994248 /* Condorcet.cpp in Sources */,
-				1F5ECE2605E5E87E00994248 /* DBResultFile.cpp in Sources */,
 				1F5ECE2805E5E87E00994248 /* FuzzyVotePickOne.cpp in Sources */,
 				1F5ECE2A05E5E87E00994248 /* InstantRunoffVotePickOne.cpp in Sources */,
 				1F5ECE2C05E5E87E00994248 /* IRNR.cpp in Sources */,
@@ -511,6 +588,8 @@
 				1FF4BB670B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */,
 				1FF4BBA20B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */,
 				1F2AAFC80B339C8200AFA56C /* VoteForAndAgainst.cpp in Sources */,
+				3286DBF30F4688E10059D26D /* DBResultFile.cpp in Sources */,
+				3286DC0C0F46896C0059D26D /* IteratedNormalizedRatings.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -767,6 +846,54 @@
 			};
 			name = Default;
 		};
+		3286DBE90F4636020059D26D /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "ppc i386 ppc64 x86_64";
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = vsmall;
+			};
+			name = Development;
+		};
+		3286DBEA0F4636020059D26D /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "ppc i386 ppc64 x86_64";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = vsmall;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		3286DBEB0F4636020059D26D /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "ppc i386 ppc64 x86_64";
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = vsmall;
+			};
+			name = Default;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -806,6 +933,16 @@
 				1F01290D0A27F7E000B0A401 /* Development */,
 				1F01290E0A27F7E000B0A401 /* Deployment */,
 				1F01290F0A27F7E000B0A401 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3286DBEF0F4636060059D26D /* Build configuration list for PBXNativeTarget "vsmall" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3286DBE90F4636020059D26D /* Development */,
+				3286DBEA0F4636020059D26D /* Deployment */,
+				3286DBEB0F4636020059D26D /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;

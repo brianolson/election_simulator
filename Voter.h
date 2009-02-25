@@ -99,18 +99,24 @@ public:
 	return *(they + i);
     };
 	
+	// preferences for each voter are numc independent uniform random variables from -1..1
+	void randomize();
+
 	// place the voters in N-dimensional space, uniformly distributed within a -1..1 N-cube.
 	// choicePositions is interpreted as 2D, [choice one x, y, z, ...][choice two x, y, z, ...]...
 	// center can be NULL or double[dimensions] defining the center of the N-cube.
 	// scale multiplies each position to change the size of the N-cube.
 	// prefenece for a choice is (approvalDistance - voter_choice_distance)
-	void randomizeNSpace(int dimensions, double* choicePositions, double* center, double scale, double approvalDistance);
+	void randomizeNSpace(int dimensions, double* choicePositions, double* center = NULL, double scale = 1.0, double approvalDistance = 0.5);
 
 	// place the voters in N-dimensional space, uniformly distributed within a gaussian distribution.
 	// choicePositions is interpreted as 2D, [choice one x, y, z, ...][choice two x, y, z, ...]...
 	// center can be NULL or double[dimensions] defining the center of the N-cube.
 	// prefenece for a choice is (sigma - voter_choice_distance)
-	void randomizeGaussianNSpace(int dimensions, double* choicePositions, double* center, double sigma);
+	void randomizeGaussianNSpace(int dimensions, double* choicePositions, double* center = NULL, double sigma = 1.0);
+
+	// poisitions is written into, must be allocated double[numc*dimensions]
+	static void randomGaussianChoicePositions(double* positions, int numc, int dimensions, double sigma = 1.0);
 };
 
 void voterDump( char* voteDumpFilename, const VoterArray& they, int numv, int numc );

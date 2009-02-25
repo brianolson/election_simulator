@@ -1,4 +1,5 @@
 #include "VoterSim.h"
+#include <assert.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
@@ -101,7 +102,9 @@ VoterSim::VoterSim()
     resultDump( NULL ), resultDumpHtml( NULL ),
     tweValid( false ), summary( basic ),
     resultDumpHtmlVertical( 0 ), winners( NULL ),
-    upToTrials( 0 ), strategies( NULL ), numStrat( 0 )
+    upToTrials( 0 ), strategies( NULL ), numStrat( 0 ),
+	preferenceMode(NSPACE_GAUSSIAN_PREFERENCES),
+	dimensions(3)
 {
 }
 VoterSim::~VoterSim() {
@@ -115,121 +118,135 @@ VoterSim::~VoterSim() {
     if ( happiness != NULL ) delete [] happiness;
 }
 
-char optstring[] = "c:D:d:e:F:H:h:L:l:n:N:qPR:rsS:v:";
+//char optstring[] = "c:D:d:e:F:H:h:L:l:n:N:qPR:rsS:v:";
 
 
 int VoterSim::init( int argc, char** argv ) {
-    int c;
     int sys;
-    extern char* optarg;
-    extern int optind;
-#if HAVE_OPT_RESET
-    extern int optreset;
-    
-    optreset = 1;
-#endif
-    optind = 1;
-    
-    while ( (c = getopt(argc,argv,optstring)) != -1 ) switch ( c ) {
-    case 'v':	// number of voters
-        numv = atoi( optarg );
-        break;
-    case 'n':	// number of trials
-        trials = atoi( optarg );
-        break;
-    case 'N':	// number of trials
-        upToTrials = atoi( optarg );
-        break;
-    case 'c':	// number of candidates
-        numc = atoi( optarg );
-        break;
-    case 'P':	// print all voters for each trial
-        printVoters = ! printVoters;
-        break;
-    case 'r':	// print results for all trails (not just summary)
-        printAllResults = ! printAllResults;
-        break;
-    case 'R':	// result dump
-	resultDump = fopen( optarg, "w" );
-	if ( resultDump == NULL ) {
-	    perror( argv[0] );
-	    fprintf( stderr, "opening result dump file \"%s\" failed\n", optarg );
+	int i = 1;
+	while (i < argc) {
+		if (argv[i][0] == '-') {
+			switch (argv[i][1]) {
+				case 'v':	// number of voters
+					++i;
+					numv = atoi(argv[i]);
+					break;
+				case 'n':	// number of trials
+					++i;
+					trials = atoi(argv[i]);
+					break;
+				case 'N':	// number of trials
+					++i;
+					upToTrials = atoi(argv[i]);
+					break;
+				case 'c':	// number of candidates
+					++i;
+					numc = atoi(argv[i]);
+					break;
+				case 'P':	// print all voters for each trial
+					printVoters = ! printVoters;
+					break;
+				case 'r':	// print results for all trails (not just summary)
+					printAllResults = ! printAllResults;
+					break;
+				case 'R':	// result dump
+					++i;
+					resultDump = fopen( argv[i], "w" );
+					if ( resultDump == NULL ) {
+						perror( argv[0] );
+						fprintf( stderr, "opening result dump file \"%s\" failed\n", argv[i]);
+					}
+					break;
+				case 'H':	// result dump html
+					resultDumpHtmlVertical = 1;
+				case 'h':	// result dump html
+					++i;
+					resultDumpHtml = fopen( argv[i], "w" );
+					if ( resultDumpHtml == NULL ) {
+						perror( argv[0] );
+						fprintf( stderr, "opening html result dump file \"%s\" failed\n", argv[i] );
+					}
+					break;
+				case 'e':	// apply error to voter preferences
+					doError = true;
+					++i;
+					confusionError = atof( argv[i] );
+					if ( confusionError < 0.0 ) {
+						confusionError *= -1.0;
+					}
+					if ( ! (confusionError <= 2.0) ) {
+						confusionError = 2.0;
+					}
+					break;
+				case 'D':	// dump voters, binary
+					++i;
+					voterBinDumpPrefix = argv[i];
+					voterBinDumpPrefixLen = strlen(voterBinDumpPrefix);
+					break;
+				case 'd':	// dump voters, text
+					++i;
+					voterDumpPrefix = argv[i];
+					voterDumpPrefixLen = strlen(voterDumpPrefix);
+					break;
+				case 'L': {	// load voters, binary
+					++i;
+					FILE* fin = fopen( argv[i], "r" );
+					if ( !fin ) {
+						perror( argv[i] );
+						break;
+					}
+					fread( &numv, sizeof(numv), 1, fin );
+					fread( &numc, sizeof(numc), 1, fin );
+					they.build( numv, numc );
+					for ( int v = 0; v < numv; v++ ) {
+						they[v].read( fin, numc );
+					}
+					fclose( fin );
+					trials = 1;
+				}	break;
+				case 'l': {	// load voters, text
+					++i;
+					FILE* fin = fopen( argv[i], "r" );
+					if ( !fin ) {
+						perror( argv[i] );
+						break;
+					}
+					fscanf( fin, "%d", &numv );
+					fscanf( fin, "%d", &numc );
+					they.build( numv, numc );
+					for ( int v = 0; v < numv; v++ ) {
+						they[v].undump( fin, numc );
+					}
+					fclose( fin );
+					trials = 1;
+				}	break;
+				case 'q':	// quiet, no summary
+					summary = noPrint;
+					break;
+				case 's':	// enable strategies
+					numStrat = 3;
+					strategies = new Strategy*[numStrat];
+					strategies[0] = new Maximize();
+					strategies[2] = new Favorite();
+					strategies[1] = new Strategy();
+					break;
+				case 'S':	// summary style
+					++i;
+					summary = (printStyle)atoi( argv[i] );
+					break;
+				case '-':
+					break;
+				default:
+					printf("unknown option \'%s\'\n", argv[i] );
+					return -1;
+			}
+		} else {
+			printf("unknown option \'%s\'\n", argv[i] );
+			return -1;
+		}
+		++i;
 	}
-	break;
-    case 'H':	// result dump html
-	resultDumpHtmlVertical = 1;
-    case 'h':	// result dump html
-	resultDumpHtml = fopen( optarg, "w" );
-	if ( resultDumpHtml == NULL ) {
-	    perror( argv[0] );
-	    fprintf( stderr, "opening html result dump file \"%s\" failed\n", optarg );
-	}
-	break;
-    case 'e':	// apply error to voter preferences
-        doError = true;
-        confusionError = atof( optarg );
-        if ( confusionError < 0.0 ) {
-            confusionError *= -1.0;
-        }
-        if ( ! (confusionError <= 2.0) ) {
-            confusionError = 2.0;
-        }
-        break;
-    case 'D':	// dump voters, binary
-	voterBinDumpPrefix = optarg;
-	voterBinDumpPrefixLen = strlen(voterBinDumpPrefix);
-	break;
-    case 'd':	// dump voters, text
-	voterDumpPrefix = optarg;
-	voterDumpPrefixLen = strlen(voterDumpPrefix);
-	break;
-    case 'L': {	// load voters, binary
-	FILE* fin = fopen( optarg, "r" );
-	if ( !fin ) {
-	    perror( optarg );
-	    break;
-	}
-	fread( &numv, sizeof(numv), 1, fin );
-	fread( &numc, sizeof(numc), 1, fin );
-	they.build( numv, numc );
-	for ( int v = 0; v < numv; v++ ) {
-	    they[v].read( fin, numc );
-	}
-	fclose( fin );
-	trials = 1;
-    }	break;
-    case 'l': {	// load voters, text
-	FILE* fin = fopen( optarg, "r" );
-	if ( !fin ) {
-	    perror( optarg );
-	    break;
-	}
-	fscanf( fin, "%d", &numv );
-	fscanf( fin, "%d", &numc );
-	they.build( numv, numc );
-	for ( int v = 0; v < numv; v++ ) {
-	    they[v].undump( fin, numc );
-	}
-	fclose( fin );
-	trials = 1;
-    }	break;
-    case 'q':	// quiet, no summary
-	summary = noPrint;
-	break;
-    case 's':	// enable strategies
-	numStrat = 3;
-	strategies = new Strategy*[numStrat];
-	strategies[0] = new Maximize();
-	strategies[2] = new Favorite();
-	strategies[1] = new Strategy();
-	break;
-    case 'S':	// summary style
-	summary = (printStyle)atoi( optarg );
-	break;
-    default:
-	printf("unknown option \'%c\'\n", c );
-    }
-    
+
     if ( winners != NULL ) delete [] winners;
     winners = new int[numc*nsys];
 
@@ -428,94 +445,30 @@ void pickOneHappinessV( const VoterArray& they, int numv, int numc, int start, d
 }
 #endif
 
-#if 0
-void VoterSim::runNoPrintcrap( Result* r ) {
-    int i;
-    int sys;
-    if ( r == NULL ) {
-	return;
-    }
-    for ( sys = 0; sys < nsys; sys++ ) {
-        happisum[sys] = 0;
-        happistdsum[sys] = 0;
-    }
-    if ( doError || strategies ) {
-	theyWithError.build( numv, numc );
-	tweValid = true;
-    }
-    they.build( numv, numc );
-    for ( i = 0; i < trials; i++ ) {
-	if ( goGently ) return;
-	if ( trials != 1 ) {
-	    for ( int v = 0; v < numv; v++ ) {
-		they[v].randomize();
-	    }
-	}
-	if ( strategies ) {
-	    Voter tv(numc);
-	    int sti = 0;
-	    Strategy* st = strategies[sti++];
-	    int stlim = st->count;
-            for ( int v = 0; v < numv; v++ ) {
-		if ( doError ) {
-		    tv.setWithError( they[v], confusionError );
-		    theyWithError[v].set( tv, st );
-		} else {
-		    theyWithError[v].set( they[v], st );
-		}
-		if ( --stlim == 0 ) {
-		    st = strategies[sti++];
-		    stlim = st->count;
-		}
-	    }
-	} else if ( doError ) {
-            for ( int v = 0; v < numv; v++ ) {
-                theyWithError[v].setWithError( they[v], confusionError );
-            }
-        }
-        for ( sys = 0; sys < nsys; sys++ ) {
-	    double td;
-	    if ( goGently ) return;
-            if ( tweValid ) {
-                systems[sys]->runElection( winners, theyWithError );
-            } else {
-                systems[sys]->runElection( winners, they );
-            }
-            happisum[sys] += happiness[sys][i] = VotingSystem::pickOneHappiness( they, numv, *winners, &td );
-	    happistdsum[sys] += td;
-	    if ( strategies ) {
-		int stpos = 0;
-		for ( int st = 0; st < numStrat; st++ ) {
-		    strategies[st]->happisum[sys] += strategies[st]->happiness[sys][i] = VotingSystem::pickOneHappiness( they, strategies[st]->count, *winners, &td, stpos );
-		    stpos = strategies[st]->count;
-		    happistdsum[sys] += td;
-		}
-	    }
-        }
-	if ( i+1 < trials ) {
-            for ( int v = 0; v < numv; v++ ) {
-		they[v].randomize();
-	    }
-	}
-    }
-    unsigned int ttot = trials + r->trials;
-    for ( sys = 0; sys < nsys; sys++ ) {
-        double variance;
-	r->systems[sys].meanHappiness = (happisum[sys] + r->systems[sys].meanHappiness * r->trials) / ttot;
-	r->systems[sys].consensusStdAvg = (happistdsum[sys] + r->systems[sys].consensusStdAvg * r->trials) / ttot;
-	happistdsum[sys] /= trials;
-        variance = r->systems[sys].reliabilityStd * r->systems[sys].reliabilityStd * r->trials;
-        for ( i = 0; i < trials; i++ ) {
-            double d;
-            d = happiness[sys][i] - r->systems[sys].meanHappiness;
-            variance += d * d;
-        }
-	variance /= ttot;
-	r->systems[sys].reliabilityStd = sqrt( variance );
-    }
-    r->trials = ttot;
-}
-#endif
 void VoterSim::run( Result* r ) {
 #include "VoterSim_run.h"
+}
+
+void VoterSim::randomizeVoters() {
+	switch (preferenceMode) {
+		case INDEPENDENT_PREFERENCES:
+			they.randomize();
+			break;
+		case NSPACE_PREFERENCES: {
+			double* choicePositions = new double[numc*dimensions];
+			VoterArray::randomGaussianChoicePositions(choicePositions, numc, dimensions, 0.5);
+			they.randomizeNSpace(dimensions, choicePositions, NULL, 1.0, 0.5);
+			delete choicePositions;
+		}
+		case NSPACE_GAUSSIAN_PREFERENCES: {
+			double* choicePositions = new double[numc*dimensions];
+			VoterArray::randomGaussianChoicePositions(choicePositions, numc, dimensions, 0.5);
+			they.randomizeGaussianNSpace(dimensions, choicePositions, NULL, 1.0);
+			delete choicePositions;
+		}
+			break;
+		default:
+			assert(0);
+			break;
+	}
 }

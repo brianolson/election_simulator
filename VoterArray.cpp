@@ -43,6 +43,12 @@ void VoterArray::clear() {
     }
 }
 
+void VoterArray::randomize() {
+	for (int v = 0; v < numv; ++v) {
+		they[v].randomize();
+	}
+}
+
 // place the voters in N-dimensional space, uniformly distributed within a -1..1 N-cube.
 // choicePositions is interpreted as 2D, [choice one x, y, z, ...][choice two x, y, z, ...]...
 // center can be NULL or double[dimensions] defining the center of the N-cube.
@@ -99,4 +105,16 @@ void VoterArray::randomizeGaussianNSpace(int dimensions, double* choicePositions
 		}
 	}
 	delete dimholder;
+}
+
+// poisitions is written into, must be allocated double[numc*dimensions]
+// static
+void VoterArray::randomGaussianChoicePositions(double* positions, int numc, int dimensions, double sigma) {
+	struct random_gaussian_context gc = INITIAL_GAUSSIAN_CONTEXT;
+	for (int c = 0; c < numc; ++c) {
+		double* choiceCoords = positions + (c*dimensions);
+		for (int d = 0; d < dimensions; ++d) {
+			choiceCoords[d] = random_gaussian_r(&gc) * sigma;
+		}
+	}
 }

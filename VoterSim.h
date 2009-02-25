@@ -32,6 +32,9 @@ public:
     void run( ResultFile* drf, NameBlock& nb );
     void runFromWorkQueue( ResultFile* drf, NameBlock& nb, WorkSource* q );
 
+	// assign new random preferences to voters according to preferenceMode
+	void randomizeVoters();
+
     double** happiness;	// double[nsys][trials]
     double* happisum;	// double[nsys]
     double* ginisum;	// double[nsys]
@@ -62,6 +65,15 @@ public:
     unsigned int upToTrials;
     Strategy** strategies;
     int numStrat;
+	
+	enum {
+		BOGUS_PREFERENCE_MODE = 0,
+		INDEPENDENT_PREFERENCES = 1,
+		NSPACE_PREFERENCES = 2,
+		NSPACE_GAUSSIAN_PREFERENCES = 3,
+		PREFERENCE_MODE_LIMIT = 4,
+	} preferenceMode;
+	int dimensions;
 };
 
 #endif

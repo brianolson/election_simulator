@@ -43,9 +43,7 @@ they.build( numv, numc );
 for ( i = 0; i < trials; i++ ) {
     if ( goGently ) return;
     if ( trials != 1 ) {
-	for ( int v = 0; v < numv; v++ ) {
-	    they[v].randomize();
-	}
+		randomizeVoters();
     }
 #if (!defined(strategies)) || strategies
     if ( strategies ) {
@@ -181,7 +179,7 @@ for ( i = 0; i < trials; i++ ) {
     }
     if ( i+1 < trials ) {
 	for ( int v = 0; v < numv; v++ ) {
-	    they[v].randomize();
+	    randomizeVoters();
 	}
     }
 }

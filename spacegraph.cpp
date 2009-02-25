@@ -205,6 +205,18 @@ void PlaneSim::coBuild( const PlaneSim& it ) {
 }
 
 void PlaneSim::randomizeVoters( double centerx, double centery, double sigma ) {
+#if 1
+	double* candidatePositions = new double[they.numc * 2];
+	double center[2] = {
+		centerx, centery
+	};
+	for ( int c = 0; c < they.numc; c++ ) {
+		candidatePositions[c*2  ] = candidates[c].x;
+		candidatePositions[c*2+1] = candidates[c].y;
+	}
+	they.randomizeGaussianNSpace(2, candidatePositions, center, sigma);
+	delete candidatePositions;
+#else
 	for ( int i = 0; i < they.numv; i++ ) {
 		double tx, ty;
 		tx = (random_gaussian() * sigma) + centerx;
@@ -225,6 +237,7 @@ void PlaneSim::randomizeVoters( double centerx, double centery, double sigma ) {
 			}
 		}
 	}
+#endif
 }
 
 void PlaneSim::run( VotingSystem* system ) {

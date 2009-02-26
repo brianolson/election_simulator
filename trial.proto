@@ -1,0 +1,27 @@
+syntax = "proto2";
+
+// This is the parameter description and result of one simulated election.
+message TrialResult {
+	required int32 voters = 1;
+	required int32 choices = 2;
+	required float error = 3;
+	required int32 systemIndex = 4;
+	required int32 dimensions = 5;
+	
+	enum Model {
+		// this is in sync with VoterSim.h
+		//BOGUS_PREFERENCE_MODE = 0;
+		INDEPENDENT_PREFERENCES = 1;
+		NSPACE_PREFERENCES = 2;
+		NSPACE_GAUSSIAN_PREFERENCES = 3;
+	}
+	required Model voterModel = 6;
+	
+	required float meanHappiness = 7;
+	required float voterHappinessStdDev = 8;
+	required float giniIndex = 9;
+}
+
+message Systems {
+	repeated string names = 1;
+}

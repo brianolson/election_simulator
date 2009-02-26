@@ -91,6 +91,7 @@ class ResultFile {
     virtual int useStrategyNames( const NameBlock* namesIn ) = 0;
 };
 
+// A write-only Resultfile that just appends to a text file.
 class TextDumpResultFile : public ResultFile {
  protected:
     TextDumpResultFile();

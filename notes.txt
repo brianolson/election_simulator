@@ -1,0 +1,44 @@
+./spacegraph -c -0.20,0.14 -c -0.68,0.08 -c -0.90,0.24 -c 0.82,0.40 \
+-px 100 -py 100 -n 1 \
+-minx -1 -miny -1 -maxx 1 -maxy 1 \
+-Z 1.0 -v 1000 --threads 2 \
+--method IRV \
+-o /tmp/sg.png && \
+open /tmp/sg.png
+
+./vsmall --textout oat --ngauss --dimensions 3 --vsteps "100 1000" --csteps "5 10" --esteps 0.0 --threads 1 -n 1000
+
+parameters:
+voters
+choices
+error
+system
+dimensions
+voter_model {nguass,nflat,indep}
+number of elections to run
+
+per-trial results:
+happiness
+inter-voter happiness std deviation
+Gini Index
+
+per-run results:
+number of elections run
+mean happiness
+inter-trial happiness std deviation
+mean intra-trial inter-voter happiness std deviation
+mean Gini Index
+
+store all per-trial data?
+vsteps*csteps*esteps*systems*{dimension-voter-model-combos}*trials
+--vesteps "100 1000 10000"
+--csteps "2 3 4 5 6 7 8 9 11 14 18 22 27 34 43"
+--esteps "0.00 0.01 0.02 0.03 0.04 0.06 0.09 0.12 0.17 0.25 0.35 0.50 0.71 1.00 1.41 2.00"
+{(nflat,3),(nflat,5),(nflat,7),(nguass,3),(nguass,5),(nguass,7),indep}
+10000
+
+3*15*16*7*10000
+=50400000 elections
+50_400_000
+
+int32,int32,float32,int32,int32,int32, float32,float32,float32

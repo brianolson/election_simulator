@@ -41,39 +41,42 @@ void mysigint( int a ) {
 #define MAX_METHOD_ARGS 64
 #endif
 
-/*
-voter_main options:
--F dbResultFile
--Mef methodDescFile
--M methodArg
--e methodName -- consumes previous -M args initting this method
---list        -- show known methods and exit
---vsteps      -- comma separated list of number-of-voters
---csteps      -- comma separated list of number-of-choices
---esteps      -- comma separated list of error rates
--n iter       -- iterations to run
---threads n
-
-VoterSim::init options:
--v n          -- number of voters
--c n          -- number of choices
--e n          -- error rate
--n iter       -- iterations to run
--N iter lim   -- run up to iter lim if not there already
--P            -- print voters every run
--r            -- print results every run
--R            -- result dump
--H filename   -- result dump HTML
--h filename   -- result dump HTML alt format
--D filename   -- dump voters, binary
--d filename   -- dump voters, text
--L filename   -- load voters, binary
--l filename   -- load voters, text
--q            -- quiet
--s            -- enable strategies
--S int        -- summary print style
-
-*/
+static char voter_main_usage[] = 
+"-F dbResultFile\n"
+"--textout textResultFile\n"
+"-Mef methodDescFile\n"
+"-M methodArg\n"
+"-e methodName -- consumes previous -M args initting this method\n"
+"--list        -- show known methods and exit\n"
+"--vsteps      -- comma separated list of number-of-voters\n"
+"--csteps      -- comma separated list of number-of-choices\n"
+"--esteps      -- comma separated list of error rates\n"
+"-n iter       -- iterations to run\n"
+"--threads n\n"
+"\n"
+"VoterSim::init options:\n"
+"-v n          -- number of voters\n"
+"-c n          -- number of choices\n"
+"-e n          -- error rate\n"
+"-n iter       -- iterations to run\n"
+"-N iter lim   -- run up to iter lim if not there already\n"
+"-P            -- print voters every run\n"
+"-r            -- print results every run\n"
+"-R            -- result dump\n"
+"-H filename   -- result dump HTML\n"
+"-h filename   -- result dump HTML alt format\n"
+"-D filename   -- dump voters, binary\n"
+"-d filename   -- dump voters, text\n"
+"-L filename   -- load voters, binary\n"
+"-l filename   -- load voters, text\n"
+"-q            -- quiet\n"
+"-s            -- enable strategies\n"
+"-S int        -- summary print style\n"
+"--nflat       -- voters and choices exist in N demensional uniformly random space\n"
+"--ngauss      -- voters and choices exist in N demensional gaussian random space\n"
+"--dimensions N\n"
+"--independentprefs  -- voters have independent uniform -1..1 preferences for each choice\n"
+;
 
 int main( int argc, char** argv ) {
     Steps* stepq = NULL;

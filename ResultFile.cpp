@@ -1,5 +1,6 @@
 #include "ResultFile.h"
 #include "VotingSystem.h"
+#include <assert.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -174,8 +175,10 @@ Result* TextDumpResultFile::get( int choices, int voters, float error ) {
 
 // Does not take ownership of it, copies if needed.
 int TextDumpResultFile::put(Result* it, int choices, int voters, float error) {
-	printResultHeader(f, choices, voters, it->trials, error, /*nsys*/0, smallBasic);
-	printResult(f, it, (names == NULL) ? NULL : names->names, smallBasic);
+	assert(names);
+	printResultHeader(f, choices, voters, it->trials, error, names->nnames, smallBasic);
+	printResult(f, it, (names == NULL) ? NULL : names->names, names->nnames, smallBasic);
+	fflush((FILE*)f);
 	return 0;
 }
 
@@ -196,11 +199,21 @@ int TextDumpResultFile::flush() {
 }
 
 int TextDumpResultFile::useNames( const NameBlock* namesIn ) {
+	FILE* fout = (FILE*)f;
 	names = namesIn;
+	fprintf(fout, "num-systems: %d\n", names->nnames);
+	for (int i = 0; i < names->nnames; ++i) {
+		fprintf(fout, "system-name: %s\n", names->names[i]);
+	}
 	return 0;
 }
 
 int TextDumpResultFile::useStrategyNames( const NameBlock* namesIn ) {
 	fprintf(stderr, "%s:%d %s\n", __FILE__, __LINE__, __FUNCTION__);
-	return -1;
+	FILE* fout = (FILE*)f;
+	fprintf(fout, "num-strategies: %d\n", namesIn->nnames);
+	for (int i = 0; i < namesIn->nnames; ++i) {
+		fprintf(fout, "strategy-name: %s\n", namesIn->names[i]);
+	}
+	return 0;
 }

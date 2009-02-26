@@ -18,6 +18,12 @@ class ResultFile;
 class VoterSim {
 public:
     int init( int argc, char** argv );
+	
+	// arg is the name of the long option, without the '--' prefix.
+	// argc_after is the number of arguments after the long option name.
+	// argv_after is the options after the long option.
+	// return -1 on failure, number of argv elements to skip otherwise (0 or more).
+	int setLongOpt(const char* arg, int argc_after, char** argv_after);
     
     VoterSim();
     ~VoterSim();

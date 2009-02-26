@@ -1,5 +1,5 @@
-#GO2=-O2
-GO2=-g
+GO2=-O2
+#GO2=-g
 #CXXFLAGS=-Wall -g
 CXXFLAGS=-Wall ${GO2} -m64
 #CXXFLAGS+=-pg -g
@@ -133,6 +133,9 @@ ballot.html:	formCandidates makeForm.pl
 	echo "<html><head><title>voting form</title></head><body>" > ballot.html
 	./makeForm.pl formCandidates >> ballot.html
 	echo "</body></html>" >> ballot.html
+
+%.pb.cc %.pb.h : %.proto
+	protoc $< --cpp_out=$(@D)
 
 # DO NOT DELETE
 

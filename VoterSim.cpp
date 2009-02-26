@@ -234,7 +234,13 @@ int VoterSim::init( int argc, char** argv ) {
 					++i;
 					summary = (printStyle)atoi( argv[i] );
 					break;
-				case '-':
+				case '-': {
+					int iret = setLongOpt(argv[i] + 2, argc - (i + 1), argv + (i + 1));
+					if (iret < 0) {
+						return iret;
+					}
+					i += iret;
+				}
 					break;
 				default:
 					printf("unknown option \'%s\'\n", argv[i] );
@@ -275,6 +281,35 @@ int VoterSim::init( int argc, char** argv ) {
 	strategies[numStrat-1]->count += numv - curcount;
     }
     return 0;
+}
+
+int VoterSim::setLongOpt(const char* arg, int argc_after, char** argv_after) {
+	if (!strcmp(arg, "nflat")) {
+		preferenceMode = NSPACE_PREFERENCES;
+		return 0;
+	} else if (!strcmp(arg, "ngauss")) {
+		preferenceMode = NSPACE_GAUSSIAN_PREFERENCES;
+		return 0;
+	} else if (!strcmp(arg, "independentprefs")) {
+		preferenceMode = INDEPENDENT_PREFERENCES;
+		return 0;
+	} else if (!strcmp(arg, "dimensions")) {
+		if (argc_after < 1) {
+			fprintf(stderr, "missing argument for dimensions");
+			return -1;
+		}
+		char* endp;
+		long td = strtol(argv_after[0], &endp, 10);
+		if (endp == NULL || endp == argv_after[0]) {
+			fprintf(stderr, "failure to parse dimensions argument \"%s\"\n", argv_after[0]);
+			return -1;
+		}
+		dimensions = td;
+		return 1;
+	} else {
+		fprintf(stderr, "bogus arg \"--%s\"\n", arg);
+		return -1;
+	}
 }
 
 extern volatile int goGently;

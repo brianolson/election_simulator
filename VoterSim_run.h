@@ -43,78 +43,81 @@ they.build( numv, numc );
 for ( i = 0; i < trials; i++ ) {
     if ( goGently ) return;
     if ( trials != 1 ) {
+		// if trials is 1, may have loaded voters from elsewhere
 		randomizeVoters();
     }
 #if (!defined(strategies)) || strategies
     if ( strategies ) {
-	Voter tv(numc);
-	int sti = 1;
-	Strategy* st = strategies[0];
-	int stlim = st->count;
-	for ( int v = 0; v < numv; v++ ) {
-	    if ( st == NULL ) {
-		theyWithError[v].setWithError( they[v], confusionError );
-	    } else {
-		if ( doError ) {
-		    tv.setWithError( they[v], confusionError );
-		    theyWithError[v].set( tv, st );
-		} else {
-		    theyWithError[v].set( they[v], st );
+		Voter tv(numc);
+		int sti = 1;
+		Strategy* st = strategies[0];
+		int stlim = st->count;
+		for ( int v = 0; v < numv; v++ ) {
+			if ( st == NULL ) {
+				theyWithError[v].setWithError( they[v], confusionError );
+			} else {
+				if ( doError ) {
+					tv.setWithError( they[v], confusionError );
+					theyWithError[v].set( tv, st );
+				} else {
+					theyWithError[v].set( they[v], st );
+				}
+				if ( --stlim == 0 ) {
+					if ( sti < numStrat ) {
+						st = strategies[sti];
+						sti++;
+						stlim = st->count;
+					} else {
+						st = NULL;
+					}
+				}
+			}
 		}
-		if ( --stlim == 0 ) {
-		    if ( sti < numStrat ) {
-			st = strategies[sti];
-			sti++;
-			stlim = st->count;
-		    } else {
-			st = NULL;
-		    }
-		}
-	    }
-	}
     } else
 #endif
 	if ( doError ) {
-	for ( int v = 0; v < numv; v++ ) {
-	    theyWithError[v].setWithError( they[v], confusionError );
-	}
+		for ( int v = 0; v < numv; v++ ) {
+			theyWithError[v].setWithError( they[v], confusionError );
+		}
     }
     if ( printVoters ) {
-	fprintf(text,"voters = ");
-	for ( int v = 0; v < numv; v++ ) {
-	    they[v].print(text);
-	    if ( doError || strategies ) {
-		theyWithError[v].print(text);
-	    }
-	    putc('\n',text);
-	}
+		fprintf(text,"voters = ");
+		for ( int v = 0; v < numv; v++ ) {
+			they[v].print(text);
+			if ( doError || strategies ) {
+				theyWithError[v].print(text);
+			}
+			putc('\n',text);
+		}
     }
 #if (!defined(voterDumpPrefix)) || voterDumpPrefix
     if ( voterDumpPrefix != NULL ) {
-	static char* voteDumpFilename = NULL;
-	if ( voteDumpFilename == NULL ) {
-	    voteDumpFilename = (char*)malloc( voterDumpPrefixLen + 30 );
-	}
-	snprintf( voteDumpFilename, voterDumpPrefixLen + 30, "%s%.10d", voterDumpPrefix, i );
-	voterDump( voteDumpFilename, they, numv, numc );
+		static char* voteDumpFilename = NULL;
+		if ( voteDumpFilename == NULL ) {
+			voteDumpFilename = (char*)malloc( voterDumpPrefixLen + 30 );
+		}
+		snprintf( voteDumpFilename, voterDumpPrefixLen + 30, "%s%.10d", voterDumpPrefix, i );
+		voterDump( voteDumpFilename, they, numv, numc );
     }
 #endif
 #if (!defined(voterBinDumpPrefix)) || voterBinDumpPrefix
     if ( voterBinDumpPrefix != NULL ) {
-	static char* voteBinDumpFilename = NULL;
-	if ( voteBinDumpFilename == NULL ) {
-	    voteBinDumpFilename = (char*)malloc( voterBinDumpPrefixLen + 30 );
-	}
-	snprintf( voteBinDumpFilename, voterBinDumpPrefixLen + 30, "%s%.10d", voterBinDumpPrefix, i );
-	voterBinDump( voteBinDumpFilename, they, numv, numc );
+		static char* voteBinDumpFilename = NULL;
+		if ( voteBinDumpFilename == NULL ) {
+			voteBinDumpFilename = (char*)malloc( voterBinDumpPrefixLen + 30 );
+		}
+		snprintf( voteBinDumpFilename, voterBinDumpPrefixLen + 30, "%s%.10d", voterBinDumpPrefix, i );
+		voterBinDump( voteBinDumpFilename, they, numv, numc );
     }
 #endif
     if ( resultDumpHtml != NULL ) {
-	if ( ! resultDumpHtmlVertical ) {
-	    fprintf( resultDumpHtml, "<tr>" );
-	}
+		if ( ! resultDumpHtmlVertical ) {
+			fprintf( resultDumpHtml, "<tr>" );
+		}
     }
+	// Run elections for each system, recording all to winners.
     for ( sys = 0; sys < nsys; sys++ ) {
+		//fprintf(stderr, "run sys %d\n", sys);
 		if ( goGently ) return;
 		if ( tweValid ) {
 			systems[sys]->runElection( winners + (sys*numc), theyWithError );
@@ -123,7 +126,9 @@ for ( i = 0; i < trials; i++ ) {
 		}
 		happiness[sys][i] = NAN;
 	}
+	// Measure results for systems.
 	for ( int osys = 0; osys < nsys; osys++ ) {
+		//fprintf(stderr, "measure sys %d\n", osys);
 		int sys;
 		int winner = winners[osys*numc/*+0*/];
 		if ( isnan(happiness[osys][i]) ) {
@@ -133,13 +138,29 @@ for ( i = 0; i < trials; i++ ) {
 			happisum[sys] += happiness[sys][i] = th;
 			happistdsum[sys] += td;
 			ginisum[sys] += tg;
+			if ( rlog != NULL ) {
+				rlog->logResult(
+					numv, numc, (doError ? confusionError : -1.0), osys,
+					preferenceMode, dimensions,
+					th, td, tg);
+			}
 			for ( sys = osys+1; sys < nsys; sys++ ) {
+				// Each later system that has the same result has the same resulting happiness.
+				// Apply the same happiness:std:gini to them.
 				if ( winners[sys*numc] == winner ) {
 					happisum[sys] += happiness[sys][i] = th;
 					happistdsum[sys] += td;
 					ginisum[sys] += tg;
+					if ( rlog != NULL ) {
+						rlog->logResult(
+							numv, numc, (doError ? confusionError : -1.0), sys,
+							preferenceMode, dimensions,
+							th, td, tg);
+					}
 				}
 			}
+		} else {
+			//fprintf(stderr, "non-nan result for %d\n", osys);
 		}
 		sys = osys;
 		if ( printAllResults ) {
@@ -172,17 +193,20 @@ for ( i = 0; i < trials; i++ ) {
 	}
 #endif
     if ( resultDump != NULL ) {
-	fprintf( resultDump, "\n" );
+		fprintf( resultDump, "\n" );
     }
     if ( resultDumpHtml != NULL && ! resultDumpHtmlVertical ) {
-	fprintf( resultDumpHtml, "</tr>\n" );
+		fprintf( resultDumpHtml, "</tr>\n" );
     }
+#if 0
+	// randomize for next loop
     if ( i+1 < trials ) {
-	for ( int v = 0; v < numv; v++ ) {
-	    randomizeVoters();
-	}
+		for ( int v = 0; v < numv; v++ ) {
+			randomizeVoters();
+		}
     }
-}
+#endif
+}  // trials loop
 if ( resultDumpHtml != NULL ) {
     fprintf( resultDumpHtml, "</table>\n" );
     fclose( resultDumpHtml );
@@ -196,9 +220,9 @@ for ( sys = 0; sys < nsys; sys++ ) {
     happistdsum[sys] /= trials;
     variance = r->systems[sys].reliabilityStd * r->systems[sys].reliabilityStd * r->trials;
     for ( i = 0; i < trials; i++ ) {
-	double d;
-	d = happiness[sys][i] - r->systems[sys].meanHappiness;
-	variance += d * d;
+		double d;
+		d = happiness[sys][i] - r->systems[sys].meanHappiness;
+		variance += d * d;
     }
     variance /= ttot;
     r->systems[sys].reliabilityStd = sqrt( variance );
@@ -207,19 +231,19 @@ for ( sys = 0; sys < nsys; sys++ ) {
 if ( strategies ) for ( int st = 0; st < numStrat; st++ ) {
     int rsys = nsys * (st + 1);
     for ( sys = 0; sys < nsys; sys++ ) {
-	double variance;
-	r->systems[rsys+sys].meanHappiness = (strategies[st]->happisum[sys] + r->systems[rsys+sys].meanHappiness * r->trials) / ttot;
-	r->systems[rsys+sys].giniWelfare = (strategies[st]->ginisum[sys] + r->systems[rsys+sys].giniWelfare * r->trials) / ttot;
-	r->systems[rsys+sys].consensusStdAvg = (strategies[st]->happistdsum[sys] + r->systems[rsys+sys].consensusStdAvg * r->trials) / ttot;
-	strategies[st]->happistdsum[sys] /= trials;
-	variance = r->systems[rsys+sys].reliabilityStd * r->systems[rsys+sys].reliabilityStd * r->trials;
-	for ( i = 0; i < trials; i++ ) {
-	    double d;
-	    d = strategies[st]->happiness[sys][i] - r->systems[rsys+sys].meanHappiness;
-	    variance += d * d;
-	}
-	variance /= ttot;
-	r->systems[rsys+sys].reliabilityStd = sqrt( variance );
+		double variance;
+		r->systems[rsys+sys].meanHappiness = (strategies[st]->happisum[sys] + r->systems[rsys+sys].meanHappiness * r->trials) / ttot;
+		r->systems[rsys+sys].giniWelfare = (strategies[st]->ginisum[sys] + r->systems[rsys+sys].giniWelfare * r->trials) / ttot;
+		r->systems[rsys+sys].consensusStdAvg = (strategies[st]->happistdsum[sys] + r->systems[rsys+sys].consensusStdAvg * r->trials) / ttot;
+		strategies[st]->happistdsum[sys] /= trials;
+		variance = r->systems[rsys+sys].reliabilityStd * r->systems[rsys+sys].reliabilityStd * r->trials;
+		for ( i = 0; i < trials; i++ ) {
+			double d;
+			d = strategies[st]->happiness[sys][i] - r->systems[rsys+sys].meanHappiness;
+			variance += d * d;
+		}
+		variance /= ttot;
+		r->systems[rsys+sys].reliabilityStd = sqrt( variance );
     }
 }
 #endif

@@ -42,3 +42,8 @@ vsteps*csteps*esteps*systems*{dimension-voter-model-combos}*trials
 50_400_000
 
 int32,int32,float32,int32,int32,int32, float32,float32,float32
+
+
+./vpb --rlog rlog.pb --ngauss --dimensions 3 --vsteps "100 1000" --csteps "5 10" --esteps 0.0 --threads 1 -n 1000
+
+make vpb && ./vpb --rlog rlog.pb --ngauss --dimensions 3 --vsteps "100 1000" --csteps "5 10" --esteps 0.0 --threads 1 -n 10 && ls -l rlog.pb

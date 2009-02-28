@@ -5,7 +5,7 @@ message TrialResult {
 	required int32 voters = 1;
 	required int32 choices = 2;
 	required float error = 3;
-	required int32 systemIndex = 4;
+	required int32 system_index = 4;
 	required int32 dimensions = 5;
 	
 	enum Model {
@@ -15,11 +15,11 @@ message TrialResult {
 		NSPACE_PREFERENCES = 2;
 		NSPACE_GAUSSIAN_PREFERENCES = 3;
 	}
-	required Model voterModel = 6;
+	required Model voter_model = 6;
 	
-	required float meanHappiness = 7;
-	required float voterHappinessStdDev = 8;
-	required float giniIndex = 9;
+	required float mean_happiness = 7;
+	required float voter_happiness_stddev = 8;
+	required float gini_index = 9;
 }
 
 message Systems {

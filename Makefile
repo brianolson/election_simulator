@@ -1,5 +1,5 @@
-GO2=-O2
-#GO2=-g
+#GO2=-O2
+GO2=-g
 #CXXFLAGS=-Wall -g
 CXXFLAGS=-Wall ${GO2} -m64
 #CXXFLAGS+=-pg -g
@@ -21,6 +21,10 @@ OBJS += ${EMOBJS}
 VSMALLOBJS := ResultFile.o VoterArray.o VoterSim.o WorkQueue.o voter.o
 VSMALLOBJS += voter_main_sm.o gauss.o
 VSMALLOBJS += ${EMOBJS}
+
+VPBOBJS := ResultFile.o VoterArray.o VoterSim.o WorkQueue.o voter.o gauss.o
+VPBOBJS += ResultLog.o ProtoResultLog.o trial.pb.o
+VPBOBJS += ${EMOBJS}
 
 FROBOB := ResultFile.o DBResultFile.o resultFileFrob.o
 
@@ -56,6 +60,9 @@ voter_main_sm.o:	voter_main.cpp
 
 vsmall:	${VSMALLOBJS}
 	${CXX} -o vsmall ${VSMALLOBJS} ${CXXFLAGS} ${LDFLAGS}
+
+vpb:	${VPBOBJS} voter_main.cpp
+	${CXX} -o vpb ${VPBOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf -DHAVE_PROTOBUF -DNO_DB voter_main.cpp
 
 nnsv:   ${NNSVOBJS}
 
@@ -121,7 +128,7 @@ headerdoc:
 	gatherheaderdoc doc
 
 clean:
-	rm -f $(OBJS) $(FROBOB) $(TOPLOTOB) $(SGOBJS) voter.o voter frob resultDBToGnuplot nnsv spacegraph
+	rm -f $(OBJS) $(FROBOB) $(TOPLOTOB) $(SGOBJS) ${VPBOBJS} voter.o voter frob resultDBToGnuplot nnsv spacegraph vpb vsmall
 depend:
 	makedepend -Y *.cpp
 
@@ -137,24 +144,56 @@ ballot.html:	formCandidates makeForm.pl
 %.pb.cc %.pb.h : %.proto
 	protoc $< --cpp_out=$(@D)
 
+ProtoResultLog.o:	trial.pb.h
 # DO NOT DELETE
 
 AcceptanceVotePickOne.o: Voter.h AcceptanceVotePickOne.h VotingSystem.h
+ApprovalNoInfo.o: Voter.h ApprovalNoInfo.h VotingSystem.h
+ApprovalWithPoll.o: Voter.h ApprovalWithPoll.h VotingSystem.h
 Condorcet.o: Voter.h Condorcet.h RankedVotePickOne.h VotingSystem.h
 DBResultFile.o: DBResultFile.h ResultFile.h
 FuzzyVotePickOne.o: FuzzyVotePickOne.h VotingSystem.h Voter.h
+IRNR.o: IRNR.h VotingSystem.h Voter.h
 InstantRunoffVotePickOne.o: InstantRunoffVotePickOne.h VotingSystem.h Voter.h
+IteratedNormalizedRatings.o: IteratedNormalizedRatings.h VotingSystem.h
+IteratedNormalizedRatings.o: Voter.h
+NNSVSim.o: NNStrategicVoter.h Voter.h VoterSim.h ResultFile.h DBResultFile.h
+NNSVSim.o: VotingSystem.h WorkQueue.h NNSVSim.h
+NNStrategicVoter.o: NNStrategicVoter.h Voter.h
 OneVotePickOne.o: Voter.h OneVotePickOne.h VotingSystem.h
+ProtoResultLog.o: ProtoResultLog.h ResultLog.h VoterSim.h Voter.h
+ProtoResultLog.o: ResultFile.h trial.pb.h
+RandomElection.o: RandomElection.h VotingSystem.h Voter.h
 RankedVotePickOne.o: Voter.h RankedVotePickOne.h VotingSystem.h
 ResultFile.o: ResultFile.h VotingSystem.h
+ResultLog.o: ResultLog.h VoterSim.h Voter.h ResultFile.h
 ThreadSafeDBRF.o: ThreadSafeDBRF.h DBResultFile.h ResultFile.h
-VoterArray.o: Voter.h
-VoterSim.o: VoterSim.h Voter.h ResultFile.h DBResultFile.h VotingSystem.h
-VoterSim.o: WorkQueue.h VoterSim_run.h
+TopNRunoff.o: TopNRunoff.h VotingSystem.h Voter.h
+VoteForAndAgainst.o: Voter.h VoteForAndAgainst.h VotingSystem.h
+VoterArray.o: Voter.h gauss.h
+VoterSim.o: VoterSim.h Voter.h ResultFile.h ResultLog.h DBResultFile.h
+VoterSim.o: VotingSystem.h WorkQueue.h VoterSim_run.h
 WorkQueue.o: WorkQueue.h
+nnsv.o: Voter.h VoterSim.h ResultFile.h VotingSystem.h OneVotePickOne.h
+nnsv.o: RankedVotePickOne.h AcceptanceVotePickOne.h FuzzyVotePickOne.h
+nnsv.o: InstantRunoffVotePickOne.h Condorcet.h IRNR.h RandomElection.h
+nnsv.o: DBResultFile.h ThreadSafeDBRF.h WorkQueue.h NNSVSim.h
+nnsv.o: NNStrategicVoter.h
 resultDBToGnuplot.o: ResultFile.h WorkQueue.h DBResultFile.h
 resultFileFrob.o: ResultFile.h DBResultFile.h
-voter.o: Voter.h VoterSim.h VotingSystem.h OneVotePickOne.h
-voter.o: RankedVotePickOne.h AcceptanceVotePickOne.h FuzzyVotePickOne.h
-voter.o: InstantRunoffVotePickOne.h Condorcet.h ResultFile.h DBResultFile.h
-voter.o: ThreadSafeDBRF.h WorkQueue.h
+spacegraph.o: Voter.h VoterSim.h ResultFile.h VotingSystem.h OneVotePickOne.h
+spacegraph.o: RankedVotePickOne.h AcceptanceVotePickOne.h FuzzyVotePickOne.h
+spacegraph.o: InstantRunoffVotePickOne.h Condorcet.h IRNR.h
+spacegraph.o: IteratedNormalizedRatings.h RandomElection.h gauss.h
+speed_test.o: Voter.h VoterSim.h ResultFile.h VotingSystem.h OneVotePickOne.h
+speed_test.o: RankedVotePickOne.h AcceptanceVotePickOne.h FuzzyVotePickOne.h
+speed_test.o: InstantRunoffVotePickOne.h Condorcet.h IRNR.h RandomElection.h
+voter.o: Voter.h VoterSim.h ResultFile.h VotingSystem.h
+voter.o: AcceptanceVotePickOne.h Condorcet.h RankedVotePickOne.h
+voter.o: FuzzyVotePickOne.h gauss.h InstantRunoffVotePickOne.h IRNR.h
+voter.o: IteratedNormalizedRatings.h OneVotePickOne.h RandomElection.h
+voter.o: WorkQueue.h
+voter_main.o: Voter.h VoterSim.h ResultFile.h VotingSystem.h OneVotePickOne.h
+voter_main.o: RankedVotePickOne.h AcceptanceVotePickOne.h FuzzyVotePickOne.h
+voter_main.o: InstantRunoffVotePickOne.h Condorcet.h IRNR.h RandomElection.h
+voter_main.o: DBResultFile.h ThreadSafeDBRF.h WorkQueue.h workQThread.h

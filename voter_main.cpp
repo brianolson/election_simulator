@@ -31,6 +31,13 @@
 #include "WorkQueue.h"
 #include "workQThread.h"
 
+#if HAVE_PROTOBUF
+#include "ProtoResultLog.h"
+#include <fcntl.h>
+#else
+class ProtoResultLog;
+#endif
+
 volatile int goGently = 0;
 
 void mysigint( int a ) {
@@ -95,6 +102,8 @@ int main( int argc, char** argv ) {
 	int methodArgc = 0;
 	VSConfig* systemList = NULL;
 	VotingSystem** systems;
+	
+	ResultLog* rlog = NULL;
 
 	assert(methodArgs);
     srandom(time(NULL));
@@ -118,6 +127,15 @@ int main( int argc, char** argv ) {
 				fprintf(stderr, "error: could not process \"--textout %s\"\n", argv[i]);
 				exit(1);
 			}
+#if HAVE_PROTOBUF
+		} else if ( ! strcmp( argv[i], "--rlog" ) ) {
+			i++;
+			rlog = ProtoResultLog::open(argv[i], O_WRONLY|O_APPEND|O_CREAT);
+			if (rlog == NULL) {
+				perror(argv[i]);
+				exit(1);
+			}
+#endif
 		} else if ( ! strcmp( argv[i], "-Mef" ) ) {
 			i++;
 			systemList = systemsFromDescFile( argv[i], methodArgs, MAX_METHOD_ARGS, systemList );
@@ -172,6 +190,9 @@ int main( int argc, char** argv ) {
 		} else if ( ! strcmp( argv[i], "--threads" ) ) {
 			i++;
 			numThreads = atoi( argv[i] );
+		} else if ( ! strcmp( argv[i], "--help" ) ) {
+			fputs(voter_main_usage, stderr);
+			exit(0);
 		} else if ( ! strcmp( argv[i], "--hang" ) ) {
 			hang = 1;
 		} else {
@@ -223,10 +244,18 @@ int main( int argc, char** argv ) {
     }
 #endif
     if (drf == NULL) {
+#if 0
       fprintf(stderr, "error, no result output configured\n");
       exit(1);
-    }
-	drf->useNames( &nb );
+#endif
+    } else {
+		drf->useNames( &nb );
+	}
+#if HAVE_PROTOBUF
+	if (rlog != NULL) {
+		rlog->useNames( &nb );
+	}
+#endif
     
     signal( SIGINT, mysigint );
     
@@ -240,6 +269,7 @@ int main( int argc, char** argv ) {
 		}
 #endif
 		s[i].init( argc, argv );
+		s[i].rlog = rlog;
     }
     if ( stepq == NULL ) {
 		s[0].run( drf, nb );

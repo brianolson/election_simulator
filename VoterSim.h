@@ -14,6 +14,7 @@ class VotingSystem;
 class WorkSource;
 class Strategy;
 class ResultFile;
+class ResultLog;
 
 class VoterSim {
 public:
@@ -72,13 +73,16 @@ public:
     Strategy** strategies;
     int numStrat;
 	
-	enum {
+	ResultLog* rlog;
+	
+	enum PreferenceMode {
 		BOGUS_PREFERENCE_MODE = 0,
 		INDEPENDENT_PREFERENCES = 1,
 		NSPACE_PREFERENCES = 2,
 		NSPACE_GAUSSIAN_PREFERENCES = 3,
 		PREFERENCE_MODE_LIMIT = 4,
-	} preferenceMode;
+	};
+	PreferenceMode preferenceMode;
 	int dimensions;
 };
 

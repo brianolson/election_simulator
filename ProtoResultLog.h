@@ -9,6 +9,7 @@ class ProtoResultLog : public ResultLog {
 public:
 	static ProtoResultLog* open(const char* filename, int mode);
 	virtual ~ProtoResultLog();
+	virtual bool useNames(NameBlock* nb);
 	virtual void logResult(
 		int voters, int choices, double error, int systemIndex, 
 		VoterSim::PreferenceMode mode, int dimensions,

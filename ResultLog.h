@@ -9,10 +9,9 @@ public:
 	ResultLog();
 	virtual ~ResultLog();
 
-	// do this once at setup
-	void useNames(NameBlock* nb) {
-		names = nb;
-	}
+	// do this once at setup.
+	// returns true if everything is ok.
+	virtual bool useNames(NameBlock* nb);
 
 	// do this for every trial election.
 	// implementations should be thread safe.

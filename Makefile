@@ -1,5 +1,5 @@
-#GO2=-O2
-GO2=-g
+GO2=-O2
+#GO2=-g
 #CXXFLAGS=-Wall -g
 CXXFLAGS=-Wall ${GO2} -m64
 #CXXFLAGS+=-pg -g

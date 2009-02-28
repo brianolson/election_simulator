@@ -178,29 +178,6 @@ int DBResultFile::put( Result* it, int choices, int voters, float error ) {
     return err;
 }
 
-void makeBlock( NameBlock* names ) {
-    int i;
-
-    names->blockLen = 1;
-    for ( i = 0; i < names->nnames; i++ ) {
-	names->blockLen += strlen( names->names[i] ) + 1;
-    }
-    names->block = (char*)malloc( names->blockLen );
-    char* cur = names->block;
-    for ( i = 0; i < names->nnames; i++ ) {
-	char* src;
-	src = names->names[i];
-	*cur = *src;
-	while ( *src ) {
-	    cur++;
-	    src++;
-	    *cur = *src;
-	}
-	cur++;
-    }
-    *cur = '\0';
-}
-
 int DBResultFile::useNames( const NameBlock* namesIn ) {
     if ( names.block == NULL ) {
 #if 0

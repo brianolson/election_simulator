@@ -42,6 +42,29 @@ void votingSystemArrayToNameBlock( NameBlock* ret, VotingSystem** systems, int n
     ret->names[i] = NULL;
 }
 
+void makeBlock( NameBlock* names ) {
+    int i;
+	
+    names->blockLen = 1;
+    for ( i = 0; i < names->nnames; i++ ) {
+		names->blockLen += strlen( names->names[i] ) + 1;
+    }
+    names->block = (char*)malloc( names->blockLen );
+    char* cur = names->block;
+    for ( i = 0; i < names->nnames; i++ ) {
+		char* src;
+		src = names->names[i];
+		*cur = *src;
+		while ( *src ) {
+			cur++;
+			src++;
+			*cur = *src;
+		}
+		cur++;
+    }
+    *cur = '\0';
+}
+
 void parseNameBlock( NameBlock* it ) {
     int i;
     int nnames = 0;

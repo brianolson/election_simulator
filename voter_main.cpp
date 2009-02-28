@@ -268,7 +268,10 @@ int main( int argc, char** argv ) {
 			printf("argv[%d] \"%s\"\n", ai, argv[ai] );
 		}
 #endif
-		s[i].init( argc, argv );
+		int err = s[i].init( argc, argv );
+		if (err < 0) {
+			exit(1);
+		}
 		s[i].rlog = rlog;
     }
     if ( stepq == NULL ) {

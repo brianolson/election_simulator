@@ -64,6 +64,11 @@ vsmall:	${VSMALLOBJS}
 vpb:	${VPBOBJS} voter_main.cpp
 	${CXX} -o vpb ${VPBOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf -DHAVE_PROTOBUF -DNO_DB voter_main.cpp
 
+PPLOBJS := processProtoResultLog.o ProtoResultLog.o ResultFile.o ResultLog.o trial.pb.o
+
+processprl:	${PPLOBJS}
+	${CXX} -o processprl ${PPLOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf
+
 nnsv:   ${NNSVOBJS}
 
 frob:	$(FROBOB)

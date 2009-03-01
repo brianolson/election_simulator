@@ -84,6 +84,16 @@ public:
 	};
 	PreferenceMode preferenceMode;
 	int dimensions;
+	
+	static inline const char* modeName(PreferenceMode m) {
+		switch (m) {
+			case BOGUS_PREFERENCE_MODE: return "Bogus Mode";
+			case INDEPENDENT_PREFERENCES: return "Independent Prefs";
+			case NSPACE_PREFERENCES: return "Flat Distribution Spatial";
+			case NSPACE_GAUSSIAN_PREFERENCES: return "Gaussian Distribution Spatial";
+			default: return "ERROR invalid preference value";
+		}
+	}
 };
 
 #endif

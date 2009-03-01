@@ -65,15 +65,20 @@ ProtoResultLog::ProtoResultLog(char* fname_, int fd_)
 		struct stat s;
 		err = stat(namefname, &s);
 		if (err >= 0) {
+			fprintf(stderr, "loading names from \"%s\" ...", namefname);
 			int namefd = ::open(namefname, O_RDONLY);
 			if (namefd >= 0) {
 				NameBlock* nb = new NameBlock();
 				nb->block = (char*)malloc(s.st_size);
 				err = read(namefd, nb->block, s.st_size);
 				assert(err == s.st_size);
+				nb->blockLen = err;
 				parseNameBlock(nb);
 				names = nb;
 				close(namefd);
+				fprintf(stderr, "done.\n");
+			} else {
+				perror(namefname);
 			}
 		}
 		free(namefname);
@@ -99,6 +104,7 @@ bool ProtoResultLog::useNames(NameBlock* nb) {
 		// use these names, write out to file.
 		bool ok = true;
 		char* namefname = namefilename(fname);
+		fprintf(stderr, "writing out names to \"%s\" ...", namefname);
 		names = nb;
 		makeBlock(nb);
 		int fdout = ::open(namefname, O_WRONLY|O_CREAT, 0644);
@@ -112,16 +118,19 @@ bool ProtoResultLog::useNames(NameBlock* nb) {
 				ok = false;
 			}
 			close(fdout);
+			fprintf(stderr, "done\n");
 		}
 		free(namefname);
 		return ok;
 	} else {
 		// check that passed in and loaded names are the same
 		if (names->nnames != nb->nnames) {
+			fprintf(stderr, "mismatch in names. loaded has %d and new run has %d\n", names->nnames, nb->nnames);
 			return false;
 		}
 		for (int i = 0; i < nb->nnames; ++i) {
 			if (strcmp(names->names[i], nb->names[i])) {
+				fprintf(stderr, "mismatch at name %d: old \"%s\" != new \"%s\"\n", i, names->names[i], nb->names[i]);
 				return false;
 			}
 		}

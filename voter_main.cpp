@@ -253,7 +253,7 @@ int main( int argc, char** argv ) {
 	}
 #if HAVE_PROTOBUF
 	if (rlog != NULL) {
-		rlog->useNames( &nb );
+		assert(rlog->useNames( &nb ));
 	}
 #endif
     

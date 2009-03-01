@@ -380,17 +380,17 @@ VSConfig* VSConfig::defaultList( const char** a, VSConfig* n ) {
 	toret = new VSConfig( new OneVotePickOne(), toret );
 	toret = new VSConfig( new InstantRunoffVotePickOne(), toret );
 	toret = new VSConfig( new AcceptanceVotePickOne(), toret );
-	toret = new VSConfig( new FuzzyVotePickOne( "Rated Vote, raw", 0, 0 ), toret );
-	toret = new VSConfig( new FuzzyVotePickOne( "Rated Vote, equal sum", 1, 0 ), toret );
-	toret = new VSConfig( new FuzzyVotePickOne( "Rated Vote, maximized", 2, 0 ), toret );
-	toret = new VSConfig( new FuzzyVotePickOne( "Rated Vote, 1..num choices", 0, -1 ), toret );
-	toret = new VSConfig( new FuzzyVotePickOne( "Rated Vote, 1..10", 0, 10 ), toret );
+	toret = new VSConfig( new FuzzyVotePickOne( "Raw Rating Summation", 0, 0 ), toret );
+	toret = new VSConfig( new FuzzyVotePickOne( "Normalized Rating Summation", 1, 0 ), toret );
+	toret = new VSConfig( new FuzzyVotePickOne( "Maximized Rating Summation", 2, 0 ), toret );
+	toret = new VSConfig( new FuzzyVotePickOne( "Rating Summation, 1..num choices", 0, -1 ), toret );
+	toret = new VSConfig( new FuzzyVotePickOne( "Rating Summation, 1..10", 0, 10 ), toret );
 	toret = new VSConfig( new RankedVotePickOne(), toret );
-	toret = new VSConfig( new RankedVotePickOne("Ranked Vote, no neg pref",1), toret );
+	toret = new VSConfig( new RankedVotePickOne("Borda, truncated",1), toret );
 	toret = new VSConfig( new Condorcet(), toret );
-	toret = new VSConfig( new IRNR("IRNR"), toret );
-	toret = new VSConfig( new IRNR("IRNR, positive shifted", 1.0), toret );
-	toret = new VSConfig( new IteratedNormalizedRatings("INR"), toret );
+	toret = new VSConfig( new IRNR("Instant Runoff Normalized Ratings"), toret );
+	toret = new VSConfig( new IRNR("Instant Runoff Normalized Ratings, positive shifted", 1.0), toret );
+	toret = new VSConfig( new IteratedNormalizedRatings("Iterated Normalized Ratings"), toret );
 	toret = new VSConfig( new RandomElection("Random"), toret );
 #else
 	VSFactory* cur = VSFactory::root;

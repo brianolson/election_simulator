@@ -40,4 +40,4 @@ void AcceptanceVotePickOne::runElection( int* winnerR, const VoterArray& they ) 
 VotingSystem* newAcceptanceVotePickOne( const char* n ) {
 	return new AcceptanceVotePickOne();
 }
-VSFactory* AcceptanceVotePickOne_f = new VSFactory( newAcceptanceVotePickOne, "Acceptance" );
+VSFactory* AcceptanceVotePickOne_f = new VSFactory( newAcceptanceVotePickOne, "Approval" );

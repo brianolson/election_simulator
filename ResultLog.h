@@ -29,6 +29,14 @@ public:
 protected:
 	// System names
 	NameBlock* names;
+	
+public:
+	inline const char* name(int i) {
+		if (names == NULL) {
+			return NULL;
+		}
+		return names->names[i];
+	}
 };
 
 #endif

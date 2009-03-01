@@ -4,6 +4,7 @@
 
 #include <map>
 #include <set>
+#include <string>
 #include <vector>
 
 #include "trial.pb.h"
@@ -16,7 +17,16 @@ using google::protobuf::io::FileInputStream;
 
 using std::vector;
 using std::set;
+using std::string;
 using std::map;
+
+/*
+ Graphing
+ X, Y, sets
+ Y will most often be one of the compiled figures in a ResultList {mean_avg, voter_std_avg, gini_avg, mean_std}
+ X will most often be something there are many steps over, {choices, error}
+ 
+ */
 
 class ResultList {
 public:
@@ -34,7 +44,7 @@ public:
 	double mean_std;
 	
 	void process() {
-		int i;
+		size_t i;
 		double mean_sum = 0.0;
 		double mean_vs = 0.0;
 		double voter_std_sum = 0.0;
@@ -152,46 +162,57 @@ int main(int argc, char** argv) {
 	int voters, choices, systemIndex, dimensions;
 	double error, happiness, voterHappinessStd, gini;
 	VoterSim::PreferenceMode mode;
+	const char* rlogname = argv[1];
 
-	ProtoResultLog* rlog = ProtoResultLog::openForReading(argv[1]);
+	ProtoResultLog* rlog = ProtoResultLog::openForReading(rlogname);
 	while (rlog->readResult(&voters, &choices, &error, &systemIndex, &mode, &dimensions, &happiness, &voterHappinessStd, &gini)) {
 		count++;
 		ResultHolder key(voters, choices, error, systemIndex, mode, dimensions);
 		ResultHolder& value = results[key];
 		value.addResult(happiness, voterHappinessStd, gini);
 	}
-	printf("read %d records in %d configurations\n", count, results.size());
+	printf("read %d records in %zu configurations\n", count, results.size());
 	count = 0;
+	FILE* csv;
+	{
+		string csvname(rlogname);
+		csvname += ".csv";
+		csv = fopen(csvname.c_str(), "w");
+		fprintf(csv, "System,Voters,Choices,Error,Mode,Dimensions,Happiness,Voter Happiness Std,Gini,System Std\n");
+	}
 	for (ResultsMap::iterator ri = results.begin(); ri != results.end(); ri++) {
-		{
-			const ResultHolder& rh = (*ri).first;
-			//printf("v%d c%d e%f si%d m%d d%d\n", rh.voters, rh.choices, rh.error, rh.system_index, rh.mode, rh.dimensions);
-			vsteps.insert(rh.voters);
-			csteps.insert(rh.choices);
-			esteps.insert(rh.error);
-			sisteps.insert(rh.system_index);
-			modesteps.insert(rh.mode);
-			dimsteps.insert(rh.dimensions);
-		}
-		{
-			ResultHolder& rh = (*ri).second;
-			rh = (*ri).second;
-			rh.results->process();
+		const ResultHolder& key = (*ri).first;
+		//printf("v%d c%d e%f si%d m%d d%d\n", key.voters, key.choices, key.error, key.system_index, key.mode, key.dimensions);
+		vsteps.insert(key.voters);
+		csteps.insert(key.choices);
+		esteps.insert(key.error);
+		sisteps.insert(key.system_index);
+		modesteps.insert(key.mode);
+		dimsteps.insert(key.dimensions);
+		//ResultHolder& rh = (*ri).second;
+		ResultList* results = (*ri).second.results;
+		//rh = (*ri).second;
+		results->process();
+		if (csv != NULL) {
+			fprintf(csv, "\"%s\",%d,%d,%f,\"%s\",%d,%f,%f,%f,%f\n",
+				rlog->name(key.system_index), key.voters, key.choices,
+				key.error, VoterSim::modeName(key.mode), key.dimensions,
+				results->mean_avg, results->voter_std_avg, results->gini_avg, results->mean_std);
 		}
 		count++;
 	}
 	printf("iterated %d configurations\n", count);
-	printf("%d vsteps:", vsteps.size());
+	printf("%zu vsteps:", vsteps.size());
 	printIterable(vsteps.begin(), vsteps.end(), " %d");
-	printf("\n%d csteps:", csteps.size());
+	printf("\n%zu csteps:", csteps.size());
 	printIterable(csteps.begin(), csteps.end(), " %d");
-	printf("\n%d esteps:", esteps.size());
+	printf("\n%zu esteps:", esteps.size());
 	printIterable(esteps.begin(), esteps.end(), " %.2f");
-	printf("\n%d sisteps:", sisteps.size());
+	printf("\n%zu sisteps:", sisteps.size());
 	printIterable(sisteps.begin(), sisteps.end(), " %d");
-	printf("\n%d modesteps:", modesteps.size());
+	printf("\n%zu modesteps:", modesteps.size());
 	printIterable(modesteps.begin(), modesteps.end(), " %d");
-	printf("\n%d dimsteps:", dimsteps.size());
+	printf("\n%zu dimsteps:", dimsteps.size());
 	printIterable(dimsteps.begin(), dimsteps.end(), " %d");
 	printf("\n");
 }

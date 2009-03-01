@@ -7,7 +7,7 @@ class RankedVotePickOne : public VotingSystem {
 public:
     int dontCountNegPref;
     RankedVotePickOne()
-     : VotingSystem( "Ranked Vote" ), dontCountNegPref( 0 ) {};
+     : VotingSystem( "Borda" ), dontCountNegPref( 0 ) {};
     RankedVotePickOne( const char* n )
      : VotingSystem( n ), dontCountNegPref( 0 ) {};
     RankedVotePickOne( const char* n, int dcnp )

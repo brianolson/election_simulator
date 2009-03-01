@@ -7,4 +7,5 @@ ResultLog::~ResultLog() {
 
 bool ResultLog::useNames(NameBlock* nb) {
 	names = nb;
+	return true;
 }

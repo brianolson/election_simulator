@@ -120,6 +120,12 @@
 		1FB5A15705F01C60009ACE7D /* NNSVSim.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB5A15605F01C60009ACE7D /* NNSVSim.h */; };
 		1FB5A15C05F022B4009ACE7D /* voter_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB5A15B05F022B4009ACE7D /* voter_main.cpp */; };
 		1FB5A15D05F022BC009ACE7D /* voter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1905E5E87E00994248 /* voter.cpp */; };
+		1FC0F9B90F599710006B5D1C /* ResultLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F4392700F59048D006BE973 /* ResultLog.cpp */; };
+		1FC0F9BA0F599714006B5D1C /* ProtoResultLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F4392720F59048D006BE973 /* ProtoResultLog.cpp */; };
+		1FC0F9BB0F599717006B5D1C /* trial.pb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F4392760F5904A9006BE973 /* trial.pb.cc */; };
+		1FC0F9BD0F59972C006B5D1C /* processProtoResultLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FC0F9BC0F59972C006B5D1C /* processProtoResultLog.cpp */; };
+		1FC0F9D80F599766006B5D1C /* libprotobuf.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F43928B0F5905E7006BE973 /* libprotobuf.2.dylib */; };
+		1FC0F9DE0F59977E006B5D1C /* ResultFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1505E5E87E00994248 /* ResultFile.cpp */; };
 		1FF4BB660B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */; };
 		1FF4BB670B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */; };
 		1FF4BB680B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */; };
@@ -223,6 +229,8 @@
 		1FB5A13105F01BDA009ACE7D /* nnsv.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = nnsv.cpp; sourceTree = "<group>"; };
 		1FB5A15605F01C60009ACE7D /* NNSVSim.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = NNSVSim.h; sourceTree = "<group>"; };
 		1FB5A15B05F022B4009ACE7D /* voter_main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = voter_main.cpp; sourceTree = "<group>"; };
+		1FC0F9B40F5996F5006B5D1C /* proces_prl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = proces_prl; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FC0F9BC0F59972C006B5D1C /* processProtoResultLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = processProtoResultLog.cpp; sourceTree = "<group>"; };
 		1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ApprovalNoInfo.cpp; sourceTree = "<group>"; };
 		1FF4BB720B33763C00B5D49D /* ApprovalNoInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ApprovalNoInfo.h; sourceTree = "<group>"; };
 		1FF4BB9D0B33961700B5D49D /* ApprovalWithPoll.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ApprovalWithPoll.h; sourceTree = "<group>"; };
@@ -250,6 +258,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F43928C0F5905E7006BE973 /* libprotobuf.2.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FC0F9B20F5996F5006B5D1C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FC0F9D80F599766006B5D1C /* libprotobuf.2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,6 +338,7 @@
 				1FB5A15B05F022B4009ACE7D /* voter_main.cpp */,
 				1F5ECE0F05E5E87E00994248 /* OneVotePickOne.cpp */,
 				1F5ECE1005E5E87E00994248 /* OneVotePickOne.h */,
+				1FC0F9BC0F59972C006B5D1C /* processProtoResultLog.cpp */,
 				1F5ECE1105E5E87E00994248 /* RandomElection.cpp */,
 				1F5ECE1205E5E87E00994248 /* RandomElection.h */,
 				1F5ECE1305E5E87E00994248 /* RankedVotePickOne.cpp */,
@@ -360,6 +377,7 @@
 				1F21107B09FD250100B5C0AB /* spacegraph */,
 				3286DBE70F4636010059D26D /* vsmall */,
 				1F43924A0F5903FE006BE973 /* vpb */,
+				1FC0F9B40F5996F5006B5D1C /* proces_prl */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -482,6 +500,22 @@
 			productReference = 1FB5A12A05F016E5009ACE7D /* nnsv */;
 			productType = "com.apple.product-type.tool";
 		};
+		1FC0F9B30F5996F5006B5D1C /* procesprl */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1FC0F9BE0F59972C006B5D1C /* Build configuration list for PBXNativeTarget "procesprl" */;
+			buildPhases = (
+				1FC0F9B10F5996F5006B5D1C /* Sources */,
+				1FC0F9B20F5996F5006B5D1C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = procesprl;
+			productName = proces_prl;
+			productReference = 1FC0F9B40F5996F5006B5D1C /* proces_prl */;
+			productType = "com.apple.product-type.tool";
+		};
 		3286DBE60F4636010059D26D /* vsmall */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3286DBEF0F4636060059D26D /* Build configuration list for PBXNativeTarget "vsmall" */;
@@ -535,6 +569,7 @@
 				1F21107A09FD250100B5C0AB /* spacegraph */,
 				3286DBE60F4636010059D26D /* vsmall */,
 				1F4392490F5903FE006BE973 /* vpb */,
+				1FC0F9B30F5996F5006B5D1C /* procesprl */,
 			);
 		};
 /* End PBXProject section */
@@ -630,6 +665,18 @@
 				1FF4BB680B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */,
 				1FF4BBA30B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */,
 				1F2AAFCA0B339C8200AFA56C /* VoteForAndAgainst.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FC0F9B10F5996F5006B5D1C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FC0F9B90F599710006B5D1C /* ResultLog.cpp in Sources */,
+				1FC0F9BA0F599714006B5D1C /* ProtoResultLog.cpp in Sources */,
+				1FC0F9BB0F599717006B5D1C /* trial.pb.cc in Sources */,
+				1FC0F9BD0F59972C006B5D1C /* processProtoResultLog.cpp in Sources */,
+				1FC0F9DE0F59977E006B5D1C /* ResultFile.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1011,6 +1058,48 @@
 			};
 			name = Default;
 		};
+		1FC0F9B60F5996F6006B5D1C /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = proces_prl;
+			};
+			name = Development;
+		};
+		1FC0F9B70F5996F6006B5D1C /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = proces_prl;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		1FC0F9B80F5996F6006B5D1C /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = proces_prl;
+			};
+			name = Default;
+		};
 		3286DBE90F4636020059D26D /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1108,6 +1197,16 @@
 				1F43924C0F5903FF006BE973 /* Development */,
 				1F43924D0F5903FF006BE973 /* Deployment */,
 				1F43924E0F5903FF006BE973 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		1FC0F9BE0F59972C006B5D1C /* Build configuration list for PBXNativeTarget "procesprl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1FC0F9B60F5996F6006B5D1C /* Development */,
+				1FC0F9B70F5996F6006B5D1C /* Deployment */,
+				1FC0F9B80F5996F6006B5D1C /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;

@@ -2,6 +2,7 @@ syntax = "proto2";
 
 // This is the parameter description and result of one simulated election.
 message TrialResult {
+	// Parameters
 	required int32 voters = 1;
 	required int32 choices = 2;
 	required float error = 3;
@@ -17,6 +18,7 @@ message TrialResult {
 	}
 	required Model voter_model = 6;
 	
+	// Results
 	required float mean_happiness = 7;
 	required float voter_happiness_stddev = 8;
 	required float gini_index = 9;

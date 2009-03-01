@@ -139,10 +139,13 @@ for ( i = 0; i < trials; i++ ) {
 			happistdsum[sys] += td;
 			ginisum[sys] += tg;
 			if ( rlog != NULL ) {
-				rlog->logResult(
+				bool ok = rlog->logResult(
 					numv, numc, (doError ? confusionError : -1.0), osys,
 					preferenceMode, dimensions,
 					th, td, tg);
+				if (!ok) {
+					goGently = true;
+				}
 			}
 			for ( sys = osys+1; sys < nsys; sys++ ) {
 				// Each later system that has the same result has the same resulting happiness.

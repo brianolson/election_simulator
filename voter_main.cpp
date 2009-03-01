@@ -130,7 +130,7 @@ int main( int argc, char** argv ) {
 #if HAVE_PROTOBUF
 		} else if ( ! strcmp( argv[i], "--rlog" ) ) {
 			i++;
-			rlog = ProtoResultLog::open(argv[i], O_WRONLY|O_APPEND|O_CREAT);
+			rlog = ProtoResultLog::openForAppend(argv[i]);
 			if (rlog == NULL) {
 				perror(argv[i]);
 				exit(1);

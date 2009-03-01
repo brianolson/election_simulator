@@ -104,6 +104,7 @@ VoterSim::VoterSim()
     tweValid( false ), summary( basic ),
     resultDumpHtmlVertical( 0 ), winners( NULL ),
     upToTrials( 0 ), strategies( NULL ), numStrat( 0 ),
+	rlog(NULL),
 	preferenceMode(NSPACE_GAUSSIAN_PREFERENCES),
 	dimensions(3)
 {
@@ -117,6 +118,7 @@ VoterSim::~VoterSim() {
         delete [] happiness[sys];
     }
     if ( happiness != NULL ) delete [] happiness;
+	if ( rlog != NULL ) delete rlog;
 }
 
 //char optstring[] = "c:D:d:e:F:H:h:L:l:n:N:qPR:rsS:v:";
@@ -286,6 +288,7 @@ int VoterSim::init( int argc, char** argv ) {
 
 int VoterSim::setLongOpt(const char* arg, int argc_after, char** argv_after) {
 	if (!strcmp(arg, "nflat")) {
+		dimensions = 0;
 		preferenceMode = NSPACE_PREFERENCES;
 		return 0;
 	} else if (!strcmp(arg, "ngauss")) {

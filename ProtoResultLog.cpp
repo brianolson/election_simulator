@@ -5,14 +5,44 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
+#include <google/protobuf/io/zero_copy_stream_impl.h>
+#include <google/protobuf/io/coded_stream.h>
+
+using google::protobuf::uint32;
+using google::protobuf::io::CodedOutputStream;
+using google::protobuf::io::FileOutputStream;
+using google::protobuf::io::CodedInputStream;
+using google::protobuf::io::FileInputStream;
+
 /* static */
-ProtoResultLog* ProtoResultLog::open(const char* filename, int mode) {
-	int fd = ::open(filename, mode, 0666);
+ProtoResultLog* ProtoResultLog::openForAppend(const char* filename) {
+	int fd = ::open(filename, O_APPEND|O_WRONLY|O_CREAT, 0666);
 	if (fd < 0) {
 		perror(filename);
 		return NULL;
 	}
-	return new ProtoResultLog(strdup(filename), fd);
+	ProtoResultLog* out = new ProtoResultLog(strdup(filename), fd);
+	out->setupForAppend();
+	return out;
+}
+ProtoResultLog* ProtoResultLog::openForReading(const char* filename) {
+	int fd = ::open(filename, O_RDONLY);
+	if (fd < 0) {
+		perror(filename);
+		return NULL;
+	}
+	ProtoResultLog* out = new ProtoResultLog(strdup(filename), fd);
+	out->setupForRead();
+	return out;
+}
+
+void ProtoResultLog::setupForAppend() {
+	zcos = new FileOutputStream(fd);
+	cos = new CodedOutputStream(zcos);
+}
+void ProtoResultLog::setupForRead() {
+	zcis = new FileInputStream(fd);
+	cis = new CodedInputStream(zcis);
 }
 
 static char* namefilename(const char* fname) {
@@ -23,10 +53,14 @@ static char* namefilename(const char* fname) {
 }
 
 // protected
-ProtoResultLog::ProtoResultLog(char* fname_, int fd_) : fname(fname_), fd(fd_) {
+ProtoResultLog::ProtoResultLog(char* fname_, int fd_)
+	: fname(fname_), fd(fd_),
+	zcis(NULL), cis(NULL), zcos(NULL), cos(NULL)
+{
 	int err = pthread_mutex_init(&lock, NULL);
 	assert(err == 0);
 	{
+		// load names from file
 		char* namefname = namefilename(fname);
 		struct stat s;
 		err = stat(namefname, &s);
@@ -47,6 +81,10 @@ ProtoResultLog::ProtoResultLog(char* fname_, int fd_) : fname(fname_), fd(fd_) {
 }
 
 ProtoResultLog::~ProtoResultLog() {
+	if (cos != NULL) delete cos;
+	if (zcos != NULL) delete zcos;
+	if (cis != NULL) delete cis;
+	if (zcis != NULL) delete zcis;
 	if (fd >= 0) {
 		close(fd);
 	}
@@ -58,11 +96,12 @@ ProtoResultLog::~ProtoResultLog() {
 
 bool ProtoResultLog::useNames(NameBlock* nb) {
 	if (names == NULL) {
+		// use these names, write out to file.
 		bool ok = true;
 		char* namefname = namefilename(fname);
 		names = nb;
 		makeBlock(nb);
-		int fdout = ::open(namefname, O_WRONLY|O_CREAT, 0444);
+		int fdout = ::open(namefname, O_WRONLY|O_CREAT, 0644);
 		if (fdout < 0) {
 			perror(namefname);
 			ok = false;
@@ -104,7 +143,29 @@ inline TrialResult::Model trFromVS(VoterSim::PreferenceMode m) {
 	return (TrialResult::Model)-1;
 }
 
-void ProtoResultLog::logResult(
+inline VoterSim::PreferenceMode vsFromTR(TrialResult::Model m) {
+	switch (m) {
+		case TrialResult::INDEPENDENT_PREFERENCES:
+			return VoterSim::INDEPENDENT_PREFERENCES;
+		case TrialResult::NSPACE_PREFERENCES:
+			return VoterSim::NSPACE_PREFERENCES;
+		case TrialResult::NSPACE_GAUSSIAN_PREFERENCES:
+			return VoterSim::NSPACE_GAUSSIAN_PREFERENCES;
+		default:
+			assert(0);
+	}
+	return VoterSim::BOGUS_PREFERENCE_MODE;
+}
+
+static inline void myperror_(int en, const char* x, const char* file, int line) {
+	char es[256];
+	strerror_r(en, es, sizeof(es));
+	fprintf(stderr, "%s:%d %s: %s\n", file, line, x, es);
+}
+#define myperror(a,b) myperror_(a, b, __FILE__, __LINE__)
+
+
+bool ProtoResultLog::logResult(
 		int voters, int choices, double error, int systemIndex, 
 		VoterSim::PreferenceMode mode, int dimensions,
 		double happiness, double voterHappinessStd, double gini) {
@@ -121,13 +182,55 @@ void ProtoResultLog::logResult(
 	r.set_voter_happiness_stddev(voterHappinessStd);
 	r.set_gini_index(gini);
 
+	bool ok = true;
 #if 0
 	fprintf(stderr, "%d\t%d\t%f\t%d\t%d\t%d\t%f\t%f\t%f\n",
 		voters, choices, error, systemIndex, mode, dimensions,
 		happiness, voterHappinessStd, gini);
 #endif
 	pthread_mutex_lock(&lock);
-	assert(r.SerializeToFileDescriptor(fd));
+	if (cos != NULL) {
+		ok = cos->WriteVarint32(r.ByteSize());
+		if (ok) {
+			ok = r.SerializeToCodedStream(cos);
+			if (!ok) {
+				myperror(zcos->GetErrno(), fname);
+			}
+		} else {
+			myperror(zcos->GetErrno(), fname);
+		}
+	} else {
+		fprintf(stderr, "output is not setup\n");
+		ok = false;
+	}
 	pthread_mutex_unlock(&lock);
+	return ok;
 }
 
+// return true if a result was read. false implies error or eof.
+bool ProtoResultLog::readResult(
+		int* voters, int* choices, double* error, int* systemIndex,
+		VoterSim::PreferenceMode* mode, int* dimensions,
+		double* happiness, double* voterHappinessStd, double* gini) {
+	TrialResult r;
+	if (cis == NULL) return false;
+	uint32 size;
+	bool ok = cis->ReadVarint32(&size);
+	if (!ok) return ok;
+	CodedInputStream::Limit l = cis->PushLimit(size);
+	ok = r.ParseFromCodedStream(cis);
+	cis->PopLimit(l);
+	if (!ok) return ok;
+	if (ok) {
+		*voters = r.voters();
+		*choices = r.choices();
+		*error = r.error();
+		*systemIndex = r.system_index();
+		*mode = vsFromTR(r.voter_model());
+		*dimensions = r.dimensions();
+		*happiness = r.mean_happiness();
+		*voterHappinessStd = r.voter_happiness_stddev();
+		*gini = r.gini_index();
+	}
+	return ok;
+}

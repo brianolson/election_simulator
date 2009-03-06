@@ -2,6 +2,7 @@
 #define VOTER_H
 
 #include <stdio.h>
+#include <stdlib.h>
 
 class Strategy;
 
@@ -122,8 +123,6 @@ public:
 void voterDump( char* voteDumpFilename, const VoterArray& they, int numv, int numc );
 void voterDump( FILE* voteDumpFile, const VoterArray& they, int numv, int numc );
 void voterBinDump( char* voteDumpFilename, const VoterArray& they, int numv, int numc );
-
-extern "C" long random(void);
 
 // [-1.0 .. 1.0]
 inline double uniformOneOneRandom() {

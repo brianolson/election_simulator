@@ -14,36 +14,36 @@ EMOBJS += VoteForAndAgainst.o
 EMOBJS += IteratedNormalizedRatings.o
 
 OBJS := ResultFile.o DBResultFile.o VoterArray.o VoterSim.o WorkQueue.o
-OBJS += ThreadSafeDBRF.o voter_main.o
+OBJS += ThreadSafeDBRF.o voter_main.o NameBlock.o
 OBJS += ${EMOBJS}
 #OBJS += voter.o
 
 VSMALLOBJS := ResultFile.o VoterArray.o VoterSim.o WorkQueue.o voter.o
-VSMALLOBJS += voter_main_sm.o gauss.o
+VSMALLOBJS += voter_main_sm.o gauss.o NameBlock.o
 VSMALLOBJS += ${EMOBJS}
 
 VPBOBJS := ResultFile.o VoterArray.o VoterSim.o WorkQueue.o voter.o gauss.o
-VPBOBJS += ResultLog.o ProtoResultLog.o trial.pb.o
+VPBOBJS += ResultLog.o ProtoResultLog.o trial.pb.o NameBlock.o
 VPBOBJS += ${EMOBJS}
 
-FROBOB := ResultFile.o DBResultFile.o resultFileFrob.o
+FROBOB := ResultFile.o DBResultFile.o resultFileFrob.o NameBlock.o
 
-TOPLOTOB := resultDBToGnuplot.o ResultFile.o DBResultFile.o WorkQueue.o
+TOPLOTOB := resultDBToGnuplot.o ResultFile.o DBResultFile.o WorkQueue.o NameBlock.o
 
 NNSVOBJS := ${EMOBJS}
 NNSVOBJS += ResultFile.o DBResultFile.o VoterArray.o VoterSim.o WorkQueue.o
 NNSVOBJS += ThreadSafeDBRF.o voter.o
-NNSVOBJS += NNSVSim.o
+NNSVOBJS += NNSVSim.o NameBlock.o
 NNSVOBJS += NNStrategicVoter.o
 
 SGOBJS := ${EMOBJS}
 SGOBJS += VoterArray.o spacegraph.o
 SGOBJS += ResultFile.o voter.o gauss.o
-SGOBJS += VoterSim.o WorkQueue.o
+SGOBJS += VoterSim.o WorkQueue.o NameBlock.o
 #SGOBJS += DBResultFile.o ThreadSafeDBRF.o
 
 STOBJS := VoterArray.o WorkQueue.o voter.o speed_test.o gauss.o
-STOBJS += ${EMOBJS}
+STOBJS += ${EMOBJS} NameBlock.o
 
 UNAME := $(shell uname)
 
@@ -64,7 +64,7 @@ vsmall:	${VSMALLOBJS}
 vpb:	${VPBOBJS} voter_main.cpp
 	${CXX} -o vpb ${VPBOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf -DHAVE_PROTOBUF -DNO_DB voter_main.cpp
 
-PPLOBJS := processProtoResultLog.o ProtoResultLog.o ResultFile.o ResultLog.o trial.pb.o
+PPLOBJS := processProtoResultLog.o ProtoResultLog.o ResultFile.o ResultLog.o trial.pb.o NameBlock.o
 
 processprl:	${PPLOBJS}
 	${CXX} -o processprl ${PPLOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf

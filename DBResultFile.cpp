@@ -63,15 +63,16 @@ int DBResultFile::openInit() {
     int err;
     err = db_get( db, &SYSTEM_NAMES, &(systemNames), 0 );
     if ( err == 0 ) {
-	names.block = (char*)malloc(systemNames.size);
-	if ( names.block == NULL ) {
+	char* block = (char*)malloc(systemNames.size);
+	if ( block == NULL ) {
 	    fprintf(stderr,"%s:%d malloc failed\n", __FILE__, __LINE__ );
 	    return -1;
 	}
-	memcpy( names.block, (char*)systemNames.data, systemNames.size );;
-	names.blockLen = systemNames.size;
+	memcpy( block, (char*)systemNames.data, systemNames.size );;
+	//names.blockLen = systemNames.size;
 //	printf("got name block %p size %d\n", names.block, names.blockLen );
-	parseNameBlock( &names );
+	//parseNameBlock( &names );
+	names.parse(block, systemNames.size);
 #if 0
 	printf("opening db with system names:\n");
 	for ( int i = 0; i < names.nnames; i++ ) {
@@ -186,9 +187,10 @@ int DBResultFile::useNames( const NameBlock* namesIn ) {
 	    printf("%s\n", namesIn->names[i] );
 	}
 #endif
-	names.nnames = namesIn->nnames;
+	names.clone(*namesIn);
+	/*names.nnames = namesIn->nnames;
 	names.names = namesIn->names;
-	makeBlock( &names );
+	makeBlock( &names );*/
 	systemNames.data = names.block;
 	systemNames.size = names.blockLen;
 //	printf("putting names %p size %d\n", systemNames.data, systemNames.size );

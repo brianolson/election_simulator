@@ -69,12 +69,14 @@ ProtoResultLog::ProtoResultLog(char* fname_, int fd_)
 			int namefd = ::open(namefname, O_RDONLY);
 			if (namefd >= 0) {
 				NameBlock* nb = new NameBlock();
-				nb->block = (char*)malloc(s.st_size);
-				err = read(namefd, nb->block, s.st_size);
+				char* block = (char*)malloc(s.st_size);
+				err = read(namefd, block, s.st_size);
 				assert(err == s.st_size);
-				nb->blockLen = err;
-				parseNameBlock(nb);
+				//nb->blockLen = err;
+				//parseNameBlock(nb);
+				nb->parse(block, s.st_size);
 				names = nb;
+				delete_names = true;
 				close(namefd);
 				fprintf(stderr, "done.\n");
 			} else {
@@ -106,7 +108,7 @@ bool ProtoResultLog::useNames(NameBlock* nb) {
 		char* namefname = namefilename(fname);
 		fprintf(stderr, "writing out names to \"%s\" ...", namefname);
 		names = nb;
-		makeBlock(nb);
+		//makeBlock(nb);
 		int fdout = ::open(namefname, O_WRONLY|O_CREAT, 0644);
 		if (fdout < 0) {
 			perror(namefname);

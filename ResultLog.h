@@ -11,6 +11,7 @@ public:
 
 	// do this once at setup.
 	// returns true if everything is ok.
+	// does not take ownership of nb.
 	virtual bool useNames(NameBlock* nb);
 
 	// do this for every trial election.
@@ -26,9 +27,17 @@ public:
 		int* voters, int* choices, double* error, int* systemIndex,
 		VoterSim::PreferenceMode* mode, int* dimensions,
 		double* happiness, double* voterHappinessStd, double* gini) = 0;
+	
+	// Return a copy of names.
+	// caller responsible for delete of it.
+	NameBlock* getNamesCopy();
+
 protected:
 	// System names
 	NameBlock* names;
+	
+	// Defaults to false.
+	bool delete_names;
 	
 public:
 	inline const char* name(int i) {

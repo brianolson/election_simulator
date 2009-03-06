@@ -57,19 +57,14 @@ void printResult( void* file, const Result* it, char** names, int nsys, printSty
 void printResultHeader( void* file, u_int32_t numc, u_int32_t numv, u_int32_t trials, float error, int nsys, printStyle style = basic );
 void printResultFooter( void* file, u_int32_t numc, u_int32_t numv, u_int32_t trials, float error, int nsys, printStyle style = basic );
 
-struct NameBlock {
-    char* block;
-    int blockLen;
-    char** names;
-    int nnames;
-};
-typedef struct NameBlock NameBlock;
+#include "NameBlock.h"
 
 class VotingSystem;
 
+// FIXME deprecated and delete these, replaced with NameBlock members.
 void votingSystemArrayToNameBlock( NameBlock* ret, VotingSystem** systems, int nsys );
-void parseNameBlock( NameBlock* it );
-void makeBlock( NameBlock* names );
+//void parseNameBlock( NameBlock* it );
+//void makeBlock( NameBlock* names );
 
 class ResultFile {
  public:

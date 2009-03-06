@@ -42,6 +42,7 @@ void votingSystemArrayToNameBlock( NameBlock* ret, VotingSystem** systems, int n
     ret->names[i] = NULL;
 }
 
+#if 0
 void makeBlock( NameBlock* names ) {
     int i;
 	
@@ -64,7 +65,43 @@ void makeBlock( NameBlock* names ) {
     }
     *cur = '\0';
 }
+#endif
 
+#if 0
+bool NameBlock::parse(char* data, size_t len) {
+	blockLen = len;
+	block = data;
+	int i;
+	nnames = 0;
+    for ( i = 0; i < blockLen; i++ ) {
+		if ( block[i] == '\0' ) {
+			nnames++;
+			if ( (i + 1 < blockLen) && (block[i+1] == '\0') ) {
+			break;
+			}
+		}
+    }
+    names = (char**)malloc( sizeof(char*) * (nnames + 1));
+    if ( names == NULL ) {
+		fprintf(stderr,"%s:%d malloc failed\n", __FILE__, __LINE__ );
+		return false;
+    }
+    names[0] = block;
+    nnames = 0;
+    for ( i = 0; i < blockLen; i++ ) {
+		if ( block[i] == '\0' ) {
+			nnames++;
+			if ( (i + 1 < blockLen) && (block[i+1] == '\0') ) {
+			break;
+			}
+			names[nnames] = block + i + 1;
+		}
+    }
+    names[nnames] = NULL;
+}
+#endif
+
+#if 0
 void parseNameBlock( NameBlock* it ) {
     int i;
     int nnames = 0;
@@ -95,6 +132,7 @@ void parseNameBlock( NameBlock* it ) {
     }
     it->names[nnames] = NULL;
 }
+#endif
 
 Result* newResult( int nsys ) {
     Result* toret = (Result*)malloc( 8 + nsys * sizeof(struct SystemResult) );

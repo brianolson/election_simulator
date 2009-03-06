@@ -159,6 +159,14 @@
 		3286DC0B0F46896C0059D26D /* IteratedNormalizedRatings.h in Headers */ = {isa = PBXBuildFile; fileRef = 3286DC080F46896C0059D26D /* IteratedNormalizedRatings.h */; };
 		3286DC0C0F46896C0059D26D /* IteratedNormalizedRatings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3286DC090F46896C0059D26D /* IteratedNormalizedRatings.cpp */; };
 		3286DC0D0F46896C0059D26D /* IteratedNormalizedRatings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3286DC090F46896C0059D26D /* IteratedNormalizedRatings.cpp */; };
+		328C82FD0F602CE900C872DA /* NameBlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 328C82FC0F602CE900C872DA /* NameBlock.cpp */; };
+		328C82FE0F602CE900C872DA /* NameBlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 328C82FC0F602CE900C872DA /* NameBlock.cpp */; };
+		328C82FF0F602CE900C872DA /* NameBlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 328C82FC0F602CE900C872DA /* NameBlock.cpp */; };
+		328C83000F602CE900C872DA /* NameBlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 328C82FC0F602CE900C872DA /* NameBlock.cpp */; };
+		328C83010F602CE900C872DA /* NameBlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 328C82FC0F602CE900C872DA /* NameBlock.cpp */; };
+		328C83020F602CE900C872DA /* NameBlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 328C82FC0F602CE900C872DA /* NameBlock.cpp */; };
+		328C83040F602CF100C872DA /* NameBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 328C83030F602CF100C872DA /* NameBlock.h */; };
+		328C83050F602CF100C872DA /* NameBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 328C83030F602CF100C872DA /* NameBlock.h */; };
 		32E9DA2F0D651BD900EC3419 /* libpng.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E9DA2E0D651BD900EC3419 /* libpng.dylib */; };
 		32E9DA340D651C3600EC3419 /* gauss.c in Sources */ = {isa = PBXBuildFile; fileRef = 32E9DA330D651C3600EC3419 /* gauss.c */; };
 		8DD76F6A0486A84900D96B5E /* v2.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6859E8B029090EE04C91782 /* v2.1 */; };
@@ -238,6 +246,8 @@
 		3286DBE70F4636010059D26D /* vsmall */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = vsmall; sourceTree = BUILT_PRODUCTS_DIR; };
 		3286DC080F46896C0059D26D /* IteratedNormalizedRatings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IteratedNormalizedRatings.h; sourceTree = "<group>"; };
 		3286DC090F46896C0059D26D /* IteratedNormalizedRatings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IteratedNormalizedRatings.cpp; sourceTree = "<group>"; };
+		328C82FC0F602CE900C872DA /* NameBlock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NameBlock.cpp; sourceTree = "<group>"; };
+		328C83030F602CF100C872DA /* NameBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NameBlock.h; sourceTree = "<group>"; };
 		32E9DA2E0D651BD900EC3419 /* libpng.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng.dylib; path = /usr/local/lib64/libpng.dylib; sourceTree = "<absolute>"; };
 		32E9DA330D651C3600EC3419 /* gauss.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gauss.c; sourceTree = "<group>"; };
 		8DD76F6C0486A84900D96B5E /* v2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = v2; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -330,6 +340,8 @@
 				1F5ECE0C05E5E87E00994248 /* InstantRunoffVotePickOne.h */,
 				1F5ECE0D05E5E87E00994248 /* IRNR.cpp */,
 				1F5ECE0E05E5E87E00994248 /* IRNR.h */,
+				328C82FC0F602CE900C872DA /* NameBlock.cpp */,
+				328C83030F602CF100C872DA /* NameBlock.h */,
 				1F5ECE5B05E5EFB100994248 /* NNStrategicVoter.cpp */,
 				1F5ECE5C05E5EFB100994248 /* NNStrategicVoter.h */,
 				1FB5A12305F00074009ACE7D /* NNSVSim.cpp */,
@@ -418,6 +430,7 @@
 				1FF4BB740B33763C00B5D49D /* ApprovalNoInfo.h in Headers */,
 				1FF4BB9F0B33961700B5D49D /* ApprovalWithPoll.h in Headers */,
 				1F2AAFCB0B339C8200AFA56C /* VoteForAndAgainst.h in Headers */,
+				328C83050F602CF100C872DA /* NameBlock.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -446,6 +459,7 @@
 				1F2AAFC90B339C8200AFA56C /* VoteForAndAgainst.h in Headers */,
 				3286DBF20F4688E00059D26D /* DBResultFile.h in Headers */,
 				3286DC0B0F46896C0059D26D /* IteratedNormalizedRatings.h in Headers */,
+				328C83040F602CF100C872DA /* NameBlock.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -608,6 +622,7 @@
 				1F2AAFC70B339C8200AFA56C /* VoteForAndAgainst.cpp in Sources */,
 				32E9DA340D651C3600EC3419 /* gauss.c in Sources */,
 				3286DC0D0F46896C0059D26D /* IteratedNormalizedRatings.cpp in Sources */,
+				328C82FF0F602CE900C872DA /* NameBlock.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -637,6 +652,7 @@
 				1F4392740F59048D006BE973 /* ResultLog.cpp in Sources */,
 				1F4392750F59048D006BE973 /* ProtoResultLog.cpp in Sources */,
 				1F4392780F5904A9006BE973 /* trial.pb.cc in Sources */,
+				328C83010F602CE900C872DA /* NameBlock.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -665,6 +681,7 @@
 				1FF4BB680B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */,
 				1FF4BBA30B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */,
 				1F2AAFCA0B339C8200AFA56C /* VoteForAndAgainst.cpp in Sources */,
+				328C83000F602CE900C872DA /* NameBlock.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -677,6 +694,7 @@
 				1FC0F9BB0F599717006B5D1C /* trial.pb.cc in Sources */,
 				1FC0F9BD0F59972C006B5D1C /* processProtoResultLog.cpp in Sources */,
 				1FC0F9DE0F59977E006B5D1C /* ResultFile.cpp in Sources */,
+				328C83020F602CE900C872DA /* NameBlock.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -703,6 +721,7 @@
 				3286DC040F4689280059D26D /* WorkQueue.cpp in Sources */,
 				3286DC0A0F46896C0059D26D /* IteratedNormalizedRatings.cpp in Sources */,
 				1F6D6E820F47091E001B7A1D /* gauss.c in Sources */,
+				328C82FD0F602CE900C872DA /* NameBlock.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -732,6 +751,7 @@
 				1F2AAFC80B339C8200AFA56C /* VoteForAndAgainst.cpp in Sources */,
 				3286DBF30F4688E10059D26D /* DBResultFile.cpp in Sources */,
 				3286DC0C0F46896C0059D26D /* IteratedNormalizedRatings.cpp in Sources */,
+				328C82FE0F602CE900C872DA /* NameBlock.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

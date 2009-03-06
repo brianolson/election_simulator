@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <math.h>
+#include <unistd.h>
 
 #include <map>
 #include <set>
@@ -157,29 +158,61 @@ template<class T> void printIterable(T i, const T& end, const char* format) {
 	}
 }
 
+vector<const char*> infilenames;
+
 int main(int argc, char** argv) {
 	int count = 0;
 	int voters, choices, systemIndex, dimensions;
 	double error, happiness, voterHappinessStd, gini;
 	VoterSim::PreferenceMode mode;
-	const char* rlogname = argv[1];
+	NameBlock* names = NULL;
+	const char* rlogname = NULL;
+	const char* csvoutname = NULL;
 
-	ProtoResultLog* rlog = ProtoResultLog::openForReading(rlogname);
-	while (rlog->readResult(&voters, &choices, &error, &systemIndex, &mode, &dimensions, &happiness, &voterHappinessStd, &gini)) {
-		count++;
-		ResultHolder key(voters, choices, error, systemIndex, mode, dimensions);
-		ResultHolder& value = results[key];
-		value.addResult(happiness, voterHappinessStd, gini);
+	int i = 1;
+	while (i < argc) {
+		if (!strcmp(argv[i], "-o")) {
+			++i;
+			csvoutname = argv[i];
+		} else if (0 == access(argv[i], R_OK)) {
+			infilenames.push_back(argv[i]);
+		} else {
+			fprintf(stderr, "bogus arg \"%s\"\n", argv[i]);
+			exit(1);
+		}
+		++i;
 	}
-	printf("read %d records in %zu configurations\n", count, results.size());
+	for (vector<const char*>::iterator fni = infilenames.begin();
+			fni != infilenames.end(); fni++) {
+		const char* fname = *fni;
+		if (rlogname == NULL) {
+			rlogname = fname;
+		}
+		ProtoResultLog* rlog = ProtoResultLog::openForReading(fname);
+		if (names == NULL) {
+			names = rlog->getNamesCopy();
+		} else if (!rlog->useNames(names)) {
+			fprintf(stderr, "name disagreement between \"%s\" and \"%s\"\n", rlogname, fname);
+			exit(1);
+		}
+		while (rlog->readResult(&voters, &choices, &error, &systemIndex, &mode, &dimensions, &happiness, &voterHappinessStd, &gini)) {
+			count++;
+			ResultHolder key(voters, choices, error, systemIndex, mode, dimensions);
+			ResultHolder& value = results[key];
+			value.addResult(happiness, voterHappinessStd, gini);
+		}
+		printf("%s: read %d records in %zu configurations\n", fname, count, results.size());
+	}
 	count = 0;
 	FILE* csv;
-	{
+	if (csvoutname != NULL) {
+		csv = fopen(csvoutname, "w");
+	} else {
 		string csvname(rlogname);
 		csvname += ".csv";
 		csv = fopen(csvname.c_str(), "w");
-		fprintf(csv, "System,Voters,Choices,Error,Mode,Dimensions,Happiness,Voter Happiness Std,Gini,System Std\n");
 	}
+	fprintf(csv, "System,Voters,Choices,Error,Mode,Dimensions,Happiness,Voter Happiness Std,Gini,System Std\n");
 	for (ResultsMap::iterator ri = results.begin(); ri != results.end(); ri++) {
 		const ResultHolder& key = (*ri).first;
 		//printf("v%d c%d e%f si%d m%d d%d\n", key.voters, key.choices, key.error, key.system_index, key.mode, key.dimensions);
@@ -195,7 +228,7 @@ int main(int argc, char** argv) {
 		results->process();
 		if (csv != NULL) {
 			fprintf(csv, "\"%s\",%d,%d,%f,\"%s\",%d,%f,%f,%f,%f\n",
-				rlog->name(key.system_index), key.voters, key.choices,
+				names->names[key.system_index], key.voters, key.choices,
 				key.error, VoterSim::modeName(key.mode), key.dimensions,
 				results->mean_avg, results->voter_std_avg, results->gini_avg, results->mean_std);
 		}

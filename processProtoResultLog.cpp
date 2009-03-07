@@ -212,7 +212,7 @@ int main(int argc, char** argv) {
 		csvname += ".csv";
 		csv = fopen(csvname.c_str(), "w");
 	}
-	fprintf(csv, "System,Voters,Choices,Error,Mode,Dimensions,Happiness,Voter Happiness Std,Gini,System Std\n");
+	fprintf(csv, "System,Voters,Choices,Error,Mode,Dimensions,Runs,Happiness,Voter Happiness Std,Gini,System Std\n");
 	for (ResultsMap::iterator ri = results.begin(); ri != results.end(); ri++) {
 		const ResultHolder& key = (*ri).first;
 		//printf("v%d c%d e%f si%d m%d d%d\n", key.voters, key.choices, key.error, key.system_index, key.mode, key.dimensions);
@@ -227,9 +227,12 @@ int main(int argc, char** argv) {
 		//rh = (*ri).second;
 		results->process();
 		if (csv != NULL) {
-			fprintf(csv, "\"%s\",%d,%d,%f,\"%s\",%d,%f,%f,%f,%f\n",
+			fprintf(csv,
+				"\"%s\",%d,%d,%f,\"%s\",%d,%zu,"
+				"%f,%f,%f,%f\n",
 				names->names[key.system_index], key.voters, key.choices,
 				key.error, VoterSim::modeName(key.mode), key.dimensions,
+				results->mean_happiness.size(),
 				results->mean_avg, results->voter_std_avg, results->gini_avg, results->mean_std);
 		}
 		count++;

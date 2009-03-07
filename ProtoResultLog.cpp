@@ -26,12 +26,19 @@ ProtoResultLog* ProtoResultLog::openForAppend(const char* filename) {
 	return out;
 }
 ProtoResultLog* ProtoResultLog::openForReading(const char* filename) {
-	int fd = ::open(filename, O_RDONLY);
-	if (fd < 0) {
-		perror(filename);
-		return NULL;
+	int fd = -1;
+	ProtoResultLog* out;
+	if ((filename == NULL) || (!strcmp(filename, "-"))) {
+		fd = STDIN_FILENO;
+		filename = "";
+	} else {
+		fd = ::open(filename, O_RDONLY);
+		if (fd < 0) {
+			perror(filename);
+			return NULL;
+		}
 	}
-	ProtoResultLog* out = new ProtoResultLog(strdup(filename), fd);
+	out = new ProtoResultLog(strdup(filename), fd);
 	out->setupForRead();
 	return out;
 }
@@ -43,6 +50,7 @@ void ProtoResultLog::setupForAppend() {
 void ProtoResultLog::setupForRead() {
 	zcis = new FileInputStream(fd);
 	cis = new CodedInputStream(zcis);
+	cis->SetTotalBytesLimit(1024*1024*1024, 1024*1024*1024);
 }
 
 static char* namefilename(const char* fname) {

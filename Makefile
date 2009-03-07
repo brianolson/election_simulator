@@ -61,6 +61,9 @@ voter_main_sm.o:	voter_main.cpp
 vsmall:	${VSMALLOBJS}
 	${CXX} -o vsmall ${VSMALLOBJS} ${CXXFLAGS} ${LDFLAGS}
 
+# everything protobuf-needing, for bulk sim runs
+pball:	vpb processprl
+
 vpb:	${VPBOBJS} voter_main.cpp
 	${CXX} -o vpb ${VPBOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf -DHAVE_PROTOBUF -DNO_DB voter_main.cpp
 

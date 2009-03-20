@@ -8,9 +8,9 @@
 #include <string>
 #include <vector>
 
-#include "trial.pb.h"
 #include "ProtoResultLog.h"
 
+#include "trial.pb.h"
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 
 using google::protobuf::int32;
@@ -252,4 +252,3 @@ int main(int argc, char** argv) {
 	printIterable(dimsteps.begin(), dimsteps.end(), " %d");
 	printf("\n");
 }
-

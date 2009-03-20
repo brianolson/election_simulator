@@ -503,7 +503,7 @@ void VoterSim::randomizeVoters() {
 			double* choicePositions = new double[numc*dimensions];
 			VoterArray::randomGaussianChoicePositions(choicePositions, numc, dimensions, 0.5);
 			they.randomizeGaussianNSpace(dimensions, choicePositions, NULL, 1.0);
-			delete choicePositions;
+			delete [] choicePositions;
 		}
 			break;
 		default:

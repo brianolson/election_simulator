@@ -104,7 +104,7 @@ void VoterArray::randomizeGaussianNSpace(int dimensions, double* choicePositions
 			they[v].setPref(c, sigma - sqrt(rsquared));
 		}
 	}
-	delete dimholder;
+	delete [] dimholder;
 }
 
 // poisitions is written into, must be allocated double[numc*dimensions]

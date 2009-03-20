@@ -1,4 +1,4 @@
-GO2=-O2
+GO2=-O2 -DNDEBUG
 #GO2=-g
 #CXXFLAGS=-Wall -g
 CXXFLAGS=-Wall ${GO2} -m64

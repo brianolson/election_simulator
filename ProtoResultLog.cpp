@@ -1,10 +1,10 @@
 #include "ProtoResultLog.h"
-#include "trial.pb.h"
 
 #include <stdio.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 
+#include "trial.pb.h"
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/io/coded_stream.h>
 
@@ -62,7 +62,7 @@ static char* namefilename(const char* fname) {
 
 // protected
 ProtoResultLog::ProtoResultLog(char* fname_, int fd_)
-	: fname(fname_), fd(fd_),
+	: ResultLog(), fname(fname_), fd(fd_),
 	zcis(NULL), cis(NULL), zcos(NULL), cos(NULL)
 {
 	int err = pthread_mutex_init(&lock, NULL);
@@ -133,6 +133,7 @@ bool ProtoResultLog::useNames(NameBlock* nb) {
 		free(namefname);
 		return ok;
 	} else {
+		fprintf(stderr, "comparing passed in names to existing\n");
 		// check that passed in and loaded names are the same
 		if (names->nnames != nb->nnames) {
 			fprintf(stderr, "mismatch in names. loaded has %d and new run has %d\n", names->nnames, nb->nnames);

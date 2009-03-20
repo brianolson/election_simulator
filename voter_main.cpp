@@ -23,6 +23,7 @@
 #include "RandomElection.h"
 
 #include "ResultFile.h"
+#include "ResultLog.h"
 #if NO_DB
 #else
 #include "DBResultFile.h"
@@ -251,11 +252,14 @@ int main( int argc, char** argv ) {
     } else {
 		drf->useNames( &nb );
 	}
-#if HAVE_PROTOBUF
 	if (rlog != NULL) {
-		assert(rlog->useNames( &nb ));
+		printf("main useNames\n");
+		bool ok = rlog->useNames( &nb );
+		assert(ok);
+		if (!ok) {
+			exit(1);
+		}
 	}
-#endif
     
     signal( SIGINT, mysigint );
     

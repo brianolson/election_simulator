@@ -2,7 +2,9 @@
 
 import csv
 import getopt
+import os
 import re
+import string
 import sys
 import time
 
@@ -10,6 +12,22 @@ int_pattern = re.compile("^[-+]?[0-9]+$")
 float_pattern = re.compile(r"^[-+]?[0-9]*\.?[0-9]+[eE]?[0-9]*$")
 
 free_variables = ['Happiness', 'System Std', 'Voter Happiness Std', 'Gini']
+
+default_format = "l${sets}_x${x}/${combos}_${y}.svg"
+default_template = string.Template(default_format)
+
+def buildPath(xname, yname, setsname, combo_names, combo_values, tpl=default_template):
+	combo_tuples = zip(combo_names, combo_values)
+	combos = "_".join(["%s=%s" % x for x in combo_tuples])
+	path = tpl.safe_substitute(
+		{'x': xname, 'y': yname, 'sets': setsname, 'combos': combos})
+	return path
+	
+def openWithMakedirs(path, mode):
+	(dir, fname) = os.path.split(path)
+	if dir and not os.path.isdir(dir):
+		os.makedirs(dir)
+	return open(path, mode)
 
 class column(object):
 	def __init__(self, name=None):
@@ -186,8 +204,9 @@ def svgSets(out, sets, xlabel=None, ylabel=None):
 	for sn in setnames:
 		setdata = sets[sn]
 		colori = (colori + 1) % len(svg_colors)
-		out.write("""<path fill="none" stroke-width="1" stroke="%s" d="M"""
+		out.write("""<path fill="none" stroke-width="1" stroke="%s" """
 			% svg_colors[colori])
+		out.write("d=\"M")
 		first = True
 		for x,y in setdata:
 			gx = ((x - minx) * xmult) + xleft
@@ -319,28 +338,80 @@ def generateSteppable(steppable_columns):
 def filename_sanitize(x):
 	return x.replace(" ", "_").replace(",", "_")
 
-def csvToColumnList(csvFile):
+def myStrNumEq(a, b):
+	try:
+		fa = float(a)
+		fb = float(b)
+		return fa == fb
+	except:
+		pass
+	return a == b
+
+def csvToColumnList(csvFile, restricts=None):
+	"""csvFile iterator that returns lists of table cells (a csv reader). first row is headers.
+	restricts list of [colname, value, positive] to filter input on
+	returns list of column objects full of data
+	"""
 	cr = csv.reader(csvFile)
 	headerRow = cr.next()
+	indexValueFilters = []
 	columnlist = map(column, headerRow)
+	if restricts:
+		for i in xrange(0, len(columnlist)):
+			for pair in restricts:
+				if pair[0] == columnlist[i].name:
+					indexValueFilters.append( (i, pair[1], pair[2]) )
 	rowcount = 0
 	for row in cr:
-		def ca(col, x):
-			if col is None:
-				return
-			col.append(x)
-		map(ca, columnlist, row)
+		doRow = True
+		for i,v,p in indexValueFilters:
+			test = myStrNumEq(row[i], v)
+			if (p and not test) or ((not p) and test):
+				doRow = False
+				break
+		if doRow:
+			def ca(col, x):
+				if col is None:
+					return
+				col.append(x)
+			map(ca, columnlist, row)
 	for c in columnlist:
 		c.cleanup()
 	return columnlist
+
+
+def truefalse(x):
+	"""Return True/False based on string input.
+	There really ought to be a standard function for this."""
+	if x is None:
+		return False
+	if x.lower() == 'true':
+		return True
+	if x.lower() == 'false':
+		return False
+	try:
+		return bool(int(x))
+	except:
+		# not an int? don't care
+		pass
+	# only false on empty string
+	return bool(x)
+
+usage = """./plotrlog.py foo.csv [options]
+ -x a/--x=a  limit x axis to 'a'
+ --set=a     only run set axis 'a'
+ --only=a=b  only accept data where column 'a' has value 'b'
+"""
 
 def main(argv):
 	# "rlog.csv"
 	finame = None
 	xaxis_opt = None
 	setaxis_opt = None
+	do_gnuplot = False
+	do_svgplot = False
 	restricts = []
-	optlist, args = getopt.gnu_getopt(argv[1:], "i:x:", ['in=', 'only=', 'x=', 'set='])
+	optlist, args = getopt.gnu_getopt(argv[1:], "i:x:", ['in=', 'only=', 'x=', 'set=', 'sets=', 'svg=', 'dosvg', 'not='])
 	for option, value in optlist:
 		if option == '-i' or option == '--in':
 			if finame is None:
@@ -351,10 +422,20 @@ def main(argv):
 		elif option == '-x' or option == '--x':
 			xaxis_opt = value
 			print "limiting to x axis \"%s\"" % xaxis_opt
-		elif option == 'set':
+		elif option == '--set' or option == '--sets':
 			setaxis_opt = value
-		elif option == 'only':
-			restricts.append(value.split("="))
+		elif option == '--only':
+			ra = value.split("=")
+			ra.append(True)
+			restricts.append(ra)
+		elif option == '--not':
+			ra = value.split("=")
+			ra.append(False)
+			restricts.append(ra)
+		elif option == '--dosvg':
+			do_svgplot = True
+		elif option == '--svg':
+			do_svgplot = truefalse(value)
 		else:
 			sys.stderr.write("bogus option=\"%s\" value=\"%s\"\n" % (option, value))
 			sys.exit(1)
@@ -367,8 +448,9 @@ def main(argv):
 		else:
 			sys.stderr.write("no input specified. use -i/--in\n")
 			sys.exit(1)
+	
 	start_time = time.time()
-	columnlist = csvToColumnList(open(finame,"rb"))
+	columnlist = csvToColumnList(open(finame,"rb"), restricts)
 	parse_end_time = time.time()
 	dt = parse_end_time - start_time
 	print "loaded %d rows in %f seconds" % (len(columnlist[0].data), dt)
@@ -397,6 +479,7 @@ def main(argv):
 			continue
 		if (setaxis_opt is not None) and (setaxis_opt != setaxis.name):
 			continue
+		combo_names = [x.name for x in graphsets]
 		graph_combos = product(map(lambda x: x.getNumValues(), graphsets))
 		graph_combo_count += graph_combos
 		print "x axis = %s, sets = %s: %d graphs over {%s}" % (
@@ -405,7 +488,22 @@ def main(argv):
 			)
 		dirname_spaces = "x %s l %s" % (xaxis.name, setaxis.name)
 		dirname = filename_sanitize(dirname_spaces)
+		for comboi in permute_sets(*(l.getUniqueValues() for l in graphsets)):
+			for y in free_variables:
+				outpath = buildPath(xaxis.name, y, setaxis.name, combo_names, comboi)
+				print outpath
+				sets = getPlotSets(
+					xaxis.name, y, setaxis.name, colhash,
+					combo_names, eqbut(comboi))
+				if do_svgplot:
+					outfile = openWithMakedirs(outpath, "w")
+					outfile.write(svg_prologue)
+					svgSets(outfile, sets, xaxis.name, y)
+					outfile.write("</svg>\n")
+					outfile.close()
+#			print repr(zip(combo_names, comboi))
 #		print dirname
+#def buildPath(xname, yname, setsname, combo_names, combo_values, tpl=default_template):
 	print "total graphs: %d" % graph_combo_count
 	return
 #	for column_combo in permute(steppable_columns, len(steppable_columns) - 1):
@@ -416,7 +514,7 @@ def main(argv):
 		"Error", "Happiness", "System", colhash,
 		["Voters", "Choices", "System"], eqbut([100, 7]))
 	# lambda a: (a[0:2] == [1000, 7]) and (a[2] not in nowshowMethods)
-	if False:
+	if do_gnuplot:
 		gpf = open("r.gnuplot","w")
 		gpf.write("""set style data linespoints
 	set terminal png
@@ -424,11 +522,12 @@ def main(argv):
 		gpf.write("""set output 'v1000c7.png'\n""")
 		gnuplotSets(gpf, sets)
 		gpf.close()
-	svgout = open("v1000c7.svg", "w")
-	svgout.write(svg_prologue)
-	svgSets(svgout, sets, "Error", "Happiness")
-	svgout.write("</svg>\n")
-	svgout.close()
+	if do_svgplot:
+		svgout = open("v1000c7.svg", "w")
+		svgout.write(svg_prologue)
+		svgSets(svgout, sets, "Error", "Happiness")
+		svgout.write("</svg>\n")
+		svgout.close()
 
 if __name__ == "__main__":
 	main(sys.argv)

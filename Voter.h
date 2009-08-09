@@ -118,6 +118,26 @@ public:
 
 	// poisitions is written into, must be allocated double[numc*dimensions]
 	static void randomGaussianChoicePositions(double* positions, int numc, int dimensions, double sigma = 1.0);
+	
+	// convert preferences for numc choices into preferences for numc-choose-seats winner slates.
+	// combos gets numc-choose-seats sets of seats-long indecies to original choice indecies.
+	void combinatoricExplode(const VoterArray& source, int seats, int* combos);
+	
+	// n! / (k!)(n-k)!
+	static inline int nChooseK(int n, int k) {
+		int out = n;
+		int i = n - 1;
+		while (i > k) {
+			out *= i;
+			i--;
+		}
+		i = k;
+		while (i > 1) {
+			out /= i;
+			i--;
+		}
+		return out;
+	}
 };
 
 void voterDump( char* voteDumpFilename, const VoterArray& they, int numv, int numc );

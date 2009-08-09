@@ -7,6 +7,7 @@
 #include <string.h>
 #include <signal.h>
 #include <pthread.h>
+#include <assert.h>
 
 #include "Voter.h"
 #include "VoterSim.h"
@@ -178,6 +179,49 @@ void Voter::randomGaussianCoord(float* coord, int dimensions, double sigma) {
 	for (int i = 0; i < dimensions; ++i) {
 		coord[i] = random_gaussian_r(&gc);
 	}
+}
+
+static bool incrementCombo(int* outcounter, int seats, int numc) {
+	int pos = seats - 1;
+	if (pos < 0) {
+		return false;
+	}
+	outcounter[pos]++;
+	while (outcounter[pos] >= numc) {
+		if (pos == 0) return false;
+		bool ok = incrementCombo(outcounter, seats - 1, numc);
+		if (!ok) return false;
+		outcounter[pos] = outcounter[pos - 1] + 1;
+	}
+	return true;
+}
+
+void VoterArray::combinatoricExplode(const VoterArray& source, int seats, int* combos) {
+	int newc = nChooseK(source.numc, seats);
+	build(source.numv, newc);
+	int* outcounter = new int[seats];
+	int i;
+	int combopos = 0;
+	for (i = 0; i < seats; i++) {
+		outcounter[i] = i;
+	}
+	bool ok = true;
+	while (ok) {
+		for (i = 0; i < seats; ++i) {
+			combos[(combopos * seats) + i] = outcounter[i];
+		}
+		for (int v = 0; v < numv; ++v) {
+			double sum = 0.0;
+			for (i = 0; i < seats; ++i) {
+				sum += source[v].getPref(outcounter[i]);
+			}
+			they[v].setPref(combopos, sum);
+		}
+		ok = incrementCombo(outcounter, seats, source.numc);
+		combopos++;
+	}
+	assert(combopos == newc);
+	delete [] outcounter;
 }
 
 Voter::~Voter() {

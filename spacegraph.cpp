@@ -88,11 +88,13 @@ public:
 	uint8_t* pix;
 
 	int seats;
+	bool doCombinatoricExplode;
+	VoterArray exploded;
 
 	PlaneSim() : candidates( NULL ), minx( -2.0 ), maxx( 2.0 ), miny( -2.0 ), maxy( 2.0 ),
 		px( 500 ), py( 500 ), voterSigma( 0.5 ), electionsPerPixel( 10 ),
 		manhattanDistance( false ), linearFalloff( false ), accum( NULL ), isSlave( false ),
-		candroot( NULL ), candcount( 0 ), pix( NULL ), seats(1)
+		candroot( NULL ), candcount( 0 ), pix( NULL ), seats(1), doCombinatoricExplode(false)
 	{}
 	
 	void build( int numv );
@@ -106,6 +108,7 @@ public:
 	// first and last are ((y*px) + x) indecies.
 	// (first >= 0) && (last < px*py)
 	void runRange( VotingSystem* system, int first, int last );
+	int* runPixel(VotingSystem* system, int x, int y, double dx, double dy, int* winners, int* combos);
 
 	size_t configStr( char* dest, size_t len );
 
@@ -203,6 +206,7 @@ void PlaneSim::coBuild( const PlaneSim& it ) {
 	manhattanDistance = it.manhattanDistance;
 	linearFalloff = it.linearFalloff;
 	seats = it.seats;
+	doCombinatoricExplode = it.doCombinatoricExplode;
 	
 	accum = it.accum;
 	isSlave = true;
@@ -246,24 +250,71 @@ void PlaneSim::randomizeVoters( double centerx, double centery, double sigma ) {
 #endif
 }
 
+int* PlaneSim::runPixel(VotingSystem* system, int x, int y, double dx, double dy, int* winners, int* combos) {
+	for ( int n = 0; n < electionsPerPixel; n++ ) {
+		randomizeVoters( dx, dy, voterSigma );
+		if (doCombinatoricExplode) {
+			if (combos == NULL) {
+				combos = new int[seats*VoterArray::nChooseK(they.numc, seats)];
+			}
+			exploded.combinatoricExplode(they, seats, combos);
+			system->runElection( winners, exploded );
+			assert( winners[0] >= 0 );
+			assert( winners[0] < exploded.numc );
+			int* winningCombo = combos + (seats*winners[0]);
+			for (int s = 0; s < seats; ++s) {
+				incAccum( x, y, winningCombo[s] );
+			}
+		} else {
+			system->runElection( winners, they );
+			assert( winners[0] >= 0 );
+			assert( winners[0] < they.numc );
+			for (int s = 0; s < seats; ++s) {
+				incAccum( x, y, winners[s] );
+			}
+		}
+	}
+	//printf("%d,%d\n", x, y);
+	return combos;
+}
+
 void PlaneSim::run( VotingSystem* system ) {
 	int* winners;
+	int* combos = NULL;
 	winners = new int[they.numc];
 	for ( int y = 0; y < py; y++ ) {
 		double dy = yIndexToCoord( y );
 		printf("y=%d\n", y);
 		for ( int x = 0; x < px; x++ ) {
 			double dx = xIndexToCoord( x );
+#if 1
+			combos = runPixel(system, x, y, dx, dy, winners, combos);
+#else
 			for ( int n = 0; n < electionsPerPixel; n++ ) {
 				randomizeVoters( dx, dy, voterSigma );
-				system->runElection( winners, they );
-				assert( winners[0] >= 0 );
-				assert( winners[0] < they.numc );
-				for (int s = 0; s < seats; ++s) {
-					incAccum( x, y, winners[s] );
+				if (doCombinatoricExplode) {
+					if (combos == NULL) {
+						combos = new int[seats*VoterArray::nChooseK(they.numc, seats)];
+					}
+					exploded.combinatoricExplode(they, seats, combos);
+					system->runElection( winners, exploded );
+					assert( winners[0] >= 0 );
+					assert( winners[0] < exploded.numc );
+					int* winningCombo = combos + (seats*winners[0]);
+					for (int s = 0; s < seats; ++s) {
+						incAccum( x, y, winningCombo[s] );
+					}
+				} else {
+					system->runElection( winners, they );
+					assert( winners[0] >= 0 );
+					assert( winners[0] < they.numc );
+					for (int s = 0; s < seats; ++s) {
+						incAccum( x, y, winners[s] );
+					}
 				}
 			}
 			//printf("%d,%d\n", x, y);
+#endif
 		}
 	}
 	delete [] winners;
@@ -271,6 +322,7 @@ void PlaneSim::run( VotingSystem* system ) {
 
 void PlaneSim::runRange( VotingSystem* system, int first, int last ) {
 	int* winners;
+	int* combos = NULL;
 	int x, y;
 	int pos = first;
 	x = first % px;
@@ -280,6 +332,9 @@ void PlaneSim::runRange( VotingSystem* system, int first, int last ) {
 	double dy = yIndexToCoord( y );
 	double dx = xIndexToCoord( x );
 	while ( true ) {
+#if 1
+		combos = runPixel(system, x, y, dx, dy, winners, combos);
+#else
 		//printf("y=%d\n", y);
 		for ( int n = 0; n < electionsPerPixel; n++ ) {
 			randomizeVoters( dx, dy, voterSigma );
@@ -290,6 +345,7 @@ void PlaneSim::runRange( VotingSystem* system, int first, int last ) {
 				incAccum( x, y, winners[s] );
 			}
 		}
+#endif
 		pos++;
 		if ( pos > last ) {
 			break;
@@ -816,6 +872,8 @@ int main( int argc, char** argv ) {
 		} else if (maybeLongarg(argv[i], "--planes", &optarg)) {
 			if (!optarg) { i++; optarg = argv[i]; }
 			planesPrefix = optarg;
+		} else if (maybeLongarg(argv[i], "--combine", NULL)) {
+			sim.doCombinatoricExplode = true;
 		} else {
 			fprintf( stderr, "bogus arg \"%s\"\n", argv[i] );
 			fputs( usage, stderr );

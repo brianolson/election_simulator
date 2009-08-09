@@ -8,7 +8,7 @@ CFLAGS=-Wall ${GO2} -m64
 LDFLAGS+=-L/usr/local/lib64
 EMOBJS := AcceptanceVotePickOne.o FuzzyVotePickOne.o InstantRunoffVotePickOne.o
 EMOBJS += OneVotePickOne.o RankedVotePickOne.o Condorcet.o TopNRunoff.o
-EMOBJS += IRNR.o RandomElection.o
+EMOBJS += IRNR.o RandomElection.o STV.o
 EMOBJS += ApprovalNoInfo.o ApprovalWithPoll.o
 EMOBJS += VoteForAndAgainst.o
 EMOBJS += IteratedNormalizedRatings.o
@@ -136,7 +136,7 @@ headerdoc:
 	gatherheaderdoc doc
 
 clean:
-	rm -f $(OBJS) $(FROBOB) $(TOPLOTOB) $(SGOBJS) ${VPBOBJS} voter.o voter frob resultDBToGnuplot nnsv spacegraph vpb vsmall
+	rm -f $(OBJS) $(FROBOB) $(TOPLOTOB) $(SGOBJS) ${VPBOBJS} voter.o voter frob resultDBToGnuplot nnsv spacegraph vpb vsmall trial.pb.cc trail.pb.h
 depend:
 	makedepend -Y *.cpp
 

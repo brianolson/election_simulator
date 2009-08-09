@@ -84,11 +84,15 @@ public:
 
 	candidatearg* candroot;
 	int candcount;
-	
+
+	uint8_t* pix;
+
+	int seats;
+
 	PlaneSim() : candidates( NULL ), minx( -2.0 ), maxx( 2.0 ), miny( -2.0 ), maxy( 2.0 ),
 		px( 500 ), py( 500 ), voterSigma( 0.5 ), electionsPerPixel( 10 ),
 		manhattanDistance( false ), linearFalloff( false ), accum( NULL ), isSlave( false ),
-		candroot( NULL ), candcount( 0 ), pix( NULL )
+		candroot( NULL ), candcount( 0 ), pix( NULL ), seats(1)
 	{}
 	
 	void build( int numv );
@@ -140,7 +144,6 @@ public:
 	    candroot = new candidatearg( arg, candroot );
 	    candcount++;
 	}
-	uint8_t* pix;
 	
 	inline uint8_t* getpxp( int x, int y ) {
 		return pix + (x*3 + y*3*px);
@@ -156,6 +159,8 @@ public:
 	}
 	void gaussTest( const char* filename, int nvoters );
 	void writePNG( const char* filename );
+	void writePlanePNG( const char* filename, int choice );
+	void writeSumPNG( const char* filename );
 
 	void drawDiamond( int x, int y, const uint8_t* color );
 };
@@ -197,6 +202,7 @@ void PlaneSim::coBuild( const PlaneSim& it ) {
 	electionsPerPixel = it.electionsPerPixel;
 	manhattanDistance = it.manhattanDistance;
 	linearFalloff = it.linearFalloff;
+	seats = it.seats;
 	
 	accum = it.accum;
 	isSlave = true;
@@ -253,7 +259,9 @@ void PlaneSim::run( VotingSystem* system ) {
 				system->runElection( winners, they );
 				assert( winners[0] >= 0 );
 				assert( winners[0] < they.numc );
-				incAccum( x, y, winners[0] );
+				for (int s = 0; s < seats; ++s) {
+					incAccum( x, y, winners[s] );
+				}
 			}
 			//printf("%d,%d\n", x, y);
 		}
@@ -278,7 +286,9 @@ void PlaneSim::runRange( VotingSystem* system, int first, int last ) {
 			system->runElection( winners, they );
 			assert( winners[0] >= 0 );
 			assert( winners[0] < they.numc );
-			incAccum( x, y, winners[0] );
+			for (int s = 0; s < seats; ++s) {
+				incAccum( x, y, winners[s] );
+			}
 		}
 		pos++;
 		if ( pos > last ) {
@@ -459,6 +469,8 @@ void PlaneSim::writePNG( const char* filename ) {
 	pix = new uint8_t[px*py*3];
 	uint8_t** rows = new uint8_t*[py];
 	int i;
+	int sumErrors = 0;
+	double targetSum = electionsPerPixel * seats;
 	fprintf(stderr,"making image %dx%d for %d choices\n", px,py, they.numc );
 	for ( i = 0; i < py; i++ ) {
 		rows[i] = pix + 3*px*i;
@@ -470,9 +482,10 @@ void PlaneSim::writePNG( const char* filename ) {
 			for ( i = 0; i < they.numc; i++ ) {
 				sum += getAccum( x, y, i );
 			}
-			if ( sum != electionsPerPixel ) {
-				fprintf(stderr,"error at (%d,%d), sum %f != electionsPerPixel %d\n",
-					x, y, sum, electionsPerPixel );
+			if ( sum != targetSum ) {
+				fprintf(stderr,"PlaneSim::writePNG error at (%d,%d), sum %f != targetSum %f\n",
+					x, y, sum, targetSum );
+				sumErrors++;
 			}
 			for ( i = 0; i < they.numc; i++ ) {
 				double weight = getAccum( x, y, i ) / sum;
@@ -492,6 +505,93 @@ void PlaneSim::writePNG( const char* filename ) {
 	    drawDiamond( xCoordToIndex( candidates[i].x ),
 			 yCoordToIndex( candidates[i].y ),
 			 candidateColors + ((i % numCandidateColors) * 3) );
+	}
+	char* args = new char[1024];
+	if ( args != NULL ) {
+	    configStr( args, 1024 );
+	}
+	myDoPNG( filename, rows, px, py, args );
+	delete [] rows;
+	delete [] pix;
+	pix = NULL;
+	if (sumErrors != 0) {
+		fprintf(stderr, "%d targetSum errors out of (%dx%d=%d) pixels\n", sumErrors, px, py, px*py);
+	}
+}
+void PlaneSim::writePlanePNG( const char* filename, int c ) {
+	pix = new uint8_t[px*py*3];
+	uint8_t** rows = new uint8_t*[py];
+	int i;
+	fprintf(stderr,"making image %dx%d for choices %d\n", px, py, c );
+	for ( i = 0; i < py; i++ ) {
+		rows[i] = pix + 3*px*i;
+	}
+	for ( int y = 0; y < py; y++ ) {
+		for ( int x = 0; x < px; x++ ) {
+			double weight = getAccum( x, y, c );
+			weight = weight / electionsPerPixel;
+			weight *= 255.0;
+			assert(weight <= 255.0);
+			assert(weight >= 0.0);
+			uint8_t* p;
+			p = getpxp( x, y );
+			*p += (uint8_t)(weight);
+			p++;
+			*p += (uint8_t)(weight);
+			p++;
+			*p += (uint8_t)(weight);
+		}
+	}
+	printf("cd %f,%f -> ", candidates[c].x, candidates[c].y );
+	drawDiamond( xCoordToIndex( candidates[c].x ),
+				yCoordToIndex( candidates[c].y ),
+				candidateColors + ((c % numCandidateColors) * 3) );
+	char* args = new char[1024];
+	if ( args != NULL ) {
+	    configStr( args, 1024 );
+	}
+	myDoPNG( filename, rows, px, py, args );
+	delete [] rows;
+	delete [] pix;
+	pix = NULL;
+}
+void PlaneSim::writeSumPNG( const char* filename ) {
+	pix = new uint8_t[px*py*3];
+	uint8_t** rows = new uint8_t*[py];
+	int i;
+	double targetSum = electionsPerPixel * seats;
+	fprintf(stderr,"making sum image %dx%d\n", px, py );
+	for ( i = 0; i < py; i++ ) {
+		rows[i] = pix + 3*px*i;
+	}
+	for ( int y = 0; y < py; y++ ) {
+		for ( int x = 0; x < px; x++ ) {
+			double sum;
+			sum = 0.0;
+			for ( i = 0; i < they.numc; i++ ) {
+				sum += getAccum( x, y, i );
+			}
+			if ( sum > targetSum ) {
+				fprintf(stderr,"error at (%d,%d), sum %f > targetSum %f\n",
+						x, y, sum, targetSum );
+			}
+			for ( i = 0; i < they.numc; i++ ) {
+				double weight = (sum / targetSum) * 255.0;
+				uint8_t* p;
+				p = getpxp( x, y );
+				*p += (uint8_t)(weight);
+				p++;
+				*p += (uint8_t)(weight);
+				p++;
+				*p += (uint8_t)(weight);
+			}
+		}
+	}
+	for ( i = 0; i < they.numc; i++ ) {
+	    printf("cd %f,%f -> ", candidates[i].x, candidates[i].y );
+	    drawDiamond( xCoordToIndex( candidates[i].x ),
+					yCoordToIndex( candidates[i].y ),
+					candidateColors + ((i % numCandidateColors) * 3) );
 	}
 	char* args = new char[1024];
 	if ( args != NULL ) {
@@ -604,21 +704,53 @@ const char* usage =
 ;
 
 #ifndef MAX_METHOD_ENV
-#define MAX_METHOD_ENV 20
+#define MAX_METHOD_ENV 200
 #endif
-const char* methodEnv[MAX_METHOD_ENV] = { 0 };
-int methodEnvCount = 0;
 char defaultFoutname[] = "tsg.png";
+
+static bool maybeLongarg(const char* arg, const char* prefix, const char** optarg) {
+	const char* a = arg;
+	const char* b = prefix;
+	while (*a == *b) {
+		a++;
+		b++;
+		if (*a == '\0') {
+			if (*b == '\0') {
+				if (optarg != NULL) {
+					*optarg = NULL;
+				}
+				return true;
+			} else {
+				return false;
+			}
+		} else if (*a == '=') {
+			if (*b != '\0') {
+				return false;
+			}
+			if (optarg == NULL) {
+				return false;
+			}
+			*optarg = a + 1;
+			return true;
+		}
+	}
+	return false;
+}
 
 int main( int argc, char** argv ) {
 	// trivial main
+	const char* votingSystemName = NULL;
 	VotingSystem* vs = NULL;
+	const char** methodEnv = new const char*[MAX_METHOD_ENV];
+	int methodEnvCount = 0;
 	PlaneSim sim;
 	int i;
 	char* foutname = defaultFoutname;
 	char* testgauss = NULL;
 	int nvoters = 1000;
 	int nthreads = 1;
+	const char* planesPrefix = NULL;
+	const char* optarg;
 
 	for ( i = 1; i < argc; i++ ) {
 		if ( ! strcmp( argv[i], "-o" ) ) {
@@ -664,16 +796,9 @@ int main( int argc, char** argv ) {
 			sim.manhattanDistance = true;
 		} else if ( ! strcmp( argv[i], "--linearFalloff" ) ) {
 			sim.linearFalloff = true;
-		} else if ( ! strcmp( argv[i], "--method" ) ) {
-			const VSFactory* cf;
-			i++;
-			cf = VSFactory::byName( argv[i] );
-			if ( cf == NULL ) {
-				fprintf(stderr,"no such election method \"%s\", have:\n", argv[i] );
-				printEMList();
-				exit(1);
-			}
-			vs = cf->make();
+		} else if (maybeLongarg(argv[i], "--method", &optarg)) {
+			if (!optarg) { i++; optarg = argv[i]; }
+			votingSystemName = optarg;
 		} else if ( ! strcmp( argv[i], "--opt" ) ) {
 			i++;
 			methodEnv[methodEnvCount] = argv[i];
@@ -681,6 +806,16 @@ int main( int argc, char** argv ) {
 		} else if ( ! strcmp( argv[i], "--threads" ) ) {
 			i++;
 			nthreads = strtol( argv[i], NULL, 10 );
+		} else if (maybeLongarg(argv[i], "--seats", &optarg)) {
+			if (!optarg) { i++; optarg = argv[i]; }
+			sim.seats = strtol( optarg, NULL, 10 );
+			char* seatsMethodArg = new char[20];  // FIXME: this leaks
+			sprintf(seatsMethodArg, "seats=%d", sim.seats);
+			methodEnv[methodEnvCount] = seatsMethodArg;
+			methodEnvCount++;
+		} else if (maybeLongarg(argv[i], "--planes", &optarg)) {
+			if (!optarg) { i++; optarg = argv[i]; }
+			planesPrefix = optarg;
 		} else {
 			fprintf( stderr, "bogus arg \"%s\"\n", argv[i] );
 			fputs( usage, stderr );
@@ -700,8 +835,17 @@ int main( int argc, char** argv ) {
 		sim.gaussTest( testgauss, nvoters );
 		return 0;
 	}
-	if ( vs == NULL ) {
+	if ( votingSystemName == NULL ) {
 		vs = new InstantRunoffVotePickOne();
+	} else {
+		const VSFactory* cf;
+		cf = VSFactory::byName(votingSystemName);
+		if ( cf == NULL ) {
+			fprintf(stderr,"no such election method \"%s\", have:\n", votingSystemName );
+			printEMList();
+			exit(1);
+		}
+		vs = cf->make();
 	}
 	if ( methodEnvCount > 0 ) {
 		vs->init( methodEnv );
@@ -740,6 +884,17 @@ int main( int argc, char** argv ) {
 		for (i = 0; i < nthreads; ++i) {
 			pthread_join(threads[i].thread, NULL);
 		}
+	}
+	if (planesPrefix) {
+		int prefixlen = strlen(planesPrefix);
+		char* pfilename = new char[prefixlen + 20];
+		strcpy(pfilename, planesPrefix);
+		for (int plane = 0; plane < sim.they.numc; ++plane) {
+			sprintf(pfilename + prefixlen, "%d.png", plane);
+			sim.writePlanePNG(pfilename, plane);
+		}
+		strcpy(pfilename + prefixlen, "_sum.png");
+		sim.writeSumPNG(pfilename);
 	}
 	sim.writePNG( foutname );
 }

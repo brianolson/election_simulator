@@ -49,7 +49,6 @@
 		1F4392740F59048D006BE973 /* ResultLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F4392700F59048D006BE973 /* ResultLog.cpp */; };
 		1F4392750F59048D006BE973 /* ProtoResultLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F4392720F59048D006BE973 /* ProtoResultLog.cpp */; };
 		1F4392780F5904A9006BE973 /* trial.pb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F4392760F5904A9006BE973 /* trial.pb.cc */; };
-		1F43928C0F5905E7006BE973 /* libprotobuf.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F43928B0F5905E7006BE973 /* libprotobuf.2.dylib */; };
 		1F5ECE2205E5E87E00994248 /* AcceptanceVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0305E5E87E00994248 /* AcceptanceVotePickOne.cpp */; };
 		1F5ECE2305E5E87E00994248 /* AcceptanceVotePickOne.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0405E5E87E00994248 /* AcceptanceVotePickOne.h */; };
 		1F5ECE2405E5E87E00994248 /* Condorcet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0505E5E87E00994248 /* Condorcet.cpp */; };
@@ -124,7 +123,6 @@
 		1FC0F9BA0F599714006B5D1C /* ProtoResultLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F4392720F59048D006BE973 /* ProtoResultLog.cpp */; };
 		1FC0F9BB0F599717006B5D1C /* trial.pb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F4392760F5904A9006BE973 /* trial.pb.cc */; };
 		1FC0F9BD0F59972C006B5D1C /* processProtoResultLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FC0F9BC0F59972C006B5D1C /* processProtoResultLog.cpp */; };
-		1FC0F9D80F599766006B5D1C /* libprotobuf.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F43928B0F5905E7006BE973 /* libprotobuf.2.dylib */; };
 		1FC0F9DE0F59977E006B5D1C /* ResultFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1505E5E87E00994248 /* ResultFile.cpp */; };
 		1FF4BB660B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */; };
 		1FF4BB670B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */; };
@@ -136,6 +134,12 @@
 		1FF4BBA10B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */; };
 		1FF4BBA20B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */; };
 		1FF4BBA30B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */; };
+		1FF81B80102D9494005E4B04 /* STV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF81B7F102D9494005E4B04 /* STV.cpp */; };
+		1FF81B81102D9494005E4B04 /* STV.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FF81B7E102D9494005E4B04 /* STV.h */; };
+		1FF81B82102D9494005E4B04 /* STV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF81B7F102D9494005E4B04 /* STV.cpp */; };
+		1FF81B83102D9494005E4B04 /* STV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF81B7F102D9494005E4B04 /* STV.cpp */; };
+		1FF81B84102D9494005E4B04 /* STV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF81B7F102D9494005E4B04 /* STV.cpp */; };
+		1FF81B93102F48BA005E4B04 /* libprotobuf.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FF81B92102F48BA005E4B04 /* libprotobuf.3.dylib */; };
 		3286DBF20F4688E00059D26D /* DBResultFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0805E5E87E00994248 /* DBResultFile.h */; };
 		3286DBF30F4688E10059D26D /* DBResultFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0705E5E87E00994248 /* DBResultFile.cpp */; };
 		3286DBF40F4688E70059D26D /* AcceptanceVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0305E5E87E00994248 /* AcceptanceVotePickOne.cpp */; };
@@ -198,7 +202,6 @@
 		1F4392730F59048D006BE973 /* ResultLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResultLog.h; sourceTree = "<group>"; };
 		1F4392760F5904A9006BE973 /* trial.pb.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trial.pb.cc; sourceTree = "<group>"; };
 		1F4392770F5904A9006BE973 /* trial.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trial.pb.h; sourceTree = "<group>"; };
-		1F43928B0F5905E7006BE973 /* libprotobuf.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libprotobuf.2.dylib; path = /usr/local/lib/libprotobuf.2.dylib; sourceTree = "<absolute>"; };
 		1F5ECE0305E5E87E00994248 /* AcceptanceVotePickOne.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = AcceptanceVotePickOne.cpp; sourceTree = SOURCE_ROOT; };
 		1F5ECE0405E5E87E00994248 /* AcceptanceVotePickOne.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AcceptanceVotePickOne.h; sourceTree = SOURCE_ROOT; };
 		1F5ECE0505E5E87E00994248 /* Condorcet.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Condorcet.cpp; sourceTree = SOURCE_ROOT; };
@@ -243,6 +246,9 @@
 		1FF4BB720B33763C00B5D49D /* ApprovalNoInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ApprovalNoInfo.h; sourceTree = "<group>"; };
 		1FF4BB9D0B33961700B5D49D /* ApprovalWithPoll.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ApprovalWithPoll.h; sourceTree = "<group>"; };
 		1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ApprovalWithPoll.cpp; sourceTree = "<group>"; };
+		1FF81B7E102D9494005E4B04 /* STV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STV.h; sourceTree = "<group>"; };
+		1FF81B7F102D9494005E4B04 /* STV.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = STV.cpp; sourceTree = "<group>"; };
+		1FF81B92102F48BA005E4B04 /* libprotobuf.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libprotobuf.3.dylib; path = /usr/local/lib/libprotobuf.3.dylib; sourceTree = "<absolute>"; };
 		3286DBE70F4636010059D26D /* vsmall */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = vsmall; sourceTree = BUILT_PRODUCTS_DIR; };
 		3286DC080F46896C0059D26D /* IteratedNormalizedRatings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IteratedNormalizedRatings.h; sourceTree = "<group>"; };
 		3286DC090F46896C0059D26D /* IteratedNormalizedRatings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IteratedNormalizedRatings.cpp; sourceTree = "<group>"; };
@@ -267,7 +273,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F43928C0F5905E7006BE973 /* libprotobuf.2.dylib in Frameworks */,
+				1FF81B93102F48BA005E4B04 /* libprotobuf.3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,7 +281,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FC0F9D80F599766006B5D1C /* libprotobuf.2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,7 +305,7 @@
 		0249A662FF388D9811CA2CEA /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				1F43928B0F5905E7006BE973 /* libprotobuf.2.dylib */,
+				1FF81B92102F48BA005E4B04 /* libprotobuf.3.dylib */,
 				32E9DA2E0D651BD900EC3419 /* libpng.dylib */,
 				1F01291B0A27F8D600B0A401 /* libdb.dylib */,
 			);
@@ -362,6 +367,8 @@
 				1F4392720F59048D006BE973 /* ProtoResultLog.cpp */,
 				1F4392730F59048D006BE973 /* ResultLog.h */,
 				1F21108A09FD256A00B5C0AB /* spacegraph.cpp */,
+				1FF81B7E102D9494005E4B04 /* STV.h */,
+				1FF81B7F102D9494005E4B04 /* STV.cpp */,
 				1F5ECE1705E5E87E00994248 /* ThreadSafeDBRF.cpp */,
 				1F5ECE1805E5E87E00994248 /* ThreadSafeDBRF.h */,
 				1F4392760F5904A9006BE973 /* trial.pb.cc */,
@@ -460,6 +467,7 @@
 				3286DBF20F4688E00059D26D /* DBResultFile.h in Headers */,
 				3286DC0B0F46896C0059D26D /* IteratedNormalizedRatings.h in Headers */,
 				328C83040F602CF100C872DA /* NameBlock.h in Headers */,
+				1FF81B81102D9494005E4B04 /* STV.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -623,6 +631,7 @@
 				32E9DA340D651C3600EC3419 /* gauss.c in Sources */,
 				3286DC0D0F46896C0059D26D /* IteratedNormalizedRatings.cpp in Sources */,
 				328C82FF0F602CE900C872DA /* NameBlock.cpp in Sources */,
+				1FF81B80102D9494005E4B04 /* STV.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -653,6 +662,7 @@
 				1F4392750F59048D006BE973 /* ProtoResultLog.cpp in Sources */,
 				1F4392780F5904A9006BE973 /* trial.pb.cc in Sources */,
 				328C83010F602CE900C872DA /* NameBlock.cpp in Sources */,
+				1FF81B84102D9494005E4B04 /* STV.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -722,6 +732,7 @@
 				3286DC0A0F46896C0059D26D /* IteratedNormalizedRatings.cpp in Sources */,
 				1F6D6E820F47091E001B7A1D /* gauss.c in Sources */,
 				328C82FD0F602CE900C872DA /* NameBlock.cpp in Sources */,
+				1FF81B83102D9494005E4B04 /* STV.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -752,6 +763,7 @@
 				3286DBF30F4688E10059D26D /* DBResultFile.cpp in Sources */,
 				3286DC0C0F46896C0059D26D /* IteratedNormalizedRatings.cpp in Sources */,
 				328C82FE0F602CE900C872DA /* NameBlock.cpp in Sources */,
+				1FF81B82102D9494005E4B04 /* STV.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

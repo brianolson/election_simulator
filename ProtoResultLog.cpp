@@ -210,13 +210,9 @@ bool ProtoResultLog::logResult(
 #endif
 	pthread_mutex_lock(&lock);
 	if (cos != NULL) {
-		ok = cos->WriteVarint32(r.ByteSize());
-		if (ok) {
-			ok = r.SerializeToCodedStream(cos);
-			if (!ok) {
-				myperror(zcos->GetErrno(), fname);
-			}
-		} else {
+		cos->WriteVarint32(r.ByteSize());
+		ok = r.SerializeToCodedStream(cos);
+		if (!ok) {
 			myperror(zcos->GetErrno(), fname);
 		}
 	} else {

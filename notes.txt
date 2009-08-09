@@ -65,3 +65,13 @@ time /usr/bin/nice -20 ./vpb \
 -n 10
 
 ./processprl rlog.pb
+
+
+
+./spacegraph -c -0.20,0.14 -c -0.68,0.08 -c -0.90,0.24 -c 0.82,0.40 \
+-px 100 -py 100 -n 1 \
+-minx -1 -miny -1 -maxx 1 -maxy 1 \
+-Z 1.0 -v 1000 --threads 2 \
+--method STV --seats=2 \
+--planes=/tmp/xp \
+-o /tmp/sg.png

@@ -2,7 +2,9 @@
 
 @methods = qw(Max OneVote IRV IRNR Condorcet Rated Borda ApprovalNoInfo ApprovalWithPoll VoteForAndAgainst MaximizedRatings Closest);
 %options = ( "MaximizedRatings" => "Rated --opt maximize",
-"Closest" => "Max -v 10 -Z 0.000001" );
+"Closest" => "Max -v 10 -Z 0.000001",
+"CombinatoricCondorcet" => "Condorcet --combine",
+"CombinatoricIRNR" => "IRNR --combine" );
 $world = "-px 400 -py 400 -n 4 -minx -1 -miny -1 -maxx 1 -maxy 1 -Z 1.0 -v 10000 --threads 2";
 @candsets = (
 ["threecorners","-c 1,1 -c -1,1 -c 0,-1"],
@@ -61,6 +63,7 @@ sub newerthan ($$) {
 $doit = 1;
 $quiet = 0;
 $html = 0;
+$doplanes = -f "doplanes";
 
 # defaults from spacegraph.cpp  PlaneSim::PlaneSim()
 $px = 500;
@@ -157,6 +160,10 @@ $doing = 0;
 foreach $cs ( @candsets ) {
   foreach $m ( @methods ) {
     my $dest = $cs->[0] . "_" . $m . ".png";
+    my $planeopt = "";
+    if ($doplanes) {
+      $planeopt = " --planes=" . $cs->[0] . "_" . $m . "_";
+    }
     if ( newerthan( "spacegraph", $dest ) ) {
       $doing++;
       my $opt;
@@ -165,7 +172,7 @@ foreach $cs ( @candsets ) {
       } else {
 	$opt = $m;
       }
-      my $cmd = "./spacegraph $world $cs->[1] --method $opt -o $dest";
+      my $cmd = "./spacegraph $world $cs->[1] --method $opt -o $dest" . $planeopt;
       if ( ! $quiet ) {
         print <<EOF;
 # item: $doing/$numToDo

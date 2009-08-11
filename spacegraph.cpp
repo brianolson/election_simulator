@@ -22,10 +22,16 @@
 #include "IRNR.h"
 #include "IteratedNormalizedRatings.h"
 #include "RandomElection.h"
+#include "STV.h"
 
 #include "gauss.h"
 
 #include "png.h"
+
+// This doesn't do anything but make sure STV.o gets linked in.
+void* linker_tricking() {
+	return new STV();
+}
 
 class pos {
 public:
@@ -90,12 +96,17 @@ public:
 	int seats;
 	bool doCombinatoricExplode;
 	VoterArray exploded;
+	int* combos;
 
 	PlaneSim() : candidates( NULL ), minx( -2.0 ), maxx( 2.0 ), miny( -2.0 ), maxy( 2.0 ),
 		px( 500 ), py( 500 ), voterSigma( 0.5 ), electionsPerPixel( 10 ),
 		manhattanDistance( false ), linearFalloff( false ), accum( NULL ), isSlave( false ),
-		candroot( NULL ), candcount( 0 ), pix( NULL ), seats(1), doCombinatoricExplode(false)
+		candroot( NULL ), candcount( 0 ), pix( NULL ),
+		seats(1), doCombinatoricExplode(false), combos(NULL)
 	{}
+	~PlaneSim() {
+		if (combos) {delete [] combos;}
+	}
 	
 	void build( int numv );
 	// build this to be a slave to it.
@@ -108,7 +119,7 @@ public:
 	// first and last are ((y*px) + x) indecies.
 	// (first >= 0) && (last < px*py)
 	void runRange( VotingSystem* system, int first, int last );
-	int* runPixel(VotingSystem* system, int x, int y, double dx, double dy, int* winners, int* combos);
+	void runPixel(VotingSystem* system, int x, int y, double dx, double dy, int* winners);
 
 	size_t configStr( char* dest, size_t len );
 
@@ -172,6 +183,7 @@ void PlaneSim::build( int numv ) {
 	candidates = new pos[candcount];
 	they.build( numv, candcount );
 	accum = new int[px * py * they.numc];
+	memset(accum, 0, sizeof(int)*(px * py * they.numc));
 #if 0
 	printf("numc=%d sizeof(pos[numc]) = %lu\n"
 		   "px=%d py=%d sizeof(int[px * py * numc]) = %lu\n",
@@ -225,7 +237,7 @@ void PlaneSim::randomizeVoters( double centerx, double centery, double sigma ) {
 		candidatePositions[c*2+1] = candidates[c].y;
 	}
 	they.randomizeGaussianNSpace(2, candidatePositions, center, sigma);
-	delete candidatePositions;
+	delete [] candidatePositions;
 #else
 	for ( int i = 0; i < they.numv; i++ ) {
 		double tx, ty;
@@ -250,7 +262,7 @@ void PlaneSim::randomizeVoters( double centerx, double centery, double sigma ) {
 #endif
 }
 
-int* PlaneSim::runPixel(VotingSystem* system, int x, int y, double dx, double dy, int* winners, int* combos) {
+void PlaneSim::runPixel(VotingSystem* system, int x, int y, double dx, double dy, int* winners) {
 	for ( int n = 0; n < electionsPerPixel; n++ ) {
 		randomizeVoters( dx, dy, voterSigma );
 		if (doCombinatoricExplode) {
@@ -275,54 +287,30 @@ int* PlaneSim::runPixel(VotingSystem* system, int x, int y, double dx, double dy
 		}
 	}
 	//printf("%d,%d\n", x, y);
-	return combos;
 }
 
 void PlaneSim::run( VotingSystem* system ) {
 	int* winners;
-	int* combos = NULL;
 	winners = new int[they.numc];
+	if (doCombinatoricExplode) {
+		assert(combos == NULL);
+		combos = new int[seats*VoterArray::nChooseK(they.numc, seats)];
+	}
 	for ( int y = 0; y < py; y++ ) {
 		double dy = yIndexToCoord( y );
 		printf("y=%d\n", y);
 		for ( int x = 0; x < px; x++ ) {
 			double dx = xIndexToCoord( x );
-#if 1
-			combos = runPixel(system, x, y, dx, dy, winners, combos);
-#else
-			for ( int n = 0; n < electionsPerPixel; n++ ) {
-				randomizeVoters( dx, dy, voterSigma );
-				if (doCombinatoricExplode) {
-					if (combos == NULL) {
-						combos = new int[seats*VoterArray::nChooseK(they.numc, seats)];
-					}
-					exploded.combinatoricExplode(they, seats, combos);
-					system->runElection( winners, exploded );
-					assert( winners[0] >= 0 );
-					assert( winners[0] < exploded.numc );
-					int* winningCombo = combos + (seats*winners[0]);
-					for (int s = 0; s < seats; ++s) {
-						incAccum( x, y, winningCombo[s] );
-					}
-				} else {
-					system->runElection( winners, they );
-					assert( winners[0] >= 0 );
-					assert( winners[0] < they.numc );
-					for (int s = 0; s < seats; ++s) {
-						incAccum( x, y, winners[s] );
-					}
-				}
-			}
-			//printf("%d,%d\n", x, y);
-#endif
+			runPixel(system, x, y, dx, dy, winners);
 		}
 	}
+	delete [] combos;
+	combos = NULL;
 	delete [] winners;
 }
 
 void PlaneSim::runRange( VotingSystem* system, int first, int last ) {
 	int* winners;
-	int* combos = NULL;
 	int x, y;
 	int pos = first;
 	x = first % px;
@@ -332,20 +320,7 @@ void PlaneSim::runRange( VotingSystem* system, int first, int last ) {
 	double dy = yIndexToCoord( y );
 	double dx = xIndexToCoord( x );
 	while ( true ) {
-#if 1
-		combos = runPixel(system, x, y, dx, dy, winners, combos);
-#else
-		//printf("y=%d\n", y);
-		for ( int n = 0; n < electionsPerPixel; n++ ) {
-			randomizeVoters( dx, dy, voterSigma );
-			system->runElection( winners, they );
-			assert( winners[0] >= 0 );
-			assert( winners[0] < they.numc );
-			for (int s = 0; s < seats; ++s) {
-				incAccum( x, y, winners[s] );
-			}
-		}
-#endif
+		runPixel(system, x, y, dx, dy, winners);
 		pos++;
 		if ( pos > last ) {
 			break;
@@ -523,6 +498,7 @@ void PlaneSim::drawDiamond( int cx, int cy, const uint8_t* color ) {
 }
 void PlaneSim::writePNG( const char* filename ) {
 	pix = new uint8_t[px*py*3];
+	memset(pix, 0, px*py*3);
 	uint8_t** rows = new uint8_t*[py];
 	int i;
 	int sumErrors = 0;
@@ -576,6 +552,7 @@ void PlaneSim::writePNG( const char* filename ) {
 }
 void PlaneSim::writePlanePNG( const char* filename, int c ) {
 	pix = new uint8_t[px*py*3];
+	memset(pix, 0, px*py*3);
 	uint8_t** rows = new uint8_t*[py];
 	int i;
 	fprintf(stderr,"making image %dx%d for choices %d\n", px, py, c );
@@ -591,11 +568,11 @@ void PlaneSim::writePlanePNG( const char* filename, int c ) {
 			assert(weight >= 0.0);
 			uint8_t* p;
 			p = getpxp( x, y );
-			*p += (uint8_t)(weight);
+			*p = (uint8_t)(weight);
 			p++;
-			*p += (uint8_t)(weight);
+			*p = (uint8_t)(weight);
 			p++;
-			*p += (uint8_t)(weight);
+			*p = (uint8_t)(weight);
 		}
 	}
 	printf("cd %f,%f -> ", candidates[c].x, candidates[c].y );
@@ -613,6 +590,7 @@ void PlaneSim::writePlanePNG( const char* filename, int c ) {
 }
 void PlaneSim::writeSumPNG( const char* filename ) {
 	pix = new uint8_t[px*py*3];
+	memset(pix, 0, px*py*3);
 	uint8_t** rows = new uint8_t*[py];
 	int i;
 	double targetSum = electionsPerPixel * seats;
@@ -906,6 +884,7 @@ int main( int argc, char** argv ) {
 		vs = cf->make();
 	}
 	if ( methodEnvCount > 0 ) {
+		methodEnv[methodEnvCount] = NULL;
 		vs->init( methodEnv );
 	}
 	sim.build( nvoters );

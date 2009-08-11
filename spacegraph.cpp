@@ -71,6 +71,8 @@ candidatearg::candidatearg( const char* arg, candidatearg* nextI ) : next( nextI
 	}
 }
 
+class XYSource;
+
 class PlaneSim {
 public:
 	pos* candidates;
@@ -115,10 +117,7 @@ public:
 	void randomizeVoters( double centerx, double centery, double sigma );
 	
 	void run( VotingSystem* system );
-	// calculates first through last inclusive.
-	// first and last are ((y*px) + x) indecies.
-	// (first >= 0) && (last < px*py)
-	void runRange( VotingSystem* system, int first, int last );
+	void runXYSource(VotingSystem* system, XYSource* source);
 	void runPixel(VotingSystem* system, int x, int y, double dx, double dy, int* winners);
 
 	size_t configStr( char* dest, size_t len );
@@ -177,6 +176,45 @@ public:
 	void writeSumPNG( const char* filename );
 
 	void drawDiamond( int x, int y, const uint8_t* color );
+};
+
+class XYSource {
+public:
+	XYSource(int x, int y) : curx(0), cury(0), sizex(x), sizey(y) {
+#if !NDEBUG
+		int err = 
+#endif
+		pthread_mutex_init(&lock, NULL);
+		assert(0 == err);
+	}
+	~XYSource() {
+		pthread_mutex_destroy(&lock);
+	}
+	
+	bool next(int* x, int* y) {
+		bool ok = true;
+		pthread_mutex_lock(&lock);
+		if (cury >= sizey) {
+			ok = false;
+		} else {
+			*x = curx;
+			*y = cury;
+			curx++;
+			if (curx >= sizex) {
+				curx = 0;
+				cury++;
+			}
+		}
+		pthread_mutex_unlock(&lock);
+		return ok;
+	}
+	
+private:
+	int curx;
+	int cury;
+	int sizex;
+	int sizey;
+	pthread_mutex_t lock;
 };
 
 void PlaneSim::build( int numv ) {
@@ -309,30 +347,14 @@ void PlaneSim::run( VotingSystem* system ) {
 	delete [] winners;
 }
 
-void PlaneSim::runRange( VotingSystem* system, int first, int last ) {
-	int* winners;
-	int x, y;
-	int pos = first;
-	x = first % px;
-	y = first / px;
-	assert( ((y*px)+x) == first );
-	winners = new int[they.numc];
-	double dy = yIndexToCoord( y );
-	double dx = xIndexToCoord( x );
-	while ( true ) {
-		runPixel(system, x, y, dx, dy, winners);
-		pos++;
-		if ( pos > last ) {
-			break;
-		}
-		x++;
-		if ( x == px ) {
-			x = 0;
-			y++;
-			assert(y < py);
-			dy = yIndexToCoord( y );
-		}
+void PlaneSim::runXYSource(VotingSystem* system, XYSource* source) {
+	int* winners = new int[they.numc];
+	int x = -1, y = -1;
+	double dx, dy;
+	while (source->next(&x, &y)) {
+		dy = yIndexToCoord( y );
 		dx = xIndexToCoord( x );
+		runPixel(system, x, y, dx, dy, winners);
 	}
 	delete [] winners;
 }
@@ -709,12 +731,11 @@ public:
 	PlaneSim* sim;
 	pthread_t thread;
 	VotingSystem* vs;
-	int first;
-	int last;
+	XYSource* source;
 };
 void* runPlaneSimThread(void* arg) {
 	PlaneSimThread* it = (PlaneSimThread*)arg;
-	it->sim->runRange( it->vs, it->first, it->last );
+	it->sim->runXYSource(it->vs, it->source);
 	return NULL;
 }
 
@@ -899,22 +920,17 @@ int main( int argc, char** argv ) {
 	} else {
 		PlaneSim* sims = new PlaneSim[nthreads-1];
 		PlaneSimThread* threads = new PlaneSimThread[nthreads];
-		int total = sim.px * sim.py;
-		int step = total / nthreads;
-		int pos = 0;
+		XYSource* source = new XYSource(sim.px, sim.py);
 		int i;
 		for (i = 0; i < nthreads-1; ++i) {
 			sims[i].coBuild(sim);
 			threads[i].sim = &(sims[i]);
 			threads[i].vs = vs;
-			threads[i].first = pos;
-			pos += step;
-			threads[i].last = pos - 1;
+			threads[i].source = source;
 		}
 		threads[i].sim = &sim;
 		threads[i].vs = vs;
-		threads[i].first = pos;
-		threads[i].last = total - 1;
+		threads[i].source = source;
 		for (i = 0; i < nthreads; ++i) {
 			pthread_create(&(threads[i].thread), NULL, runPlaneSimThread, &(threads[i]));
 		}

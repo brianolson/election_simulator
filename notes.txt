@@ -75,3 +75,9 @@ time /usr/bin/nice -20 ./vpb \
 --method STV --seats=2 \
 --planes=/tmp/xp \
 -o /tmp/sg.png
+
+
+http://www.cs.cornell.edu/w8/~andru/civs/proportional.html
+http://www.mcdougall.org.uk/VM/ISSUE3/P5.HTM
+http://www.mcdougall.org.uk/VM/ISSUE6/P4.HTM
+http://www.mail-archive.com/election-methods@lists.electorama.com/msg04001.html

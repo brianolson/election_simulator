@@ -81,6 +81,11 @@
 		1F5ECE5D05E5EFB100994248 /* NNStrategicVoter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE5B05E5EFB100994248 /* NNStrategicVoter.cpp */; };
 		1F5ECE5E05E5EFB100994248 /* NNStrategicVoter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE5C05E5EFB100994248 /* NNStrategicVoter.h */; };
 		1F6D6E820F47091E001B7A1D /* gauss.c in Sources */ = {isa = PBXBuildFile; fileRef = 32E9DA330D651C3600EC3419 /* gauss.c */; };
+		1F7684971037B475005E8425 /* IRNRP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F7684961037B475005E8425 /* IRNRP.cpp */; };
+		1F7684981037B475005E8425 /* IRNRP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F7684961037B475005E8425 /* IRNRP.cpp */; };
+		1F7684991037B475005E8425 /* IRNRP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F7684961037B475005E8425 /* IRNRP.cpp */; };
+		1F76849A1037B475005E8425 /* IRNRP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7684951037B475005E8425 /* IRNRP.h */; };
+		1F76849B1037B475005E8425 /* IRNRP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F7684961037B475005E8425 /* IRNRP.cpp */; };
 		1FB5A12405F00074009ACE7D /* NNSVSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB5A12305F00074009ACE7D /* NNSVSim.cpp */; };
 		1FB5A12E05F0174A009ACE7D /* AcceptanceVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0305E5E87E00994248 /* AcceptanceVotePickOne.cpp */; };
 		1FB5A13205F01BDA009ACE7D /* nnsv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FB5A13105F01BDA009ACE7D /* nnsv.cpp */; };
@@ -235,6 +240,8 @@
 		1F5ECE2105E5E87E00994248 /* WorkQueue.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = WorkQueue.h; sourceTree = SOURCE_ROOT; };
 		1F5ECE5B05E5EFB100994248 /* NNStrategicVoter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = NNStrategicVoter.cpp; sourceTree = SOURCE_ROOT; };
 		1F5ECE5C05E5EFB100994248 /* NNStrategicVoter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = NNStrategicVoter.h; sourceTree = SOURCE_ROOT; };
+		1F7684951037B475005E8425 /* IRNRP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRNRP.h; sourceTree = "<group>"; };
+		1F7684961037B475005E8425 /* IRNRP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IRNRP.cpp; sourceTree = "<group>"; };
 		1FB5A12305F00074009ACE7D /* NNSVSim.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = NNSVSim.cpp; sourceTree = "<group>"; };
 		1FB5A12A05F016E5009ACE7D /* nnsv */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = nnsv; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FB5A13105F01BDA009ACE7D /* nnsv.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = nnsv.cpp; sourceTree = "<group>"; };
@@ -345,6 +352,8 @@
 				1F5ECE0C05E5E87E00994248 /* InstantRunoffVotePickOne.h */,
 				1F5ECE0D05E5E87E00994248 /* IRNR.cpp */,
 				1F5ECE0E05E5E87E00994248 /* IRNR.h */,
+				1F7684951037B475005E8425 /* IRNRP.h */,
+				1F7684961037B475005E8425 /* IRNRP.cpp */,
 				328C82FC0F602CE900C872DA /* NameBlock.cpp */,
 				328C83030F602CF100C872DA /* NameBlock.h */,
 				1F5ECE5B05E5EFB100994248 /* NNStrategicVoter.cpp */,
@@ -468,6 +477,7 @@
 				3286DC0B0F46896C0059D26D /* IteratedNormalizedRatings.h in Headers */,
 				328C83040F602CF100C872DA /* NameBlock.h in Headers */,
 				1FF81B81102D9494005E4B04 /* STV.h in Headers */,
+				1F76849A1037B475005E8425 /* IRNRP.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -632,6 +642,7 @@
 				3286DC0D0F46896C0059D26D /* IteratedNormalizedRatings.cpp in Sources */,
 				328C82FF0F602CE900C872DA /* NameBlock.cpp in Sources */,
 				1FF81B80102D9494005E4B04 /* STV.cpp in Sources */,
+				1F7684981037B475005E8425 /* IRNRP.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -663,6 +674,7 @@
 				1F4392780F5904A9006BE973 /* trial.pb.cc in Sources */,
 				328C83010F602CE900C872DA /* NameBlock.cpp in Sources */,
 				1FF81B84102D9494005E4B04 /* STV.cpp in Sources */,
+				1F7684971037B475005E8425 /* IRNRP.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -733,6 +745,7 @@
 				1F6D6E820F47091E001B7A1D /* gauss.c in Sources */,
 				328C82FD0F602CE900C872DA /* NameBlock.cpp in Sources */,
 				1FF81B83102D9494005E4B04 /* STV.cpp in Sources */,
+				1F7684991037B475005E8425 /* IRNRP.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -764,6 +777,7 @@
 				3286DC0C0F46896C0059D26D /* IteratedNormalizedRatings.cpp in Sources */,
 				328C82FE0F602CE900C872DA /* NameBlock.cpp in Sources */,
 				1FF81B82102D9494005E4B04 /* STV.cpp in Sources */,
+				1F76849B1037B475005E8425 /* IRNRP.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

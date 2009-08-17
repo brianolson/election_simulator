@@ -4,12 +4,15 @@ $name = shift;
 
 if ( ! defined $name ) {
 	print STDERR "usage:\n\tnewMethod.pl methodName\n";
+	exit 1;
 }
 if ( -e "${name}.cpp" ) {
 	print STDERR "error: ${name}.cpp already exists\n";
+	exit 1;
 }
 if ( -e "${name}.h" ) {
 	print STDERR "error: ${name}.h already exists\n";
+	exit 1;
 }
 
 $ucname = uc( $name );
@@ -19,39 +22,52 @@ print FOUT<<EOF;
 #include "Voter.h"
 #include "${name}.h"
 
+#if 0
+void ${name}::init( const char** envp ) {
+	const char* cur = *envp;
+	while (cur != NULL) {
+		if (0 == strncmp(cur, "seats=", 6)) {
+			seats = strtol(cur + 6, NULL, 10);
+		}
+		envp++;
+		cur = *envp;
+	}
+}
+#endif
+
 void ${name}::runElection( int* winnerR, const VoterArray& they ) {
     int i;
-    int* talley;
+    int* tally;
     int winner;
     int numc = they.numc;
     int numv = they.numv;
     
     // init things
-    talley = new int[numc];
+    tally = new int[numc];
     for ( i = 0; i  < numc; i++ ) {
-        talley[i] = 0;
+        tally[i] = 0;
     }
     
     // count votes for each candidate
     for ( i = 0; i < numv; i++ ) {
-        talley[they[i].getMax()]++;
+        tally[they[i].getMax()]++;
     }
     // find winner
     {
-        int m = talley[0];
+        int m = tally[0];
         winner = 0;
         for ( i = 1; i < numc; i++ ) {
-            if ( talley[i] > m ) {
-                m = talley[i];
+            if ( tally[i] > m ) {
+                m = tally[i];
                 winner = i;
             }
         }
     }
-    delete [] talley;
+    delete [] tally;
     if ( winnerR ) *winnerR = winner;
 }
 
-VotingSystem* new${name}( char* n ) {
+VotingSystem* new${name}( const char* n ) {
 	return new ${name}();
 }
 VSFactory* ${name}_f = new VSFactory( new${name}, "${name}" );
@@ -70,9 +86,10 @@ print FOUT<<EOF;
 
 class ${name} : public VotingSystem {
 public:
-    ${name}() : VotingSystem( "${name}" ) {};
-    virtual void runElection( int* winnerR, const VoterArray& they );
-    virtual ~${name}();
+	${name}() : VotingSystem( "${name}" ) {};
+	//virtual void init( const char** envp );
+	virtual void runElection( int* winnerR, const VoterArray& they );
+	virtual ~${name}();
 };
 
 #endif

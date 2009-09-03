@@ -126,12 +126,14 @@ public:
 	// n! / (k!)(n-k)!
 	static inline int nChooseK(int n, int k) {
 		int out = n;
+                int n_minus_k = n - k;
 		int i = n - 1;
-		while (i > k) {
+		while (i > n_minus_k) {
 			out *= i;
 			i--;
 		}
 		i = k;
+                // out == (n! / (n-k)!)
 		while (i > 1) {
 			out /= i;
 			i--;

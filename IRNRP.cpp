@@ -1,5 +1,6 @@
 #include "Voter.h"
 #include "IRNRP.h"
+#include "MaybeDebugLog.h"
 
 #include <assert.h>
 #include <math.h>
@@ -11,6 +12,8 @@ void IRNRP::init( const char** envp ) {
 	while (cur != NULL) {
 		if (0 == strncmp(cur, "seats=", 6)) {
 			seats = strtol(cur + 6, NULL, 10);
+		} else if (0 == strncmp(cur, "debug=", 6)) {
+			debug = MaybeDebugLog::ForPath(cur + 6);
 		}
 		envp++;
 		cur = *envp;
@@ -31,10 +34,10 @@ static const double overtallyEpsilon = 1.001;
  If over-quota sum less than epsilon and insufficient winners, disqualify lowest.
  */
 void IRNRP::runElection( int* winnerR, const VoterArray& they ) {
-    int i;
-    int numc = they.numc;
-    int numv = they.numv;
-    double* tally = new double[numc];
+	int i;
+	int numc = they.numc;
+	int numv = they.numv;
+	double* tally = new double[numc];
 	double* cweight = new double[numc];
 	bool* active = new bool[numc];
 	bool* winning = new bool[numc];
@@ -46,7 +49,12 @@ void IRNRP::runElection( int* winnerR, const VoterArray& they ) {
 		winning[c] = false;
 		cweight[c] = 1.0;
 	}
-    
+	if (debug) {
+		debug->clear();
+		debug->setEnable(false);
+		debug->vlog("<table>");
+	}
+
 	while (true) {
 		// round init
 		for (int c = 0; c < numc; ++c) {
@@ -57,35 +65,59 @@ void IRNRP::runElection( int* winnerR, const VoterArray& they ) {
 		for ( i = 0; i < numv; i++ ) {
 			double vsum = 0.0;
 			double minp = 0.0;
+			bool shiftvotes = false;
 			for (int c = 0; c < numc; ++c) {
 				if (active[c]) {
 					double p = they[i].getPref(c);
 					if (p < minp) {
 						minp = p;
+						shiftvotes = true;
 					}
-					double t = p * cweight[c];
-					vsum += t * t;
 				}
 			}
-			if (minp < 0.0) {
-				vsum = 0.0;
+			if (shiftvotes) {
+				// shift all values positive. negatives break quota.
+				if (minp < 0.0) {
+					vsum = 0.0;
+					for (int c = 0; c < numc; ++c) {
+						if (active[c]) {
+							double p = they[i].getPref(c) - minp;
+							double t = p * cweight[c];
+							vsum += t * t;
+						}
+					}
+				}
+				if (vsum <= 0.0) {
+					assert(false);
+					continue;
+				}
+				vsum = 1.0 / sqrt(vsum);
 				for (int c = 0; c < numc; ++c) {
 					if (active[c]) {
 						double p = they[i].getPref(c) - minp;
+						assert(p >= 0.0);
+						tally[c] += p * cweight[c] * vsum;
+					}
+				}
+			} else {
+				for (int c = 0; c < numc; ++c) {
+					if (active[c]) {
+						double p = they[i].getPref(c);
 						double t = p * cweight[c];
 						vsum += t * t;
 					}
 				}
-			}
-			if (vsum <= 0.0) {
-				continue;
-			}
-			vsum = 1.0 / sqrt(vsum);
-			for (int c = 0; c < numc; ++c) {
-				if (active[c]) {
-					double p = they[i].getPref(c) - minp;
-					assert(p >= 0.0);
-					tally[c] += p * cweight[c] * vsum;
+				if (vsum <= 0.0) {
+					assert(false);
+					continue;
+				}
+				vsum = 1.0 / sqrt(vsum);
+				for (int c = 0; c < numc; ++c) {
+					if (active[c]) {
+						double p = they[i].getPref(c);
+						assert(p >= 0.0);
+						tally[c] += p * cweight[c] * vsum;
+					}
 				}
 			}
 		}
@@ -112,11 +144,29 @@ void IRNRP::runElection( int* winnerR, const VoterArray& they ) {
 					//fprintf(stderr, "%d tally[%d]=%f > %f. new cweight=%f\n", roundcounter, c, tally[c], quotaPlusEpsilon, cweight[c]);
 				}
 			} else if (winning[c]) {
-				numwinners++;
+				//numwinners++;
+				if (debug) {
+					static int fail_limit = 4;
+					if (--fail_limit < 0) {
+						delete debug;
+						exit(1);
+					}
+					debug->setEnable(true);
 				fprintf(
 					stderr, "%d warning, winning choice(%d) has fallen below quota (%f < %f)\n",
 					roundcounter, c, tally[c], quota);
+				}
+				winning[c] = false;
 			}
+		}
+		if (debug) {
+			debug->vlog("<tr><td class=\"r\">%d</td><td class=\"q\">%f</td>", roundcounter, quota);
+			for (int c = 0; c < numc; ++c) {
+				debug->vlog("<td class=\"%s\">* %f = %f</td>",
+					winning[c] ? (tally[c] < quota ? "wine" : "win") : (active[c] ? "ne" : "dq"),
+					cweight[c], tally[c]);
+			}
+			debug->vlog("</tr>\n");
 		}
 #if 0
 		for (int c = 0; c < numc; ++c) {
@@ -157,8 +207,14 @@ void IRNRP::runElection( int* winnerR, const VoterArray& they ) {
 		}
 		roundcounter++;
 	}
-	//fprintf(stderr, "finished IRNRP after %d rounds\n", roundcounter);
-    // return winners
+	if (debug) {
+		debug->vlog("</table>\n");
+		if (!debug->isEnabled()) {
+			debug->clear();
+			//debug->setEnable(true);
+			//debug->vlog(".\n");
+		}
+	}
 	int winneri = 0;
 	for (int c = 0; c < numc; ++c) {
 		if (winning[c]) {
@@ -169,7 +225,7 @@ void IRNRP::runElection( int* winnerR, const VoterArray& they ) {
 	delete [] winning;
 	delete [] active;
 	delete [] cweight;
-    delete [] tally;
+	delete [] tally;
 }
 
 VotingSystem* newIRNRP( const char* n ) {
@@ -178,4 +234,7 @@ VotingSystem* newIRNRP( const char* n ) {
 VSFactory* IRNRP_f = new VSFactory( newIRNRP, "IRNRP" );
 
 IRNRP::~IRNRP() {
+	if (debug != NULL) {
+		delete debug;
+	}
 }

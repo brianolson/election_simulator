@@ -20,6 +20,8 @@
 #include "InstantRunoffVotePickOne.h"
 #include "Condorcet.h"
 #include "IRNR.h"
+#include "STV.h"
+#include "IRNRP.h"
 #include "RandomElection.h"
 
 #include "ResultFile.h"
@@ -38,6 +40,12 @@
 #else
 class ProtoResultLog;
 #endif
+
+// This doesn't do anything but make sure these methods get linked in.
+void* linker_tricking() {
+	delete new STV();
+        return new IRNRP();
+}
 
 volatile int goGently = 0;
 

@@ -20,6 +20,7 @@
 #include "InstantRunoffVotePickOne.h"
 #include "Condorcet.h"
 #include "IRNR.h"
+#include "IRNRP.h"
 #include "IteratedNormalizedRatings.h"
 #include "RandomElection.h"
 #include "STV.h"
@@ -28,9 +29,10 @@
 
 #include "png.h"
 
-// This doesn't do anything but make sure STV.o gets linked in.
+// This doesn't do anything but make sure these methods get linked in.
 void* linker_tricking() {
-	return new STV();
+	delete new STV();
+        return new IRNRP();
 }
 
 class pos {

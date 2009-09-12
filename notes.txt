@@ -64,6 +64,8 @@ time /usr/bin/nice -20 ./vpb \
 --rlog rlog.pb \
 -n 10
 
+vpb -v 10000 -c 10 -e 0.01 --ngauss --dimensions 2 --rlog /tmp/rlog.pb -n 100 -M debug=/tmp/irnrpdebug -M seats=4 -e IRNRP
+
 ./processprl rlog.pb
 
 

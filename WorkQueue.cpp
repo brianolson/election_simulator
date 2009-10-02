@@ -5,11 +5,20 @@
 #include <string.h>
 
 WorkUnit::WorkUnit( int nv, int nc, float e, int t )
-    : numv( nv ), numc( nc ), error( e ), trials( t ), next( (WorkUnit*)0 )
+    : numv( nv ), numc( nc ), error( e ), seats( 1 ),
+      trials( t ), next( (WorkUnit*)0 )
+{}
+WorkUnit::WorkUnit( int nv, int nc, float e, int t, int s )
+    : numv( nv ), numc( nc ), error( e ), seats( s ),
+      trials( t ), next( (WorkUnit*)0 )
 {}
 void WorkUnit::print( void* file ) {
     FILE* f = (FILE*)file;
-    fprintf( f, "%d voters, %d choices, %0.2f error, %d trials\n", numv, numc, error, trials );
+    if (seats > 1) {
+        fprintf( f, "%d voters, %d choices, %0.2f error, %d seats, %d trials\n", numv, numc, error, seats, trials );
+    } else {
+        fprintf( f, "%d voters, %d choices, %0.2f error, %d trials\n", numv, numc, error, trials );
+    }
 }
 
 WorkSource::~WorkSource(){}
@@ -53,7 +62,7 @@ WorkUnit* WorkQueue::newWorkUnit() {
 }
 
 Steps::Steps()
-    : v( 0 ), c( 0 ), e( -1 )
+    : seatSteps( NULL ), v( 0 ), c( 0 ), e( -1 )
 {
     static const int dvsteps[] = { 100, 1000 };
     static const int dcsteps[] = { 2, 3, 4, 5, 6, 7, 8 };
@@ -93,7 +102,7 @@ Steps::~Steps() {
 #include <assert.h>
 
 Steps::Steps( const char* vlist, const char* clist, const char* elist, int nIn )
-    : vstepsLen( 1 ), cstepsLen( 1 ), estepsLen( 1 ),
+    : vstepsLen( 1 ), cstepsLen( 1 ), estepsLen( 1 ), seatSteps( NULL ),
       v( 0 ), c( 0 ), e( -1 ), n( nIn )
 {
     if ( vlist ) {
@@ -115,21 +124,32 @@ Steps::Steps( const char* vlist, const char* clist, const char* elist, int nIn )
 	estepsLen = 0;
     }
 }
+
+inline int countNonSpaceChunks(const char* cur) {
+    int chunks = 0;
+    int mode = 0;  // 0 = space, 1 = chunk
+    while ( *cur != '\0' ) {
+	if ( isspace( *cur )) {
+            if ( mode == 1 ) {
+                // nonspace -> space
+                mode = 0;
+            }
+        } else {
+            if ( mode == 0 ) {
+                // space -> nonspace transition
+                chunks++;
+                mode = 1;
+            }
+        }
+        cur++;
+    }
+    return chunks;
+}
+
 void Steps::parseV( const char* vlist ) {
     const char* cur;
     int pos;
-    vstepsLen = 1;
-    cur = vlist;
-    while ( *cur != '\0' ) {
-	if ( isspace( *cur )) {
-	    vstepsLen++;
-	    do {
-		cur++;
-	    } while ( isspace( *cur ));
-	} else {
-	    cur++;
-	}
-    }
+    vstepsLen = countNonSpaceChunks(vlist);
     vsteps = (int*)malloc( sizeof(int) * vstepsLen );
     cur = vlist;
     pos = 0;
@@ -149,14 +169,7 @@ void Steps::parseV( const char* vlist ) {
 void Steps::parseC( const char* clist ) {
     const char* cur;
     int pos;
-    cur = clist;
-    cstepsLen = 1;
-    while ( *cur != '\0' ) {
-	if ( isspace( *cur )) {
-	    cstepsLen++;
-	}
-	cur++;
-    }
+    cstepsLen = countNonSpaceChunks(clist);
     csteps = (int*)malloc( sizeof(int) * cstepsLen );
     cur = clist;
     pos = 0;
@@ -176,15 +189,7 @@ void Steps::parseC( const char* clist ) {
 void Steps::parseE( const char* elist ) {
     const char* cur;
     int pos;
-    cur = elist;
-    estepsLen = 1;
-    while ( *cur != '\0' ) {
-	if ( isspace( *cur )) {
-//	    printf("espace '%c'\n", *cur );
-	    estepsLen++;
-	}
-	cur++;
-    }
+    estepsLen = countNonSpaceChunks(elist);
     esteps = (float*)malloc( sizeof(int) * estepsLen );
     cur = elist;
     pos = 0;
@@ -198,6 +203,41 @@ void Steps::parseE( const char* elist ) {
 	    ((float*)esteps)[pos] = atof( cur );
 	}
 	cur++;
+    }
+}
+
+// whitespace separated list of %d,%d
+void Steps::parseCandidatesSeats( const char* slist ) {
+    const char* cur;
+    char* eptr;
+    int pos;
+    cstepsLen = countNonSpaceChunks(slist);
+    assert(cstepsLen > 0);
+    csteps = (int*)malloc( sizeof(int) * cstepsLen );
+    assert(csteps != NULL);
+    seatSteps = (int*)malloc( sizeof(int) * cstepsLen );
+    assert(seatSteps != NULL);
+    cur = slist;
+    pos = 0;
+    while ( *cur != '\0' ) {
+        while ( (*cur != '\0') && isspace( *cur )) {
+            cur++;
+        }
+        if (*cur == '\0') {
+            break;
+        }
+        assert(pos < cstepsLen);
+        csteps[pos] = strtol(cur, &eptr, 10);
+        // TODO: make nicer error messages than assert
+        assert(eptr != NULL);
+        assert(eptr != cur);
+        assert(*eptr == ',');
+        cur = eptr + 1;
+        seatSteps[pos] = strtol(cur, &eptr, 10);
+        assert(eptr != NULL);
+        assert(eptr != cur);
+        cur = eptr;
+        pos++;
     }
 }
 
@@ -275,8 +315,10 @@ WorkUnit* Steps::newWorkUnit() {
 //	v = 0;
 	return NULL;
     }
-    WorkUnit* toret = new WorkUnit( vsteps[v], csteps[c], esteps[e], n );
-    return toret;
+    if ( seatSteps != NULL ) {
+      return new WorkUnit( vsteps[v], csteps[c], esteps[e], n, seatSteps[c] );
+    }
+    return new WorkUnit( vsteps[v], csteps[c], esteps[e], n );
 }
 
 #if STEPS_TEST_MAIN

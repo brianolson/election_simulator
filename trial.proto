@@ -17,6 +17,8 @@ message TrialResult {
 		NSPACE_GAUSSIAN_PREFERENCES = 3;
 	}
 	required Model voter_model = 6;
+
+	optional int32 seats = 10 [default = 1];
 	
 	// Results
 	required float mean_happiness = 7;

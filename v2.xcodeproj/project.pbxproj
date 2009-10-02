@@ -81,6 +81,7 @@
 		1F5ECE5D05E5EFB100994248 /* NNStrategicVoter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE5B05E5EFB100994248 /* NNStrategicVoter.cpp */; };
 		1F5ECE5E05E5EFB100994248 /* NNStrategicVoter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE5C05E5EFB100994248 /* NNStrategicVoter.h */; };
 		1F6D6E820F47091E001B7A1D /* gauss.c in Sources */ = {isa = PBXBuildFile; fileRef = 32E9DA330D651C3600EC3419 /* gauss.c */; };
+		1F742CAF106E63D60073F3FB /* libprotobuf.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FF81B92102F48BA005E4B04 /* libprotobuf.3.dylib */; };
 		1F7684971037B475005E8425 /* IRNRP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F7684961037B475005E8425 /* IRNRP.cpp */; };
 		1F7684981037B475005E8425 /* IRNRP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F7684961037B475005E8425 /* IRNRP.cpp */; };
 		1F7684991037B475005E8425 /* IRNRP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F7684961037B475005E8425 /* IRNRP.cpp */; };
@@ -295,6 +296,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F742CAF106E63D60073F3FB /* libprotobuf.3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

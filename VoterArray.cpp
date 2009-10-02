@@ -1,5 +1,6 @@
 #include "Voter.h"
 #include "gauss.h"
+#include <assert.h>
 #include <math.h>
 
 #ifndef NULL
@@ -103,6 +104,16 @@ void VoterArray::randomizeGaussianNSpace(int dimensions, double* choicePositions
 			}
 			they[v].setPref(c, sigma - sqrt(rsquared));
 		}
+#ifndef NDEBUG
+		bool somedifferent = false;
+		for (int c = 1; c < numc; ++c) {
+			if (they[v].getPref(c) != they[v].getPref(c-1)) {
+				somedifferent = true;
+				break;
+			}
+		}
+		assert(somedifferent);
+#endif
 	}
 	delete [] dimholder;
 }
@@ -118,3 +129,18 @@ void VoterArray::randomGaussianChoicePositions(double* positions, int numc, int 
 		}
 	}
 }
+
+#ifndef NDEBUG
+void VoterArray::validate() const {
+	for (int v = 0; v < numv; ++v ) {
+		bool somedifferent = false;
+		for (int c = 1; c < numc; ++c) {
+			if (they[v].getPref(c) != they[v].getPref(c-1)) {
+				somedifferent = true;
+				break;
+			}
+		}
+		assert(somedifferent);
+	}
+}
+#endif

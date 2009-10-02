@@ -6,6 +6,7 @@
 #include <map>
 #include <set>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "ProtoResultLog.h"
@@ -20,6 +21,7 @@ using std::vector;
 using std::set;
 using std::string;
 using std::map;
+using std::pair;
 
 /*
  Graphing
@@ -75,6 +77,7 @@ public:
 	// Parameters
 	int32 voters;
 	int32 choices;
+	int32 seats;
 	float error;
 	int32 system_index;
 	VoterSim::PreferenceMode mode;
@@ -83,10 +86,10 @@ public:
 	// Results
 	ResultList* results;
 	ResultHolder()
-	: voters(-1), choices(-1), error(-1.0), system_index(-1), mode(VoterSim::BOGUS_PREFERENCE_MODE), dimensions(-1), results(NULL) {
+	: voters(-1), choices(-1), seats(1), error(-1.0), system_index(-1), mode(VoterSim::BOGUS_PREFERENCE_MODE), dimensions(-1), results(NULL) {
 	}
-	ResultHolder(int32 v, int32 c, float e, int32 i, VoterSim::PreferenceMode m, int32 d)
-	: voters(v), choices(c), error(e), system_index(i), mode(m), dimensions(d), results(NULL) {
+	ResultHolder(int32 v, int32 c, int32 s, float e, int32 i, VoterSim::PreferenceMode m, int32 d)
+	: voters(v), choices(c), seats(s), error(e), system_index(i), mode(m), dimensions(d), results(NULL) {
 	}
 	
 	void addResult(double mean_happiness, double voter_happiness_stddev, double gini_index) {
@@ -113,6 +116,12 @@ public:
 			return 1;
 		}
 		if (a.choices > b.choices) {
+			return 0;
+		}
+		if (a.seats < b.seats) {
+			return 1;
+		}
+		if (a.seats > b.seats) {
 			return 0;
 		}
 		if (a.error < b.error) {
@@ -146,7 +155,7 @@ public:
 typedef map<ResultHolder, ResultHolder, ResultHolderCompare> ResultsMap;
 ResultsMap results;
 set<int> vsteps;
-set<int> csteps;
+set<pair<int, int> > cssteps;
 set<double> esteps;
 set<int> sisteps;
 set<VoterSim::PreferenceMode> modesteps;
@@ -162,9 +171,9 @@ vector<const char*> infilenames;
 
 int main(int argc, char** argv) {
 	int count = 0;
-	int voters, choices, systemIndex, dimensions;
-	double error, happiness, voterHappinessStd, gini;
-	VoterSim::PreferenceMode mode;
+	//int voters, choices, systemIndex, dimensions;
+	//double error, happiness, voterHappinessStd, gini;
+	//VoterSim::PreferenceMode mode;
 	NameBlock* names = NULL;
 	const char* rlogname = NULL;
 	const char* csvoutname = NULL;
@@ -195,11 +204,12 @@ int main(int argc, char** argv) {
 			fprintf(stderr, "name disagreement between \"%s\" and \"%s\"\n", rlogname, fname);
 			exit(1);
 		}
-		while (rlog->readResult(&voters, &choices, &error, &systemIndex, &mode, &dimensions, &happiness, &voterHappinessStd, &gini)) {
+		ResultLog::Result r;
+		while (rlog->readResult(&r)) {
 			count++;
-			ResultHolder key(voters, choices, error, systemIndex, mode, dimensions);
+			ResultHolder key(r.voters, r.choices, r.seats, r.error, r.systemIndex, r.mode, r.dimensions);
 			ResultHolder& value = results[key];
-			value.addResult(happiness, voterHappinessStd, gini);
+			value.addResult(r.happiness, r.voterHappinessStd, r.gini);
 		}
 		printf("%s: read %d records in %zu configurations\n", fname, count, results.size());
 	}
@@ -212,12 +222,12 @@ int main(int argc, char** argv) {
 		csvname += ".csv";
 		csv = fopen(csvname.c_str(), "w");
 	}
-	fprintf(csv, "System,Voters,Choices,Error,Mode,Dimensions,Runs,Happiness,Voter Happiness Std,Gini,System Std\n");
+	fprintf(csv, "System,Voters,Choices,Seats,Error,Mode,Dimensions,Runs,Happiness,Voter Happiness Std,Gini,System Std\n");
 	for (ResultsMap::iterator ri = results.begin(); ri != results.end(); ri++) {
 		const ResultHolder& key = (*ri).first;
 		//printf("v%d c%d e%f si%d m%d d%d\n", key.voters, key.choices, key.error, key.system_index, key.mode, key.dimensions);
 		vsteps.insert(key.voters);
-		csteps.insert(key.choices);
+		cssteps.insert(pair<int, int>(key.choices, key.seats));
 		esteps.insert(key.error);
 		sisteps.insert(key.system_index);
 		modesteps.insert(key.mode);
@@ -228,9 +238,9 @@ int main(int argc, char** argv) {
 		results->process();
 		if (csv != NULL) {
 			fprintf(csv,
-				"\"%s\",%d,%d,%f,\"%s\",%d,%zu,"
+				"\"%s\",%d,%d,%d,%f,\"%s\",%d,%zu,"
 				"%f,%f,%f,%f\n",
-				names->names[key.system_index], key.voters, key.choices,
+				names->names[key.system_index], key.voters, key.choices, key.seats,
 				key.error, VoterSim::modeName(key.mode), key.dimensions,
 				results->mean_happiness.size(),
 				results->mean_avg, results->voter_std_avg, results->gini_avg, results->mean_std);
@@ -240,8 +250,10 @@ int main(int argc, char** argv) {
 	printf("iterated %d configurations\n", count);
 	printf("%zu vsteps:", vsteps.size());
 	printIterable(vsteps.begin(), vsteps.end(), " %d");
-	printf("\n%zu csteps:", csteps.size());
-	printIterable(csteps.begin(), csteps.end(), " %d");
+	printf("\n%zu CSsteps:", cssteps.size());
+	for (set<pair<int, int> >::iterator pi = cssteps.begin(); pi != cssteps.end(); ++pi) {
+		printf(" %d,%d", (*pi).first, (*pi).second);
+	}
 	printf("\n%zu esteps:", esteps.size());
 	printIterable(esteps.begin(), esteps.end(), " %.2f");
 	printf("\n%zu sisteps:", sisteps.size());

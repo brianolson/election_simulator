@@ -54,8 +54,8 @@ Result* newResult( int nsys );
 void mergeResult( Result* a, Result* b, int nsys );
 void printSystemResult( void* file, const struct SystemResult* it, const char* name, printStyle style = basic );
 void printResult( void* file, const Result* it, char** names, int nsys, printStyle style = basic );
-void printResultHeader( void* file, u_int32_t numc, u_int32_t numv, u_int32_t trials, float error, int nsys, printStyle style = basic );
-void printResultFooter( void* file, u_int32_t numc, u_int32_t numv, u_int32_t trials, float error, int nsys, printStyle style = basic );
+void printResultHeader( void* file, u_int32_t numc, u_int32_t numv, u_int32_t trials, float error, int seats, int nsys, printStyle style );
+void printResultFooter( void* file, u_int32_t numc, u_int32_t numv, u_int32_t trials, float error, int seats, int nsys, printStyle style );
 
 #include "NameBlock.h"
 
@@ -73,10 +73,10 @@ class ResultFile {
     /**
      * malloc()s. caller's responsibility.
      */
-    virtual Result* get( int choices, int voters, float error ) = 0;
+    virtual Result* get( int choices, int voters, float error, int seats ) = 0;
 
   // Does not take ownership of it, copies if needed.
-    virtual int put( Result* it, int choices, int voters, float error ) = 0;
+    virtual int put( Result* it, int choices, int voters, float error, int seats ) = 0;
 
     virtual int close() = 0;
     virtual int flush() = 0;
@@ -101,10 +101,10 @@ class TextDumpResultFile : public ResultFile {
     /**
      * This implementation always returns NULL. put-only.
      */
-    virtual Result* get( int choices, int voters, float error );
+    virtual Result* get( int choices, int voters, float error, int seats );
 
   // Does not take ownership of it, copies if needed.
-    virtual int put( Result* it, int choices, int voters, float error );
+    virtual int put( Result* it, int choices, int voters, float error, int seats );
 
     virtual int close();
     virtual int flush();

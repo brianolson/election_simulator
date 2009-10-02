@@ -64,9 +64,10 @@ static char voter_main_usage[] =
 "-M methodArg\n"
 "-e methodName -- consumes previous -M args initting this method\n"
 "--list        -- show known methods and exit\n"
-"--vsteps      -- comma separated list of number-of-voters\n"
-"--csteps      -- comma separated list of number-of-choices\n"
-"--esteps      -- comma separated list of error rates\n"
+"--vsteps      -- space separated list of number-of-voters\n"
+"--csteps      -- space separated list of number-of-choices\n"
+"--esteps      -- space separated list of error rates\n"
+"--CSsteps     -- space separated list of choices,seats pairs\n"
 "-n iter       -- iterations to run\n"
 "--threads n\n"
 "\n"
@@ -191,6 +192,10 @@ int main( int argc, char** argv ) {
 			i++;
 			if ( stepq == NULL ) stepq = new Steps;
 			stepq->parseE( argv[i] );
+		} else if ( ! strcmp( argv[i], "--CSsteps" ) ) {
+			i++;
+			if ( stepq == NULL ) stepq = new Steps;
+			stepq->parseCandidatesSeats( argv[i] );
 		} else if ( (! strcmp( argv[i], "-n" )) && (stepq != NULL) ) {
 			i++;j++;
 			argv[j] = argv[i];

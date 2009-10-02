@@ -96,6 +96,11 @@ protected:
     float* storage;
 
 public:
+#ifndef NDEBUG
+	void validate() const;
+#else
+	inline void validate() const {};
+#endif
     inline Voter& operator[]( int i ) const {
 	return *(they + i);
     };

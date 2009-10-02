@@ -185,23 +185,28 @@ void printResult( void* file, const Result* r, char** names, int nsys, printStyl
     }
 }
 
-void printResultHeader( void* file, u_int32_t numc, u_int32_t numv, u_int32_t trials, float error, int nsys, printStyle style ) {
+void printResultHeader( void* file, u_int32_t numc, u_int32_t numv, u_int32_t trials, float error, int seats, int nsys, printStyle style ) {
+	// leading \0 makes this default to appearing as ""
+	char seatspart[] = "\0, NNNNNNNNN seats";
+	if (seats != 1) {
+		sprintf(seatspart, ", %d seats", seats);
+	}
     FILE* f = (FILE*)file;
     if ( style == html ) {
-        fprintf( f, "%d candidates, %d voters, %d trial elections, +/- %f confusion error, %d systems<br><table><tr><th>Name</th><th>Avg. Happiness<br>(higher better)</th><th>Reliability Std.<br>(lower better)</th><th>Consensus Std.<br>(lower better)</th><th>Gini Index<br>(lower better)</th></tr>\n", numc, numv, trials, error, nsys );
+        fprintf( f, "%d candidates%s, %d voters, %d trial elections, +/- %f confusion error, %d systems<br><table><tr><th>Name</th><th>Avg. Happiness<br>(higher better)</th><th>Reliability Std.<br>(lower better)</th><th>Consensus Std.<br>(lower better)</th><th>Gini Index<br>(lower better)</th></tr>\n", numc, seatspart, numv, trials, error, nsys );
     } else if ( style == htmlWithStrategy ) {
-        fprintf( f, "%d candidates, %d voters, %d trial elections, +/- %f confusion error, %d systems<br><table><tr><th>Name</th><th>Strategy</th><th>Avg. Happiness<br>(higher better)</th><th>Reliability Std.<br>(lower better)</th><th>Consensus Std.<br>(lower better)</th><th>Gini Index<br>(lower better)</th></tr>\n", numc, numv, trials, error, nsys );
+        fprintf( f, "%d candidates%s, %d voters, %d trial elections, +/- %f confusion error, %d systems<br><table><tr><th>Name</th><th>Strategy</th><th>Avg. Happiness<br>(higher better)</th><th>Reliability Std.<br>(lower better)</th><th>Consensus Std.<br>(lower better)</th><th>Gini Index<br>(lower better)</th></tr>\n", numc, seatspart, numv, trials, error, nsys );
     } else if ( style != noPrint ) {
 	if ( error < 0 ) {
-	    fprintf( f, "%d candidates, %d voters, %d trial elections, %d systems\n",
-	      numc, numv, trials, nsys );
+	    fprintf( f, "%d candidates%s, %d voters, %d trial elections, %d systems\n",
+	      numc, seatspart, numv, trials, nsys );
 	} else {
-	    fprintf( f, "%d candidates, %d voters, %d trial elections, +/- %f confusion error, %d systems\n",
-	      numc, numv, trials, error, nsys );
+	    fprintf( f, "%d candidates%s, %d voters, %d trial elections, +/- %f confusion error, %d systems\n",
+	      numc, seatspart, numv, trials, error, nsys );
 	}
     }
 }
-void printResultFooter( void* file, u_int32_t numc, u_int32_t numv, u_int32_t trials, float error, int nsys, printStyle style ) {
+void printResultFooter( void* file, u_int32_t numc, u_int32_t numv, u_int32_t trials, float error, int seats, int nsys, printStyle style ) {
     FILE* f = (FILE*)file;
     if ( style == html || style == htmlWithStrategy ) {
         fprintf( f, "<tr><th>Name</th><th>Avg. Happiness<br>(higher better)</th><th>Reliability Std.<br>(lower better)</th><th>Consensus Std.<br>(lower better)</th><th>Gini Index<br>(lower better)</th></tr></table>\n" );
@@ -230,14 +235,14 @@ TextDumpResultFile::~TextDumpResultFile() {
 /**
  * This implementation always returns NULL. put-only.
  */
-Result* TextDumpResultFile::get( int choices, int voters, float error ) {
+Result* TextDumpResultFile::get( int choices, int voters, float error, int seats ) {
 	return NULL;
 }
 
 // Does not take ownership of it, copies if needed.
-int TextDumpResultFile::put(Result* it, int choices, int voters, float error) {
+int TextDumpResultFile::put(Result* it, int choices, int voters, float error, int seats) {
 	assert(names);
-	printResultHeader(f, choices, voters, it->trials, error, names->nnames, smallBasic);
+	printResultHeader(f, choices, voters, it->trials, error, seats, names->nnames, smallBasic);
 	printResult(f, it, (names == NULL) ? NULL : names->names, names->nnames, smallBasic);
 	fflush((FILE*)f);
 	return 0;

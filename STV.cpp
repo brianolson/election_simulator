@@ -8,7 +8,7 @@ void STV::init( const char** envp ) {
 	const char* cur = *envp;
 	while (cur != NULL) {
 		if (0 == strncmp(cur, "seats=", 6)) {
-			seats = strtol(cur + 6, NULL, 10);
+			seatsDefault = strtol(cur + 6, NULL, 10);
 		}
 		envp++;
 		cur = *envp;
@@ -40,6 +40,9 @@ static inline int getFavorite(bool* notEliminated, int voteri, const VoterArray&
 	return fav;
 }
 
+void STV::runElection( int* winnerR, const VoterArray& they ) {
+	runMultiSeatElection( winnerR, they, seatsDefault );
+}
 
 /*
  Count first place votes.
@@ -48,7 +51,7 @@ static inline int getFavorite(bool* notEliminated, int voteri, const VoterArray&
 	recount
  If insufficient winners over quota, disqualify a loser.
  */
-void STV::runElection( int* winnerR, const VoterArray& they ) {
+bool STV::runMultiSeatElection( int* winnerR, const VoterArray& they, int seats ) {
 	int i;
 	int numc = they.numc;
 	int numv = they.numv;
@@ -150,6 +153,7 @@ done:
 	delete [] roundActive;
 	delete [] tally;
 	delete [] weight;
+	return true;
 }
 
 VotingSystem* newSTV( const char* n ) {
@@ -158,8 +162,4 @@ VotingSystem* newSTV( const char* n ) {
 VSFactory* STV_f = new VSFactory( newSTV, "STV" );
 
 STV::~STV() {
-}
-
-void STV::setSeats(int x) {
-  seats = x;
 }

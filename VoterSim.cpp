@@ -95,7 +95,7 @@ double giniWelfare( const VoterArray& they, int numv, int winner, double* stddev
 #endif
 
 VoterSim::VoterSim()
-    : numv( 100 ), numc( 4 ), trials( 10000 ), printVoters( false ), 
+    : numv( 100 ), numc( 4 ), trials( 10000 ), seats( 1 ), printVoters( false ), 
     printAllResults( false ), text( stdout ), doError( false ),
     confusionError( -1.0 ),
     voterDumpPrefix( NULL ), voterDumpPrefixLen( 0 ),
@@ -355,6 +355,7 @@ void VoterSim::runFromWorkQueue( ResultFile* drf, NameBlock& nb, WorkSource* q )
 	    doError = false;
 	}
 	trials = wu->trials;
+	seats = wu->seats;
 	delete wu;
     if ( winners != NULL ) delete [] winners;
     winners = new int[numc*nsys];
@@ -369,7 +370,7 @@ void VoterSim::run( ResultFile* drf, NameBlock& nb ) {
 
     nr = newResult( nsys * (numStrat + 1) );
     if ( drf != NULL ) {
-	r = drf->get( numc, numv, confusionError );
+	r = drf->get( numc, numv, confusionError, seats );
 	if ( r ) {
 	    memcpy( nr, r, sizeofRusult( nsys * (numStrat + 1) ) );
 	    free(r);
@@ -401,7 +402,7 @@ void VoterSim::run( ResultFile* drf, NameBlock& nb ) {
 			splitter = textSplitter;
 		}
 		splen = strlen( splitter );
-		printResultHeader( stdout, numc, numv, nr->trials, confusionError, nsys, summary );
+		printResultHeader( stdout, numc, numv, nr->trials, confusionError, seats, nsys, summary );
 	    for ( int i = 0; i < nsys; i++ ) {
 		name = nb.names ? strdup(nb.names[i]) : strdup("");
 		name = (char*)realloc( name, 1024 );
@@ -421,7 +422,7 @@ void VoterSim::run( ResultFile* drf, NameBlock& nb ) {
 	    }
 	    if ( name ) free( name );
 	} else {
-		printResultHeader( stdout, numc, numv, nr->trials, confusionError, nsys, summary );
+		printResultHeader( stdout, numc, numv, nr->trials, confusionError, seats, nsys, summary );
 	    printResult( stdout, nr, nb.names, nsys, summary );
 	}
 #else
@@ -437,10 +438,10 @@ void VoterSim::run( ResultFile* drf, NameBlock& nb ) {
 	    }
 	}
 #endif
-	printResultFooter( stdout, numc, numv, nr->trials, confusionError, nsys, summary );
+	printResultFooter( stdout, numc, numv, nr->trials, confusionError, seats, nsys, summary );
     }
     if ( drf ) {
-	drf->put( nr, numc, numv, confusionError );
+	drf->put( nr, numc, numv, confusionError, seats );
     }
     free( nr );
 }
@@ -510,4 +511,5 @@ void VoterSim::randomizeVoters() {
 			assert(0);
 			break;
 	}
+	they.validate();
 }

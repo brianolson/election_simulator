@@ -11,7 +11,7 @@ void IRNRP::init( const char** envp ) {
 	const char* cur = *envp;
 	while (cur != NULL) {
 		if (0 == strncmp(cur, "seats=", 6)) {
-			seats = strtol(cur + 6, NULL, 10);
+			seatsDefault = strtol(cur + 6, NULL, 10);
 		} else if (0 == strncmp(cur, "debug=", 6)) {
 			debug = MaybeDebugLog::ForPath(cur + 6);
 		}
@@ -27,13 +27,18 @@ void IRNRP::init( const char** envp ) {
  */
 static const double overtallyEpsilon = 1.001;
 
+
+void IRNRP::runElection( int* winnerR, const VoterArray& they ) {
+	runMultiSeatElection(winnerR, they, seatsDefault);
+}
+
 /*
  Sum normalized ratings
  Calculate quota
  Deweight over-quota choices
  If over-quota sum less than epsilon and insufficient winners, disqualify lowest.
  */
-void IRNRP::runElection( int* winnerR, const VoterArray& they ) {
+bool IRNRP::runMultiSeatElection( int* winnerR, const VoterArray& they, int seats ) {
 	int i;
 	int numc = they.numc;
 	int numv = they.numv;
@@ -77,14 +82,12 @@ void IRNRP::runElection( int* winnerR, const VoterArray& they ) {
 			}
 			if (shiftvotes) {
 				// shift all values positive. negatives break quota.
-				if (minp < 0.0) {
-					vsum = 0.0;
-					for (int c = 0; c < numc; ++c) {
-						if (active[c]) {
-							double p = they[i].getPref(c) - minp;
-							double t = p * cweight[c];
-							vsum += t * t;
-						}
+				vsum = 0.0;
+				for (int c = 0; c < numc; ++c) {
+					if (active[c]) {
+						double p = they[i].getPref(c) - minp;
+						double t = p * cweight[c];
+						vsum += t * t;
 					}
 				}
 				if (vsum <= 0.0) {
@@ -211,8 +214,6 @@ void IRNRP::runElection( int* winnerR, const VoterArray& they ) {
 		debug->vlog("</table>\n");
 		if (!debug->isEnabled()) {
 			debug->clear();
-			//debug->setEnable(true);
-			//debug->vlog(".\n");
 		}
 	}
 	int winneri = 0;
@@ -226,6 +227,7 @@ void IRNRP::runElection( int* winnerR, const VoterArray& they ) {
 	delete [] active;
 	delete [] cweight;
 	delete [] tally;
+	return true;
 }
 
 VotingSystem* newIRNRP( const char* n ) {

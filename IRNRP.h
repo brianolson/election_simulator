@@ -8,14 +8,15 @@ class MaybeDebugLog;
 class IRNRP : public VotingSystem {
 public:
 	IRNRP()
-		: VotingSystem( "IRNRP" ), seats(1),
+		: VotingSystem( "IRNRP" ), seatsDefault(1),
 		debug(NULL) {};
 	virtual void init( const char** envp );
 	virtual void runElection( int* winnerR, const VoterArray& they );
+	virtual bool runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats );
 	virtual ~IRNRP();
 	
 private:
-	int seats;
+	int seatsDefault;
 	MaybeDebugLog* debug;
 };
 

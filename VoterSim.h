@@ -49,6 +49,7 @@ public:
     int numv;
     int numc;
     int trials;
+	int seats;
     
     VotingSystem** systems;
     int nsys;

@@ -21,6 +21,11 @@ public:
 	 * Compact the array and pass it to the superclass after using elements relevant to subclass.
      */
     virtual void init( const char** envp );
+
+    // Like runElection but for multi-seat methods.
+	// Default implementation calls runElection() if seats==1, returns false otherwise.
+    // Return true unless there was an internal error.
+    virtual bool runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats );
 	
     /*! @function pickOneHappiness
 	 * calculate average happiness of the voters for the winner */

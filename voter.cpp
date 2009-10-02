@@ -31,11 +31,13 @@ extern "C" char* strdup( const char* );
 void Voter::setWithError( const Voter& it, float error ) {
     for ( int i = 0; i < preflen; i++ ) {
         preference[i] = it.preference[i] + ((random() / ((double)LONG_MAX)) - 0.5) * 2.0 * error;
+#if 0
         if ( preference[i] < -1.0 ) {
             preference[i] = -1.0;
         } else if ( preference[i] > 1.0 ) {
             preference[i] = 1.0;
         }
+#endif
     }
 }
 void Voter::set( const Voter& it, Strategy* s ) {
@@ -271,6 +273,15 @@ void VotingSystem::init( const char** envp ) {
 		envp++;
 	}
 }
+
+bool VotingSystem::runMultiSeatElection(int* winnerArray, const VoterArray& they, int seats) {
+	if (seats == 1) {
+		runElection(winnerArray, they);
+		return true;
+	}
+	return false;
+}
+
 /*
 Gini?
   f_ave = sum ( w_i, i=1..n ) / n

@@ -1,5 +1,7 @@
 #include "ResultLog.h"
 
+#include <stdio.h>
+
 ResultLog::ResultLog() : names(NULL), delete_names(false) {
 }
 ResultLog::~ResultLog() {
@@ -9,6 +11,7 @@ ResultLog::~ResultLog() {
 }
 
 bool ResultLog::useNames(NameBlock* nb) {
+	printf("ResultLog::useNames\n");
 	names = nb;
 	return true;
 }

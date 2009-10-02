@@ -8,11 +8,14 @@ public:
     int numv;
     int numc;
     float error;
+    int seats;
+
     int trials;
 
     WorkUnit* next;
 
     WorkUnit( int nv, int nc, float e, int t );
+    WorkUnit( int nv, int nc, float e, int t, int s );
     
     void print( void* file );
 };
@@ -57,14 +60,20 @@ public:
     int cstepsLen;
     float* esteps;
     int estepsLen;
+    int* seatSteps;  // if not NULL, same length as csteps
+    // iterator positions within lists
     int v, c, e;
 public:
     Steps();
     Steps( const char* vlist, const char* clist, const char* elist, int nIn );
     virtual ~Steps();
+    // parse whitespace separated lists of numbers
     void parseV( const char* vlist );
     void parseC( const char* clist );
     void parseE( const char* elist );
+    // (Candidates,Seats) stepping is linked
+    // whitespace separated list of %d,%d
+    void parseCandidatesSeats( const char* slist );
     void addIfNotPresent( int v, int c, float e );
     int n;
 };

@@ -185,22 +185,22 @@ static inline void myperror_(int en, const char* x, const char* file, int line) 
 #define myperror(a,b) myperror_(a, b, __FILE__, __LINE__)
 
 
-bool ProtoResultLog::logResult(
-		int voters, int choices, double error, int systemIndex, 
-		VoterSim::PreferenceMode mode, int dimensions,
-		double happiness, double voterHappinessStd, double gini) {
+bool ProtoResultLog::logResult(const Result& x) {
 	TrialResult r;
 	
-	r.set_voters(voters);
-	r.set_choices(choices);
-	r.set_error(error);
-	r.set_system_index(systemIndex);
-	r.set_voter_model(trFromVS(mode));
-	r.set_dimensions(dimensions);
+	r.set_voters(x.voters);
+	r.set_choices(x.choices);
+	r.set_error(x.error);
+	if (x.seats != 1) {
+		r.set_seats(x.seats);
+	}
+	r.set_system_index(x.systemIndex);
+	r.set_voter_model(trFromVS(x.mode));
+	r.set_dimensions(x.dimensions);
 	
-	r.set_mean_happiness(happiness);
-	r.set_voter_happiness_stddev(voterHappinessStd);
-	r.set_gini_index(gini);
+	r.set_mean_happiness(x.happiness);
+	r.set_voter_happiness_stddev(x.voterHappinessStd);
+	r.set_gini_index(x.gini);
 
 	bool ok = true;
 #if 0
@@ -224,10 +224,7 @@ bool ProtoResultLog::logResult(
 }
 
 // return true if a result was read. false implies error or eof.
-bool ProtoResultLog::readResult(
-		int* voters, int* choices, double* error, int* systemIndex,
-		VoterSim::PreferenceMode* mode, int* dimensions,
-		double* happiness, double* voterHappinessStd, double* gini) {
+bool ProtoResultLog::readResult(Result* x) {
 	TrialResult r;
 	if (cis == NULL) return false;
 	uint32 size;
@@ -238,15 +235,16 @@ bool ProtoResultLog::readResult(
 	cis->PopLimit(l);
 	if (!ok) return ok;
 	if (ok) {
-		*voters = r.voters();
-		*choices = r.choices();
-		*error = r.error();
-		*systemIndex = r.system_index();
-		*mode = vsFromTR(r.voter_model());
-		*dimensions = r.dimensions();
-		*happiness = r.mean_happiness();
-		*voterHappinessStd = r.voter_happiness_stddev();
-		*gini = r.gini_index();
+		x->voters = r.voters();
+		x->choices = r.choices();
+		x->error = r.error();
+		x->seats = r.seats();
+		x->systemIndex = r.system_index();
+		x->mode = vsFromTR(r.voter_model());
+		x->dimensions = r.dimensions();
+		x->happiness = r.mean_happiness();
+		x->voterHappinessStd = r.voter_happiness_stddev();
+		x->gini = r.gini_index();
 	}
 	return ok;
 }

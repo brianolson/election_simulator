@@ -79,6 +79,8 @@ for ( i = 0; i < trials; i++ ) {
 		for ( int v = 0; v < numv; v++ ) {
 			theyWithError[v].setWithError( they[v], confusionError );
 		}
+		they.validate();
+		theyWithError.validate();
     }
     if ( printVoters ) {
 		fprintf(text,"voters = ");
@@ -119,14 +121,28 @@ for ( i = 0; i < trials; i++ ) {
     for ( sys = 0; sys < nsys; sys++ ) {
 		//fprintf(stderr, "run sys %d\n", sys);
 		if ( goGently ) return;
+		bool ok = true;
 		if ( tweValid ) {
-			systems[sys]->runElection( winners + (sys*numc), theyWithError );
+			ok = systems[sys]->runMultiSeatElection( winners + (sys*numc), theyWithError, seats );
 		} else {
-			systems[sys]->runElection( winners + (sys*numc), they );
+			ok = systems[sys]->runMultiSeatElection( winners + (sys*numc), they, seats );
+		}
+		if (!ok) {
+			fprintf(stderr, "sys %d failed\n", sys);
+			goGently = true;
 		}
 		happiness[sys][i] = NAN;
 	}
 	// Measure results for systems.
+	ResultLog::Result logEntry;
+	if (rlog != NULL) {
+		logEntry.voters = numv;
+		logEntry.choices = numc;
+		logEntry.error = (doError ? confusionError : -1.0);
+		logEntry.seats = seats;
+		logEntry.mode = preferenceMode;
+		logEntry.dimensions = dimensions;
+	}
 	for ( int osys = 0; osys < nsys; osys++ ) {
 		//fprintf(stderr, "measure sys %d\n", osys);
 		int sys;
@@ -139,10 +155,11 @@ for ( i = 0; i < trials; i++ ) {
 			happistdsum[sys] += td;
 			ginisum[sys] += tg;
 			if ( rlog != NULL ) {
-				bool ok = rlog->logResult(
-					numv, numc, (doError ? confusionError : -1.0), osys,
-					preferenceMode, dimensions,
-					th, td, tg);
+				logEntry.systemIndex = osys;
+				logEntry.happiness = th;
+				logEntry.voterHappinessStd = td;
+				logEntry.gini = tg;
+				bool ok = rlog->logResult(logEntry);
 				if (!ok) {
 					goGently = true;
 				}
@@ -155,10 +172,8 @@ for ( i = 0; i < trials; i++ ) {
 					happistdsum[sys] += td;
 					ginisum[sys] += tg;
 					if ( rlog != NULL ) {
-						rlog->logResult(
-							numv, numc, (doError ? confusionError : -1.0), sys,
-							preferenceMode, dimensions,
-							th, td, tg);
+						logEntry.systemIndex = sys;
+						rlog->logResult(logEntry);
 					}
 				}
 			}

@@ -210,7 +210,30 @@ public:
 		pthread_mutex_unlock(&lock);
 		return ok;
 	}
-	
+
+	/**
+	 * @param xy pointer to int array, store x,y pairs in it
+	 * @param count xy is int[count*2], store up to this many pairs
+	 * @return number of x,y pairs set int *xy. 0 on end.
+	 */
+	int nextN(int* xy, int count) {
+		int out = 0;
+		pthread_mutex_lock(&lock);
+		while ((out < count) && (cury < sizey)) {
+			xy[0] = curx;
+			xy[1] = cury;
+			xy += 2;
+			out++;
+			curx++;
+			if (curx >= sizex) {
+				curx = 0;
+				cury++;
+			}
+		}
+		pthread_mutex_unlock(&lock);
+		return out;
+	}
+
 private:
 	int curx;
 	int cury;
@@ -350,13 +373,19 @@ void PlaneSim::run( VotingSystem* system ) {
 }
 
 void PlaneSim::runXYSource(VotingSystem* system, XYSource* source) {
+	static const int xySize = 40;
+	int xy[xySize*2];
+	int xyCount;
 	int* winners = new int[they.numc];
-	int x = -1, y = -1;
 	double dx, dy;
-	while (source->next(&x, &y)) {
-		dy = yIndexToCoord( y );
-		dx = xIndexToCoord( x );
-		runPixel(system, x, y, dx, dy, winners);
+	while ((xyCount = source->nextN(xy, xySize)) > 0) {
+		for (int i = 0; i < xyCount; ++i) {
+			int x = xy[i*2    ];
+			int y = xy[i*2 + 1];
+			dy = yIndexToCoord( y );
+			dx = xIndexToCoord( x );
+			runPixel(system, x, y, dx, dy, winners);
+		}
 	}
 	delete [] winners;
 }
@@ -449,7 +478,7 @@ void myDoPNG( const char* outname, unsigned char** rows, int height, int width, 
 	t.lang_key = 0;
 #endif
 	png_set_text( png_ptr, info_ptr, &t, 1 );
-        free(t.key);
+	free(t.key);
     }
 #endif
 

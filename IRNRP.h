@@ -9,7 +9,7 @@ class IRNRP : public VotingSystem {
 public:
 	IRNRP()
 		: VotingSystem( "IRNRP" ), seatsDefault(1),
-		debug(NULL) {};
+		  debug(NULL), l2norm(false) {};
 	virtual void init( const char** envp );
 	virtual void runElection( int* winnerR, const VoterArray& they );
 	virtual bool runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats );
@@ -18,6 +18,7 @@ public:
 private:
 	int seatsDefault;
 	MaybeDebugLog* debug;
+	bool l2norm;
 };
 
 #endif

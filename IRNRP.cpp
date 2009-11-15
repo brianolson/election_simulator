@@ -14,6 +14,8 @@ void IRNRP::init( const char** envp ) {
 			seatsDefault = strtol(cur + 6, NULL, 10);
 		} else if (0 == strncmp(cur, "debug=", 6)) {
 			debug = MaybeDebugLog::ForPath(cur + 6);
+		} else if (0 == strcmp(cur, "l2norm")) {
+			l2norm = true;
 		}
 		envp++;
 		cur = *envp;
@@ -30,6 +32,110 @@ static const double overtallyEpsilon = 1.001;
 
 void IRNRP::runElection( int* winnerR, const VoterArray& they ) {
 	runMultiSeatElection(winnerR, they, seatsDefault);
+}
+
+static inline bool absNorm(
+		const Voter& vote, const bool* active, const double* cweight,
+		int numc, double* tally) {
+	double vsum = 0.0;
+	for (int c = 0; c < numc; ++c) {
+		if (active[c]) {
+			double p = vote.getPref(c);
+			double t = p * cweight[c];
+			vsum += abs(t);
+		}
+	}
+	if (vsum <= 0.0) {
+		assert(false);
+		return false;
+	}
+	vsum = 1.0 / vsum;
+	for (int c = 0; c < numc; ++c) {
+		if (active[c]) {
+			double p = vote.getPref(c);
+			assert(p >= 0.0);
+			tally[c] += p * cweight[c] * vsum;
+		}
+	}
+	return true;
+}
+
+static inline bool absNormWithShift(
+		const Voter& vote, const bool* active, const double* cweight,
+		int numc, double minp, double* tally) {
+	double vsum = 0.0;
+	for (int c = 0; c < numc; ++c) {
+		if (active[c]) {
+			double p = vote.getPref(c) - minp;
+			double t = p * cweight[c];
+			vsum += abs(t);
+		}
+	}
+	if (vsum <= 0.0) {
+		assert(false);
+		return false;
+	}
+	vsum = 1.0 / vsum;
+	for (int c = 0; c < numc; ++c) {
+		if (active[c]) {
+			double p = vote.getPref(c) - minp;
+			assert(p >= 0.0);
+			tally[c] += p * cweight[c] * vsum;
+		}
+	}
+	return true;
+}
+
+static inline bool l2Norm(
+		const Voter& vote, const bool* active, const double* cweight,
+		int numc, double* tally) {
+	double vsum = 0.0;
+	for (int c = 0; c < numc; ++c) {
+		if (active[c]) {
+			double p = vote.getPref(c);
+			double t = p * cweight[c];
+			vsum += t * t;
+		}
+	}
+	if (vsum <= 0.0) {
+		assert(false);
+		return false;
+	}
+	vsum = 1.0 / sqrt(vsum);
+	for (int c = 0; c < numc; ++c) {
+		if (active[c]) {
+			double p = vote.getPref(c);
+			assert(p >= 0.0);
+			tally[c] += p * cweight[c] * vsum;
+		}
+	}
+	return true;
+}
+
+static inline bool l2NormWithShift(
+		const Voter& vote, const bool* active, const double* cweight,
+		int numc, double minp, double* tally) {
+	double vsum = 0.0;
+	for (int c = 0; c < numc; ++c) {
+		if (active[c]) {
+			double p = vote.getPref(c) - minp;
+			double t = p * cweight[c];
+			vsum += t * t;
+		}
+	}
+	if (vsum <= 0.0) {
+		assert(false);
+		return false;
+	}
+	vsum = 1.0 / sqrt(vsum);
+	for (int c = 0; c < numc; ++c) {
+		if (active[c]) {
+			double p = vote.getPref(c) - minp;
+			assert(p >= 0.0);
+			tally[c] += p * cweight[c] * vsum;
+		}
+	}
+	return true;
 }
 
 /*
@@ -68,7 +174,7 @@ bool IRNRP::runMultiSeatElection( int* winnerR, const VoterArray& they, int seat
 		
 		// count normalized votes for each candidate
 		for ( i = 0; i < numv; i++ ) {
-			double vsum = 0.0;
+                  //double vsum = 0.0;
 			double minp = 0.0;
 			bool shiftvotes = false;
 			for (int c = 0; c < numc; ++c) {
@@ -81,47 +187,25 @@ bool IRNRP::runMultiSeatElection( int* winnerR, const VoterArray& they, int seat
 				}
 			}
 			if (shiftvotes) {
-				// shift all values positive. negatives break quota.
-				vsum = 0.0;
-				for (int c = 0; c < numc; ++c) {
-					if (active[c]) {
-						double p = they[i].getPref(c) - minp;
-						double t = p * cweight[c];
-						vsum += t * t;
-					}
-				}
-				if (vsum <= 0.0) {
-					assert(false);
-					continue;
-				}
-				vsum = 1.0 / sqrt(vsum);
-				for (int c = 0; c < numc; ++c) {
-					if (active[c]) {
-						double p = they[i].getPref(c) - minp;
-						assert(p >= 0.0);
-						tally[c] += p * cweight[c] * vsum;
-					}
-				}
+                          if (l2norm) {
+                            if (!l2NormWithShift(they[i], active, cweight, numc, minp, tally)) {
+                              continue;
+                            }
+                          } else {
+                            if (!absNormWithShift(they[i], active, cweight, numc, minp, tally)) {
+                              continue;
+                            }
+                          }
 			} else {
-				for (int c = 0; c < numc; ++c) {
-					if (active[c]) {
-						double p = they[i].getPref(c);
-						double t = p * cweight[c];
-						vsum += t * t;
-					}
-				}
-				if (vsum <= 0.0) {
-					assert(false);
-					continue;
-				}
-				vsum = 1.0 / sqrt(vsum);
-				for (int c = 0; c < numc; ++c) {
-					if (active[c]) {
-						double p = they[i].getPref(c);
-						assert(p >= 0.0);
-						tally[c] += p * cweight[c] * vsum;
-					}
-				}
+                          if (l2norm) {
+                            if (!l2Norm(they[i], active, cweight, numc, tally)) {
+                              continue;
+                            }
+                          } else {
+                            if (!absNorm(they[i], active, cweight, numc, tally)) {
+                              continue;
+                            }
+                          }
 			}
 		}
 		double totalvote = 0.0;

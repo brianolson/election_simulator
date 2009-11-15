@@ -17,14 +17,30 @@ $world = "-px 400 -py 400 -n 4 -minx -1 -miny -1 -maxx 1 -maxy 1 -Z 1.0 -v 10000
 ["4c","-c -0.20,0.14 -c -0.68,0.08 -c -0.90,0.24 -c 0.82,0.40"],
 );
 
+$candz = undef;
+
 if ( -f "candlist" ) {
   open FIN, '<', "candlist";
   @candsets = ();
   while ($line = <FIN>) {
     $line =~ s/[\r\n]*$//g;
     @a = split( /\t/, $line );
+    ($z) = $a[1] =~ /(-Z [0-9.]+)/;
+    if ( defined $z ) {
+      if ( defined $candz ) {
+        if ( $z eq $candz ) {
+        } else {
+          $candz = "bad";
+        }
+      } else {
+        $candz = $z;
+      }
+    }
     push @candsets, [@a];
   }
+}
+if ( ! defined $candz ) {
+  $candz = "";
 }
 $noreplace = 0;
 
@@ -190,6 +206,19 @@ EOF
 		exit 0;
 	  }
     }
+  }
+}
+
+if ( (! -f "pop.png") && ($candz ne "bad") ) {
+  my $cmd = "./spacegraph $world $candz -tg pop.png";
+  if ( ! $quiet ) {
+    print <<EOF;
+# pop.png
+$cmd
+EOF
+  }
+  if ( $doit ) {
+    system $cmd;
   }
 }
 

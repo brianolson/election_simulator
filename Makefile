@@ -137,7 +137,7 @@ headerdoc:
 	gatherheaderdoc doc
 
 clean:
-	rm -f $(OBJS) $(FROBOB) $(TOPLOTOB) $(SGOBJS) ${VPBOBJS} voter.o voter frob resultDBToGnuplot nnsv spacegraph vpb vsmall trial.pb.cc trail.pb.h
+	rm -f $(OBJS) $(FROBOB) $(TOPLOTOB) $(SGOBJS) ${VPBOBJS} voter.o voter frob resultDBToGnuplot nnsv spacegraph vpb vsmall trial.pb.cc trial.pb.h
 depend:
 	makedepend -Y *.cpp
 

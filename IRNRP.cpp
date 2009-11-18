@@ -42,7 +42,7 @@ static inline bool absNorm(
 		if (active[c]) {
 			double p = vote.getPref(c);
 			double t = p * cweight[c];
-			vsum += abs(t);
+			vsum += fabs(t);
 		}
 	}
 	if (vsum <= 0.0) {
@@ -55,6 +55,7 @@ static inline bool absNorm(
 			double p = vote.getPref(c);
 			assert(p >= 0.0);
 			tally[c] += p * cweight[c] * vsum;
+			assert(!isnan(tally[c]));
 		}
 	}
 	return true;
@@ -68,7 +69,7 @@ static inline bool absNormWithShift(
 		if (active[c]) {
 			double p = vote.getPref(c) - minp;
 			double t = p * cweight[c];
-			vsum += abs(t);
+			vsum += fabs(t);
 		}
 	}
 	if (vsum <= 0.0) {
@@ -81,6 +82,7 @@ static inline bool absNormWithShift(
 			double p = vote.getPref(c) - minp;
 			assert(p >= 0.0);
 			tally[c] += p * cweight[c] * vsum;
+			assert(!isnan(tally[c]));
 		}
 	}
 	return true;
@@ -107,6 +109,7 @@ static inline bool l2Norm(
 			double p = vote.getPref(c);
 			assert(p >= 0.0);
 			tally[c] += p * cweight[c] * vsum;
+			assert(!isnan(tally[c]));
 		}
 	}
 	return true;
@@ -133,6 +136,7 @@ static inline bool l2NormWithShift(
 			double p = vote.getPref(c) - minp;
 			assert(p >= 0.0);
 			tally[c] += p * cweight[c] * vsum;
+			assert(!isnan(tally[c]));
 		}
 	}
 	return true;
@@ -211,7 +215,7 @@ bool IRNRP::runMultiSeatElection( int* winnerR, const VoterArray& they, int seat
 		double totalvote = 0.0;
 		for (int c = 0; c < numc; ++c) {
 			if (active[c]) {
-				assert(tally[c] > 0.0);
+				assert(tally[c] >= 0.0);
 				totalvote += tally[c];
 			}
 		}

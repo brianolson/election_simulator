@@ -308,6 +308,58 @@ I think that requires sorting the population from poorest to richest.
 */
 
 
+static inline double clampOne(double x) {
+  if (x < -1.0) {
+    return -1.0;
+  }
+  if (x > 1.0) {
+    return 1.0;
+  }
+  return x;
+}
+static inline double oneMultiseatHappiness(const Voter& it, int* winners, int seats) {
+  double hi = 0.0;
+  for (int s = 0; s < seats; ++s) {
+    hi += it.getPref( winners[s] );
+  }
+  return clampOne(hi);
+}
+
+double multiseatHappiness( const VoterArray& they, int numv, int* winners, int seats, double* stddevP, double* giniP, int start ) {
+  double happiness = 0.0;
+  double spreadsum = 0.0;
+  int i, end;
+  end = start + numv;
+  for ( i = start; i < end; i++ ) {
+    double hi = oneMultiseatHappiness(they[i], winners, seats);
+    happiness += hi;
+    for ( int j = i + 1; j < end; j++ ) {
+      double hj = oneMultiseatHappiness(they[j], winners, seats);
+      spreadsum += fabs( hi - hj );
+    }
+  }
+  // for calculating gini welfare, offset -1..1 happiness to 0..2
+  *giniP = ( spreadsum / ( numv * (happiness+numv) ) );
+  happiness = happiness / numv;
+  double stddev = 0;
+  for ( i = start; i < end; i++ ) {
+    double d = oneMultiseatHappiness(they[i], winners, seats) - happiness;
+    stddev += ( d * d );
+  }
+  stddev = stddev / numv;
+  stddev = sqrt( stddev );
+  *stddevP = stddev;
+  return happiness;
+}
+double multiseatHappiness( const VoterArray& they, int numv, int* winners, int seats ) {
+  double happiness = 0.0;
+  for ( int i = 0; i < numv; i++ ) {
+    double hi = oneMultiseatHappiness(they[i], winners, seats);
+    happiness += hi;
+  }
+  happiness = happiness / numv;
+  return happiness;
+}
 double VotingSystem::pickOneHappiness( const VoterArray& they, int numv, int winner, double* stddevP, double* giniP, int start ) {
     double happiness = 0.0;
     double spreadsum = 0.0;
@@ -392,8 +444,40 @@ public:
 		}
 		if ( winnerR ) *winnerR = c;
 	};
-    virtual ~MaxHappiness(){};
+	virtual bool runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats );
+	virtual ~MaxHappiness(){};
 };
+bool MaxHappiness::runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats ) {
+	int* testWinners = new int[seats];	// increments over combinations
+	int* bestWinners = new int[seats];
+	for (int s = 0; s < seats; ++s) {
+		testWinners[s] = s;
+		bestWinners[s] = s;
+	}
+	double maxh = multiseatHappiness( they, they.numv, testWinners, seats );
+	while (incrementCombo(testWinners, seats, they.numc)) {
+#ifndef NDEBUG
+		for (int i = 0; i < seats; ++i) {
+			for (int j = i + 1; j < seats; ++j) {
+				assert(testWinners[i] != testWinners[j]);
+			}
+		}
+#endif
+		double th = multiseatHappiness( they, they.numv, testWinners, seats );
+		if (th > maxh) {
+			for (int s = 0; s < seats; ++s) {
+				bestWinners[s] = testWinners[s];
+			}
+			maxh = th;
+		}
+	}
+	for (int s = 0; s < seats; ++s) {
+		winnerArray[s] = bestWinners[s];
+	}
+	delete [] testWinners;
+	delete [] bestWinners;
+	return true;
+}
 
 VotingSystem* newMaxHappiness( const char* n ) {
 	return new MaxHappiness();

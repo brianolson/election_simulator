@@ -37,6 +37,10 @@ public:
     virtual ~VotingSystem() = 0;
 };
 
+double multiseatHappiness( const VoterArray& they, int numv, int* winners, int seats, double* stddevP, double* giniP, int start = 0 );
+// simpler version does much less work
+double multiseatHappiness( const VoterArray& they, int numv, int* winners, int seats );
+
 class VSFactory {
 public:
     VotingSystem* (*fact)( const char* n );

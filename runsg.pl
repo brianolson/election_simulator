@@ -4,7 +4,9 @@
 %options = ( "MaximizedRatings" => "Rated --opt maximize",
 "Closest" => "Max -v 10 -Z 0.000001",
 "CombinatoricCondorcet" => "Condorcet --combine",
-"CombinatoricIRNR" => "IRNR --combine" );
+"CombinatoricIRNR" => "IRNR --combine",
+"IRNRPl2" => "IRNRP --opt l2norm",
+);
 $world = "-px 400 -py 400 -n 4 -minx -1 -miny -1 -maxx 1 -maxy 1 -Z 1.0 -v 10000 --threads 2";
 @candsets = (
 ["threecorners","-c 1,1 -c -1,1 -c 0,-1"],

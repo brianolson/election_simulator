@@ -513,3 +513,21 @@ void VoterSim::randomizeVoters() {
 	}
 	they.validate();
 }
+
+double VoterSim::calculateHappiness(int start, int count, int* winners, double* stddevP, double* giniP) {
+	if (seats == 1) {
+		if ((stddevP == NULL) && (giniP == NULL)) {
+			assert(count == numv);
+			return VotingSystem::pickOneHappiness(they, numv, winners[0]);
+		} else {
+			return VotingSystem::pickOneHappiness(they, count, winners[0], stddevP, giniP, start);
+		}
+	} else {
+		if ((stddevP == NULL) && (giniP == NULL)) {
+			assert(count == numv);
+			return multiseatHappiness(they, numv, winners, seats);
+		} else {
+			return multiseatHappiness(they, count, winners, seats, stddevP, giniP, start);
+		}
+	}
+}

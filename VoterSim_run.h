@@ -146,10 +146,10 @@ for ( i = 0; i < trials; i++ ) {
 	for ( int osys = 0; osys < nsys; osys++ ) {
 		//fprintf(stderr, "measure sys %d\n", osys);
 		int sys;
-		int winner = winners[osys*numc/*+0*/];
+		//int winner = winners[osys*numc/*+0*/];
 		if ( isnan(happiness[osys][i]) ) {
 			double td, tg, th;
-			th = VotingSystem::pickOneHappiness( they, numv, winner, &td, &tg, 0 );
+			th = calculateHappiness( &(winners[osys*numc/*+0*/]), &td, &tg );
 			sys = osys;
 			happisum[sys] += happiness[sys][i] = th;
 			happistdsum[sys] += td;
@@ -167,7 +167,14 @@ for ( i = 0; i < trials; i++ ) {
 			for ( sys = osys+1; sys < nsys; sys++ ) {
 				// Each later system that has the same result has the same resulting happiness.
 				// Apply the same happiness:std:gini to them.
-				if ( winners[sys*numc] == winner ) {
+				bool samewinners = true;
+				for (int seat = 0; seat < seats; ++seat) {
+					if (winners[sys*numc + seat] != winners[osys*numc + seat]) {
+						samewinners = false;
+						break;
+					}
+				}
+				if ( samewinners ) {
 					happisum[sys] += happiness[sys][i] = th;
 					happistdsum[sys] += td;
 					ginisum[sys] += tg;
@@ -181,19 +188,34 @@ for ( i = 0; i < trials; i++ ) {
 			//fprintf(stderr, "non-nan result for %d\n", osys);
 		}
 		sys = osys;
+		char* winnerstring = NULL;
+		if ( printAllResults || (resultDump != NULL) || (resultDumpHtml != NULL) ) {
+			winnerstring = new char[seats*15];
+			assert(winnerstring != NULL);
+			sprintf(winnerstring, "%d", winners[osys*numc + 0]);
+			char* opos = winnerstring;
+			for (int seat = 1; seat < seats; ++seat) {
+				while (*opos != '\0') {
+					opos++;
+				}
+				sprintf(opos, ",%d", winners[osys*numc + seat]);
+			}
+		}
 		if ( printAllResults ) {
-			fprintf(text,"%s\thappiness\t%f\twinner\t%d\n", systems[sys]->name,happiness[sys][i],winner);
-			//                fprintf(text,"");
+			fprintf(text,"%s\thappiness\t%f\twinner\t%s\n", systems[sys]->name,happiness[sys][i],winnerstring);
 		}
 		if ( resultDump != NULL ) {
-			fprintf( resultDump, "%.15g\t%d\t", happiness[sys][i], winner );
+			fprintf( resultDump, "%.15g\t%s\t", happiness[sys][i], winnerstring );
 		}
 		if ( resultDumpHtml != NULL ) {
 			if ( resultDumpHtmlVertical ) {
-				fprintf( resultDumpHtml, "<tr ALIGN=\"center\"><th>%s</th><td>%.15g</td><td>%d</td></tr>\n", systems[sys]->name, happiness[sys][i], winner );
+				fprintf( resultDumpHtml, "<tr ALIGN=\"center\"><th>%s</th><td>%.15g</td><td>%s</td></tr>\n", systems[sys]->name, happiness[sys][i], winnerstring );
 			} else {
-				fprintf( resultDumpHtml, "<td>%.15g</td><td>%d</td>", happiness[sys][i], winner );
+				fprintf( resultDumpHtml, "<td>%.15g</td><td>%s</td>", happiness[sys][i], winnerstring );
 			}
+		}
+		if (winnerstring != NULL) {
+			delete [] winnerstring;
 		}
     }
 #if (!defined(strategies)) || strategies
@@ -202,7 +224,7 @@ for ( i = 0; i < trials; i++ ) {
 		for ( sys = 0; sys < nsys; sys++ ) {
 			int stpos = 0;
 			for ( int st = 0; st < numStrat; st++ ) {
-				strategies[st]->happisum[sys] += strategies[st]->happiness[sys][i] = VotingSystem::pickOneHappiness( they, strategies[st]->count, winners[sys*numc/*+0*/], &td, &tg, stpos );
+				strategies[st]->happisum[sys] += strategies[st]->happiness[sys][i] = calculateHappiness( stpos, strategies[st]->count, &(winners[sys*numc/*+0*/]), &td, &tg );
 				stpos += strategies[st]->count;
 				strategies[st]->happistdsum[sys] += td;
 				strategies[st]->ginisum[sys] += tg;

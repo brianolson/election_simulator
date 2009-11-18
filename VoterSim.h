@@ -42,6 +42,14 @@ public:
 	// assign new random preferences to voters according to preferenceMode
 	void randomizeVoters();
 
+	// start = offset into they
+	// count = number of they to process from they[start]
+	double calculateHappiness(int start, int count, int* winners, double* stddevP, double* giniP);
+	inline double calculateHappiness(
+			int* winners, double* stddevP, double* giniP) {
+		return calculateHappiness(0, numv, winners, stddevP, giniP);
+	}
+
     double** happiness;	// double[nsys][trials]
     double* happisum;	// double[nsys]
     double* ginisum;	// double[nsys]

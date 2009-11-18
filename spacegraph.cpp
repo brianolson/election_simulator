@@ -333,7 +333,7 @@ void PlaneSim::runPixel(VotingSystem* system, int x, int y, double dx, double dy
 				combos = new int[seats*VoterArray::nChooseK(they.numc, seats)];
 			}
 			exploded.combinatoricExplode(they, seats, combos);
-			system->runElection( winners, exploded );
+			system->runMultiSeatElection( winners, exploded, seats );
 			assert( winners[0] >= 0 );
 			assert( winners[0] < exploded.numc );
 			int* winningCombo = combos + (seats*winners[0]);
@@ -341,7 +341,7 @@ void PlaneSim::runPixel(VotingSystem* system, int x, int y, double dx, double dy
 				incAccum( x, y, winningCombo[s] );
 			}
 		} else {
-			system->runElection( winners, they );
+			system->runMultiSeatElection( winners, they, seats );
 			assert( winners[0] >= 0 );
 			assert( winners[0] < they.numc );
 			for (int s = 0; s < seats; ++s) {

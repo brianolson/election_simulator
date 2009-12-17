@@ -23,6 +23,7 @@
 #include "OneVotePickOne.h"
 #include "RandomElection.h"
 #include "RankedVotePickOne.h"
+#include "Bucklin.h"
 
 #include "WorkQueue.h"
 
@@ -531,6 +532,7 @@ VSConfig* VSConfig::defaultList( const char** a, VSConfig* n ) {
 	toret = new VSConfig( new IRNR("Instant Runoff Normalized Ratings, positive shifted", 1.0), toret );
 	toret = new VSConfig( new IteratedNormalizedRatings("Iterated Normalized Ratings"), toret );
 	toret = new VSConfig( new RandomElection("Random"), toret );
+	toret = new VSConfig( new Bucklin(), toret );
 #else
 	VSFactory* cur = VSFactory::root;
     while ( cur != NULL ) {

@@ -11,7 +11,7 @@ EMOBJS := AcceptanceVotePickOne.o FuzzyVotePickOne.o InstantRunoffVotePickOne.o
 EMOBJS += OneVotePickOne.o RankedVotePickOne.o Condorcet.o TopNRunoff.o
 EMOBJS += IRNR.o RandomElection.o STV.o IRNRP.o MaybeDebugLog.o
 EMOBJS += ApprovalNoInfo.o ApprovalWithPoll.o
-EMOBJS += VoteForAndAgainst.o
+EMOBJS += VoteForAndAgainst.o Bucklin.o
 EMOBJS += IteratedNormalizedRatings.o
 
 OBJS := ResultFile.o DBResultFile.o VoterArray.o VoterSim.o WorkQueue.o

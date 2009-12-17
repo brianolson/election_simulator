@@ -8,6 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		1F01291D0A27F8D600B0A401 /* libdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F01291B0A27F8D600B0A401 /* libdb.dylib */; };
+		1F1C5B2810DA6FED00C10D84 /* Bucklin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C5B2610DA6FED00C10D84 /* Bucklin.cpp */; };
+		1F1C5B2910DA6FED00C10D84 /* Bucklin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C5B2610DA6FED00C10D84 /* Bucklin.cpp */; };
+		1F1C5B2A10DA6FED00C10D84 /* Bucklin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C5B2610DA6FED00C10D84 /* Bucklin.cpp */; };
+		1F1C5B2B10DA6FED00C10D84 /* Bucklin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C5B2610DA6FED00C10D84 /* Bucklin.cpp */; };
+		1F1C5B2C10DA6FED00C10D84 /* Bucklin.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1C5B2710DA6FED00C10D84 /* Bucklin.h */; };
+		1F1C5B2D10DA6FED00C10D84 /* Bucklin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C5B2610DA6FED00C10D84 /* Bucklin.cpp */; };
+		1F1C5B2E10DA6FED00C10D84 /* Bucklin.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1C5B2710DA6FED00C10D84 /* Bucklin.h */; };
+		1F1C5B3410DA702500C10D84 /* libprotobuf.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F1C5B3310DA702500C10D84 /* libprotobuf.4.dylib */; };
+		1F1C5B3510DA702500C10D84 /* libprotobuf.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F1C5B3310DA702500C10D84 /* libprotobuf.4.dylib */; };
 		1F21108109FD254800B5C0AB /* AcceptanceVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0305E5E87E00994248 /* AcceptanceVotePickOne.cpp */; };
 		1F21108209FD254900B5C0AB /* Condorcet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0505E5E87E00994248 /* Condorcet.cpp */; };
 		1F21108409FD254C00B5C0AB /* FuzzyVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0905E5E87E00994248 /* FuzzyVotePickOne.cpp */; };
@@ -81,7 +90,6 @@
 		1F5ECE5D05E5EFB100994248 /* NNStrategicVoter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE5B05E5EFB100994248 /* NNStrategicVoter.cpp */; };
 		1F5ECE5E05E5EFB100994248 /* NNStrategicVoter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE5C05E5EFB100994248 /* NNStrategicVoter.h */; };
 		1F6D6E820F47091E001B7A1D /* gauss.c in Sources */ = {isa = PBXBuildFile; fileRef = 32E9DA330D651C3600EC3419 /* gauss.c */; };
-		1F742CAF106E63D60073F3FB /* libprotobuf.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FF81B92102F48BA005E4B04 /* libprotobuf.3.dylib */; };
 		1F7684971037B475005E8425 /* IRNRP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F7684961037B475005E8425 /* IRNRP.cpp */; };
 		1F7684981037B475005E8425 /* IRNRP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F7684961037B475005E8425 /* IRNRP.cpp */; };
 		1F7684991037B475005E8425 /* IRNRP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F7684961037B475005E8425 /* IRNRP.cpp */; };
@@ -150,7 +158,6 @@
 		1FF81B82102D9494005E4B04 /* STV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF81B7F102D9494005E4B04 /* STV.cpp */; };
 		1FF81B83102D9494005E4B04 /* STV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF81B7F102D9494005E4B04 /* STV.cpp */; };
 		1FF81B84102D9494005E4B04 /* STV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF81B7F102D9494005E4B04 /* STV.cpp */; };
-		1FF81B93102F48BA005E4B04 /* libprotobuf.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FF81B92102F48BA005E4B04 /* libprotobuf.3.dylib */; };
 		3286DBF20F4688E00059D26D /* DBResultFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0805E5E87E00994248 /* DBResultFile.h */; };
 		3286DBF30F4688E10059D26D /* DBResultFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0705E5E87E00994248 /* DBResultFile.cpp */; };
 		3286DBF40F4688E70059D26D /* AcceptanceVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0305E5E87E00994248 /* AcceptanceVotePickOne.cpp */; };
@@ -202,6 +209,9 @@
 
 /* Begin PBXFileReference section */
 		1F01291B0A27F8D600B0A401 /* libdb.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libdb.dylib; path = /usr/local/BerkeleyDB.4.4/lib/libdb.dylib; sourceTree = "<absolute>"; };
+		1F1C5B2610DA6FED00C10D84 /* Bucklin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Bucklin.cpp; sourceTree = "<group>"; };
+		1F1C5B2710DA6FED00C10D84 /* Bucklin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bucklin.h; sourceTree = "<group>"; };
+		1F1C5B3310DA702500C10D84 /* libprotobuf.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libprotobuf.4.dylib; path = /usr/local/lib/libprotobuf.4.dylib; sourceTree = "<absolute>"; };
 		1F21107B09FD250100B5C0AB /* spacegraph */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = spacegraph; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F21108A09FD256A00B5C0AB /* spacegraph.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = spacegraph.cpp; sourceTree = "<group>"; };
 		1F2AAFC50B339C8200AFA56C /* VoteForAndAgainst.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = VoteForAndAgainst.cpp; sourceTree = "<group>"; };
@@ -263,7 +273,6 @@
 		1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ApprovalWithPoll.cpp; sourceTree = "<group>"; };
 		1FF81B7E102D9494005E4B04 /* STV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STV.h; sourceTree = "<group>"; };
 		1FF81B7F102D9494005E4B04 /* STV.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = STV.cpp; sourceTree = "<group>"; };
-		1FF81B92102F48BA005E4B04 /* libprotobuf.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libprotobuf.3.dylib; path = /usr/local/lib/libprotobuf.3.dylib; sourceTree = "<absolute>"; };
 		3286DBE70F4636010059D26D /* vsmall */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = vsmall; sourceTree = BUILT_PRODUCTS_DIR; };
 		3286DC080F46896C0059D26D /* IteratedNormalizedRatings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IteratedNormalizedRatings.h; sourceTree = "<group>"; };
 		3286DC090F46896C0059D26D /* IteratedNormalizedRatings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IteratedNormalizedRatings.cpp; sourceTree = "<group>"; };
@@ -288,7 +297,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FF81B93102F48BA005E4B04 /* libprotobuf.3.dylib in Frameworks */,
+				1F1C5B3410DA702500C10D84 /* libprotobuf.4.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,7 +305,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F742CAF106E63D60073F3FB /* libprotobuf.3.dylib in Frameworks */,
+				1F1C5B3510DA702500C10D84 /* libprotobuf.4.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,7 +330,7 @@
 		0249A662FF388D9811CA2CEA /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				1FF81B92102F48BA005E4B04 /* libprotobuf.3.dylib */,
+				1F1C5B3310DA702500C10D84 /* libprotobuf.4.dylib */,
 				32E9DA2E0D651BD900EC3419 /* libpng.dylib */,
 				1F01291B0A27F8D600B0A401 /* libdb.dylib */,
 			);
@@ -348,6 +357,8 @@
 				1FF4BB720B33763C00B5D49D /* ApprovalNoInfo.h */,
 				1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */,
 				1FF4BB9D0B33961700B5D49D /* ApprovalWithPoll.h */,
+				1F1C5B2610DA6FED00C10D84 /* Bucklin.cpp */,
+				1F1C5B2710DA6FED00C10D84 /* Bucklin.h */,
 				1F5ECE0505E5E87E00994248 /* Condorcet.cpp */,
 				1F5ECE0605E5E87E00994248 /* Condorcet.h */,
 				1F5ECE0705E5E87E00994248 /* DBResultFile.cpp */,
@@ -458,6 +469,7 @@
 				1FF4BB9F0B33961700B5D49D /* ApprovalWithPoll.h in Headers */,
 				1F2AAFCB0B339C8200AFA56C /* VoteForAndAgainst.h in Headers */,
 				328C83050F602CF100C872DA /* NameBlock.h in Headers */,
+				1F1C5B2E10DA6FED00C10D84 /* Bucklin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -490,6 +502,7 @@
 				1FF81B81102D9494005E4B04 /* STV.h in Headers */,
 				1F76849A1037B475005E8425 /* IRNRP.h in Headers */,
 				1FBE2D63105C3783009E5FF6 /* MaybeDebugLog.h in Headers */,
+				1F1C5B2C10DA6FED00C10D84 /* Bucklin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -656,6 +669,7 @@
 				1FF81B80102D9494005E4B04 /* STV.cpp in Sources */,
 				1F7684981037B475005E8425 /* IRNRP.cpp in Sources */,
 				1FBE2D07105C20D6009E5FF6 /* MaybeDebugLog.cpp in Sources */,
+				1F1C5B2910DA6FED00C10D84 /* Bucklin.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -689,6 +703,7 @@
 				1FF81B84102D9494005E4B04 /* STV.cpp in Sources */,
 				1F7684971037B475005E8425 /* IRNRP.cpp in Sources */,
 				1FBE2D06105C20D6009E5FF6 /* MaybeDebugLog.cpp in Sources */,
+				1F1C5B2810DA6FED00C10D84 /* Bucklin.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -718,6 +733,7 @@
 				1FF4BBA30B33961F00B5D49D /* ApprovalWithPoll.cpp in Sources */,
 				1F2AAFCA0B339C8200AFA56C /* VoteForAndAgainst.cpp in Sources */,
 				328C83000F602CE900C872DA /* NameBlock.cpp in Sources */,
+				1F1C5B2D10DA6FED00C10D84 /* Bucklin.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -761,6 +777,7 @@
 				1FF81B83102D9494005E4B04 /* STV.cpp in Sources */,
 				1F7684991037B475005E8425 /* IRNRP.cpp in Sources */,
 				1FBE2D08105C20D6009E5FF6 /* MaybeDebugLog.cpp in Sources */,
+				1F1C5B2A10DA6FED00C10D84 /* Bucklin.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -794,6 +811,7 @@
 				1FF81B82102D9494005E4B04 /* STV.cpp in Sources */,
 				1F76849B1037B475005E8425 /* IRNRP.cpp in Sources */,
 				1FBE2D09105C20D6009E5FF6 /* MaybeDebugLog.cpp in Sources */,
+				1F1C5B2B10DA6FED00C10D84 /* Bucklin.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -325,6 +325,12 @@ int main( int argc, char** argv ) {
 		drf->flush();
 		drf->close();
     }
+	if (rlog != NULL) {
+		for ( int i = 0; i < numThreads; ++i ) {
+			s[i].rlog = NULL;
+		}
+		delete rlog;
+	}
     delete [] s;
     if ( hang ) {
 		goGently = 0;

@@ -112,7 +112,10 @@ void VoterArray::randomizeGaussianNSpace(int dimensions, double* choicePositions
 				break;
 			}
 		}
-		assert(somedifferent);
+		if (!somedifferent) {
+			fprintf(stderr, "all prefs for they[%d] are %f\n", v, they[v].getPref(0));
+			assert(somedifferent);
+		}
 #endif
 	}
 	delete [] dimholder;

@@ -67,6 +67,16 @@ void ${name}::runElection( int* winnerR, const VoterArray& they ) {
     if ( winnerR ) *winnerR = winner;
 }
 
+#if 0
+bool ${name}::runMultiSeatElection( int* winnerR, const VoterArray& they, int seats ) {
+	if (seats == 1) {
+		runElection(winnerR, they);
+		return true;
+	}
+	return false;
+}
+#endif
+
 VotingSystem* new${name}( const char* n ) {
 	return new ${name}();
 }
@@ -89,6 +99,7 @@ public:
 	${name}() : VotingSystem( "${name}" ) {};
 	//virtual void init( const char** envp );
 	virtual void runElection( int* winnerR, const VoterArray& they );
+	//virtual bool runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats );
 	virtual ~${name}();
 };
 

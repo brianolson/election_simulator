@@ -214,7 +214,7 @@ int main(int argc, char** argv) {
 		printf("%s: read %d records in %zu configurations\n", fname, count, results.size());
 	}
 	count = 0;
-	FILE* csv;
+	FILE* csv = NULL;
 	if (csvoutname != NULL) {
 		csv = fopen(csvoutname, "w");
 	} else {
@@ -222,7 +222,9 @@ int main(int argc, char** argv) {
 		csvname += ".csv";
 		csv = fopen(csvname.c_str(), "w");
 	}
-	fprintf(csv, "System,Voters,Choices,Seats,Error,Mode,Dimensions,Runs,Happiness,Voter Happiness Std,Gini,System Std\n");
+	if (csv != NULL) {
+		fprintf(csv, "System,Voters,Choices,Seats,Error,Mode,Dimensions,Runs,Happiness,Voter Happiness Std,Gini,System Std\n");
+	}
 	for (ResultsMap::iterator ri = results.begin(); ri != results.end(); ri++) {
 		const ResultHolder& key = (*ri).first;
 		//printf("v%d c%d e%f si%d m%d d%d\n", key.voters, key.choices, key.error, key.system_index, key.mode, key.dimensions);
@@ -257,7 +259,11 @@ int main(int argc, char** argv) {
 	printf("\n%zu esteps:", esteps.size());
 	printIterable(esteps.begin(), esteps.end(), " %.2f");
 	printf("\n%zu sisteps:", sisteps.size());
-	printIterable(sisteps.begin(), sisteps.end(), " %d");
+	for(set<int>::iterator system_index = sisteps.begin();
+			system_index != sisteps.end();
+			++system_index) {
+		printf(" %d:%s", *system_index, names->names[*system_index]);
+	}
 	printf("\n%zu modesteps:", modesteps.size());
 	printIterable(modesteps.begin(), modesteps.end(), " %d");
 	printf("\n%zu dimsteps:", dimsteps.size());

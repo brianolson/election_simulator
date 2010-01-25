@@ -1,6 +1,6 @@
 #GO2=-O2 -DNDEBUG
-GO2=-O2 -DNDEBUG -g
-#GO2=-g
+#GO2=-O2 -DNDEBUG -g
+GO2=-g
 #CXXFLAGS=-Wall -g
 CXXFLAGS=-Wall ${GO2} -m64
 #CXXFLAGS+=-pg -g
@@ -41,7 +41,7 @@ SGOBJS := ${EMOBJS}
 SGOBJS += VoterArray.o spacegraph.o
 SGOBJS += ResultFile.o voter.o gauss.o
 SGOBJS += VoterSim.o WorkQueue.o NameBlock.o
-#SGOBJS += DBResultFile.o ThreadSafeDBRF.o
+SGOBJS += PlaneSim.o XYSource.o
 
 STOBJS := VoterArray.o WorkQueue.o voter.o speed_test.o gauss.o
 STOBJS += ${EMOBJS} NameBlock.o

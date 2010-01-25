@@ -15,8 +15,8 @@
 		1F1C5B2C10DA6FED00C10D84 /* Bucklin.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1C5B2710DA6FED00C10D84 /* Bucklin.h */; };
 		1F1C5B2D10DA6FED00C10D84 /* Bucklin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C5B2610DA6FED00C10D84 /* Bucklin.cpp */; };
 		1F1C5B2E10DA6FED00C10D84 /* Bucklin.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1C5B2710DA6FED00C10D84 /* Bucklin.h */; };
-		1F1C5B3410DA702500C10D84 /* libprotobuf.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F1C5B3310DA702500C10D84 /* libprotobuf.4.dylib */; };
-		1F1C5B3510DA702500C10D84 /* libprotobuf.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F1C5B3310DA702500C10D84 /* libprotobuf.4.dylib */; };
+		1F1C5B3410DA702500C10D84 /* libprotobuf.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F1C5B3310DA702500C10D84 /* libprotobuf.dylib */; };
+		1F1C5B3510DA702500C10D84 /* libprotobuf.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F1C5B3310DA702500C10D84 /* libprotobuf.dylib */; };
 		1F21108109FD254800B5C0AB /* AcceptanceVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0305E5E87E00994248 /* AcceptanceVotePickOne.cpp */; };
 		1F21108209FD254900B5C0AB /* Condorcet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0505E5E87E00994248 /* Condorcet.cpp */; };
 		1F21108409FD254C00B5C0AB /* FuzzyVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0905E5E87E00994248 /* FuzzyVotePickOne.cpp */; };
@@ -191,6 +191,8 @@
 		328C83050F602CF100C872DA /* NameBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 328C83030F602CF100C872DA /* NameBlock.h */; };
 		32E9DA2F0D651BD900EC3419 /* libpng.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E9DA2E0D651BD900EC3419 /* libpng.dylib */; };
 		32E9DA340D651C3600EC3419 /* gauss.c in Sources */ = {isa = PBXBuildFile; fileRef = 32E9DA330D651C3600EC3419 /* gauss.c */; };
+		32F86DD6110CD7F500DDAC49 /* PlaneSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32F86DD5110CD7F500DDAC49 /* PlaneSim.cpp */; };
+		32F86E1D110CFADB00DDAC49 /* XYSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32F86E1B110CFADB00DDAC49 /* XYSource.cpp */; };
 		8DD76F6A0486A84900D96B5E /* v2.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6859E8B029090EE04C91782 /* v2.1 */; };
 /* End PBXBuildFile section */
 
@@ -211,7 +213,7 @@
 		1F01291B0A27F8D600B0A401 /* libdb.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libdb.dylib; path = /usr/local/BerkeleyDB.4.4/lib/libdb.dylib; sourceTree = "<absolute>"; };
 		1F1C5B2610DA6FED00C10D84 /* Bucklin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Bucklin.cpp; sourceTree = "<group>"; };
 		1F1C5B2710DA6FED00C10D84 /* Bucklin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bucklin.h; sourceTree = "<group>"; };
-		1F1C5B3310DA702500C10D84 /* libprotobuf.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libprotobuf.4.dylib; path = /usr/local/lib/libprotobuf.4.dylib; sourceTree = "<absolute>"; };
+		1F1C5B3310DA702500C10D84 /* libprotobuf.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libprotobuf.dylib; path = /usr/local/lib/libprotobuf.dylib; sourceTree = "<absolute>"; };
 		1F21107B09FD250100B5C0AB /* spacegraph */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = spacegraph; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F21108A09FD256A00B5C0AB /* spacegraph.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = spacegraph.cpp; sourceTree = "<group>"; };
 		1F2AAFC50B339C8200AFA56C /* VoteForAndAgainst.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = VoteForAndAgainst.cpp; sourceTree = "<group>"; };
@@ -280,6 +282,10 @@
 		328C83030F602CF100C872DA /* NameBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NameBlock.h; sourceTree = "<group>"; };
 		32E9DA2E0D651BD900EC3419 /* libpng.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng.dylib; path = /usr/local/lib64/libpng.dylib; sourceTree = "<absolute>"; };
 		32E9DA330D651C3600EC3419 /* gauss.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gauss.c; sourceTree = "<group>"; };
+		32F86DD4110CD7F500DDAC49 /* PlaneSim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaneSim.h; sourceTree = "<group>"; };
+		32F86DD5110CD7F500DDAC49 /* PlaneSim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlaneSim.cpp; sourceTree = "<group>"; };
+		32F86E1B110CFADB00DDAC49 /* XYSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XYSource.cpp; sourceTree = "<group>"; };
+		32F86E1C110CFADB00DDAC49 /* XYSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYSource.h; sourceTree = "<group>"; };
 		8DD76F6C0486A84900D96B5E /* v2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = v2; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6859E8B029090EE04C91782 /* v2.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = v2.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -297,7 +303,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F1C5B3410DA702500C10D84 /* libprotobuf.4.dylib in Frameworks */,
+				1F1C5B3410DA702500C10D84 /* libprotobuf.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,7 +311,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F1C5B3510DA702500C10D84 /* libprotobuf.4.dylib in Frameworks */,
+				1F1C5B3510DA702500C10D84 /* libprotobuf.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,7 +336,7 @@
 		0249A662FF388D9811CA2CEA /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				1F1C5B3310DA702500C10D84 /* libprotobuf.4.dylib */,
+				1F1C5B3310DA702500C10D84 /* libprotobuf.dylib */,
 				32E9DA2E0D651BD900EC3419 /* libpng.dylib */,
 				1F01291B0A27F8D600B0A401 /* libdb.dylib */,
 			);
@@ -393,6 +399,8 @@
 				1F5ECE1405E5E87E00994248 /* RankedVotePickOne.h */,
 				1F5ECE1505E5E87E00994248 /* ResultFile.cpp */,
 				1F5ECE1605E5E87E00994248 /* ResultFile.h */,
+				32F86DD4110CD7F500DDAC49 /* PlaneSim.h */,
+				32F86DD5110CD7F500DDAC49 /* PlaneSim.cpp */,
 				1F4392700F59048D006BE973 /* ResultLog.cpp */,
 				1F4392710F59048D006BE973 /* ProtoResultLog.h */,
 				1F4392720F59048D006BE973 /* ProtoResultLog.cpp */,
@@ -415,6 +423,8 @@
 				1F5ECE1F05E5E87E00994248 /* VotingSystem.h */,
 				1F5ECE2005E5E87E00994248 /* WorkQueue.cpp */,
 				1F5ECE2105E5E87E00994248 /* WorkQueue.h */,
+				32F86E1B110CFADB00DDAC49 /* XYSource.cpp */,
+				32F86E1C110CFADB00DDAC49 /* XYSource.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -670,6 +680,8 @@
 				1F7684981037B475005E8425 /* IRNRP.cpp in Sources */,
 				1FBE2D07105C20D6009E5FF6 /* MaybeDebugLog.cpp in Sources */,
 				1F1C5B2910DA6FED00C10D84 /* Bucklin.cpp in Sources */,
+				32F86DD6110CD7F500DDAC49 /* PlaneSim.cpp in Sources */,
+				32F86E1D110CFADB00DDAC49 /* XYSource.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

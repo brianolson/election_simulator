@@ -447,7 +447,21 @@ public:
 	};
 	virtual bool runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats );
 	virtual ~MaxHappiness(){};
+	double miniMultiHappiness( const VoterArray& they, int* winners, int seats );
 };
+double MaxHappiness::miniMultiHappiness( const VoterArray& they, int* winners, int seats ) {
+  // Like multiseatHappiness, but doesn't clamp output
+  double happiness = 0.0;
+  for ( int i = 0; i < they.numv; i++ ) {
+    double hi = 0.0;
+    for (int s = 0; s < seats; ++s) {
+      hi += they[i].getPref( winners[s] );
+    }
+    happiness += hi;
+  }
+  happiness = happiness / (they.numv * seats);
+  return happiness;
+}
 bool MaxHappiness::runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats ) {
 	int* testWinners = new int[seats];	// increments over combinations
 	int* bestWinners = new int[seats];
@@ -455,7 +469,8 @@ bool MaxHappiness::runMultiSeatElection( int* winnerArray, const VoterArray& the
 		testWinners[s] = s;
 		bestWinners[s] = s;
 	}
-	double maxh = multiseatHappiness( they, they.numv, testWinners, seats );
+	double maxh;
+	maxh = miniMultiHappiness( they, testWinners, seats );
 	while (incrementCombo(testWinners, seats, they.numc)) {
 #ifndef NDEBUG
 		for (int i = 0; i < seats; ++i) {
@@ -464,7 +479,8 @@ bool MaxHappiness::runMultiSeatElection( int* winnerArray, const VoterArray& the
 			}
 		}
 #endif
-		double th = multiseatHappiness( they, they.numv, testWinners, seats );
+		double th;
+		th = miniMultiHappiness( they, testWinners, seats );
 		if (th > maxh) {
 			for (int s = 0; s < seats; ++s) {
 				bestWinners[s] = testWinners[s];

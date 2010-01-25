@@ -9,10 +9,6 @@
 #include <google/protobuf/io/coded_stream.h>
 
 using google::protobuf::uint32;
-using google::protobuf::io::CodedOutputStream;
-using google::protobuf::io::FileOutputStream;
-using google::protobuf::io::CodedInputStream;
-using google::protobuf::io::FileInputStream;
 
 /* static */
 ProtoResultLog* ProtoResultLog::openForAppend(const char* filename) {

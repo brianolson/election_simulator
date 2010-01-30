@@ -1,21 +1,30 @@
 #include "PlaneSim.h"
 #include "XYSource.h"
+#include "GaussianRandom.h"
 #include "gauss.h"
 
 #include <assert.h>
 #include <string.h>
 #include <png.h>
 
+void ResultAccumulation::clear() {
+	memset(accum, 0, sizeof(int) * px * py * planes);
+}
+
 void PlaneSim::addCandidateArg( const char* arg ) {
 	candroot = new candidatearg( arg, candroot );
+	candcount++;
+}
+void PlaneSim::addCandidateArg( double x, double y ) {
+	candroot = new candidatearg( x, y, candroot );
 	candcount++;
 }
 
 void PlaneSim::build( int numv ) {
 	candidates = new pos[candcount];
 	they.build( numv, candcount );
-	accum = new int[px * py * they.numc];
-	memset(accum, 0, sizeof(int)*(px * py * they.numc));
+	accum = new ResultAccumulation(px, py, they.numc);
+	accum->clear();
 #if 0
 	printf("numc=%d sizeof(pos[numc]) = %lu\n"
 		   "px=%d py=%d sizeof(int[px * py * numc]) = %lu\n",
@@ -56,6 +65,10 @@ void PlaneSim::coBuild( const PlaneSim& it ) {
 	isSlave = true;
 	
 	candroot = it.candroot;
+
+        gRandom = new GaussianRandom(
+            new BufferDoubleRandomWrapper(
+                it.rootRandom, 512, false));
 }
 
 void PlaneSim::randomizeVoters( double centerx, double centery, double sigma ) {
@@ -67,7 +80,8 @@ void PlaneSim::randomizeVoters( double centerx, double centery, double sigma ) {
 		candidatePositions[c*2  ] = candidates[c].x;
 		candidatePositions[c*2+1] = candidates[c].y;
 	}
-	they.randomizeGaussianNSpace(2, candidatePositions, center, sigma);
+	they.randomizeGaussianNSpace(2, candidatePositions, center, sigma,
+                                     gRandom);
 	delete [] candidatePositions;
 }
 

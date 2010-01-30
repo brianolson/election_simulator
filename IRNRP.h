@@ -11,8 +11,8 @@ public:
 		: VotingSystem( "IRNRP" ), seatsDefault(1),
 		  debug(NULL), l2norm(false) {};
 	virtual void init( const char** envp );
-	virtual void runElection( int* winnerR, const VoterArray& they );
-	virtual bool runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats );
+	virtual void runElection( int* winnerR, const VoterArray& they ) const;
+	virtual bool runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats ) const;
 	virtual ~IRNRP();
 	
 private:

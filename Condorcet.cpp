@@ -99,7 +99,7 @@ void runBeatpath( const unsigned int* talley, unsigned int* bpm, int numc, int d
 int Condorcet::electionsRun = 0;
 int Condorcet::simpleElections = 0;
 
-void Condorcet::runElection( int* winnerR, const VoterArray& they ) {
+void Condorcet::runElection( int* winnerR, const VoterArray& they ) const {
     int i;
     unsigned int* talley;
     int winner;

@@ -30,7 +30,7 @@ void IRNRP::init( const char** envp ) {
 static const double overtallyEpsilon = 1.001;
 
 
-void IRNRP::runElection( int* winnerR, const VoterArray& they ) {
+void IRNRP::runElection( int* winnerR, const VoterArray& they ) const {
 	runMultiSeatElection(winnerR, they, seatsDefault);
 }
 
@@ -148,7 +148,7 @@ static inline bool l2NormWithShift(
  Deweight over-quota choices
  If over-quota sum less than epsilon and insufficient winners, disqualify lowest.
  */
-bool IRNRP::runMultiSeatElection( int* winnerR, const VoterArray& they, int seats ) {
+bool IRNRP::runMultiSeatElection( int* winnerR, const VoterArray& they, int seats ) const {
 	int i;
 	int numc = they.numc;
 	int numv = they.numv;

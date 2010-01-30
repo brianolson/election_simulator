@@ -9,7 +9,7 @@ public:
      : RankedVotePickOne( "Condorcet" ){};
     Condorcet( const char* n )
      : RankedVotePickOne( n ){};
-    virtual void runElection( int* winnerR, const VoterArray& they );
+    virtual void runElection( int* winnerR, const VoterArray& they ) const;
 	
 	static int electionsRun;
 	static int simpleElections;

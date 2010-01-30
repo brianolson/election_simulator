@@ -22,7 +22,7 @@ RandomElection::RandomElection( const char* nameIn )
 : VotingSystem( nameIn )
 {
 }
-void RandomElection::runElection( int* winnerR, const VoterArray& they ) {
+void RandomElection::runElection( int* winnerR, const VoterArray& they ) const {
     *winnerR = random() % they.numc;
 }
 

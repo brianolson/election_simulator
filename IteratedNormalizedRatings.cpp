@@ -187,7 +187,7 @@ void IteratedNormalizedRatings::init( const char** envp ) {
 }
 
 #define rmsnorm 0
-void IteratedNormalizedRatings::runElection( int* winnerR, const VoterArray& they ) {
+void IteratedNormalizedRatings::runElection( int* winnerR, const VoterArray& they ) const {
     bool* active;
     double* tally;
     double* candDeWeight;

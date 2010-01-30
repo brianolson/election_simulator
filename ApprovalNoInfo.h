@@ -6,7 +6,7 @@
 class ApprovalNoInfo : public VotingSystem {
 public:
     ApprovalNoInfo() : VotingSystem( "Approval No Info" ) {};
-    virtual void runElection( int* winnerR, const VoterArray& they );
+    virtual void runElection( int* winnerR, const VoterArray& they ) const;
     virtual ~ApprovalNoInfo();
 };
 

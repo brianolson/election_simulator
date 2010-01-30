@@ -23,7 +23,7 @@ void* linker_tricking() {
 volatile int goGently = 0;
 
 void mysigint( int a ) {
-    goGently = 1;
+	goGently = 1;
 }
 
 static void printEMList(void) {
@@ -37,8 +37,8 @@ static void printEMList(void) {
 
 const char* usage =
 "usage: spacegraph [-o foo.png][-tg][-minx f][-miny f][-maxx f][-maxy f]\n"
-     "\t[-px i][-py i][-v voters][-n iter per pix][-Z sigma]\n"
-     "\t[-c \"candidateX Y\"][--list][--method electionmethod]\n"
+"\t[-px i][-py i][-v voters][-n iter per pix][-Z sigma]\n"
+"\t[-c \"candidateX Y\"][--list][--method electionmethod]\n"
 ;
 
 #ifndef MAX_METHOD_ENV

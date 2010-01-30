@@ -40,7 +40,7 @@ static inline int getFavorite(bool* notEliminated, int voteri, const VoterArray&
 	return fav;
 }
 
-void STV::runElection( int* winnerR, const VoterArray& they ) {
+void STV::runElection( int* winnerR, const VoterArray& they ) const {
 	runMultiSeatElection( winnerR, they, seatsDefault );
 }
 
@@ -51,7 +51,7 @@ void STV::runElection( int* winnerR, const VoterArray& they ) {
 	recount
  If insufficient winners over quota, disqualify a loser.
  */
-bool STV::runMultiSeatElection( int* winnerR, const VoterArray& they, int seats ) {
+bool STV::runMultiSeatElection( int* winnerR, const VoterArray& they, int seats ) const {
 	int i;
 	int numc = they.numc;
 	int numv = they.numv;

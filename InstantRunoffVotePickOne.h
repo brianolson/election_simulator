@@ -7,8 +7,7 @@ class InstantRunoffVotePickOne : public VotingSystem {
 public:
     InstantRunoffVotePickOne()
      : VotingSystem("Instant Runoff Vote") {};
-    virtual void runElection( int* winnerR, const VoterArray& they );
+    virtual void runElection( int* winnerR, const VoterArray& they ) const;
 };
 
 #endif
-

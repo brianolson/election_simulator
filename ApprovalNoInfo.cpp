@@ -14,7 +14,7 @@ static inline long random() {
  with optimizations and integration by Brian Olson
  */
 
-void ApprovalNoInfo::runElection( int* winnerR, const VoterArray& they ) {
+void ApprovalNoInfo::runElection( int* winnerR, const VoterArray& they ) const {
 	int i,j;
     int* talley;
     int numc = they.numc;

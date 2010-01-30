@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-@methods = qw(Max OneVote IRV IRNR Condorcet Rated Borda ApprovalNoInfo ApprovalWithPoll VoteForAndAgainst MaximizedRatings Closest);
+@methods = qw(Max OneVote IRV IRNR Condorcet Rated Borda ApprovalNoInfo ApprovalWithPoll VoteForAndAgainst MaximizedRatings Closest Bucklin);
 %options = ( "MaximizedRatings" => "Rated --opt maximize",
 "Closest" => "Max -v 10 -Z 0.000001",
 "CombinatoricCondorcet" => "Condorcet --combine",

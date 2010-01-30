@@ -1,7 +1,7 @@
 #include "InstantRunoffVotePickOne.h"
 #include "Voter.h"
 
-void InstantRunoffVotePickOne::runElection( int* winnerR, const VoterArray& they ) {
+void InstantRunoffVotePickOne::runElection( int* winnerR, const VoterArray& they ) const {
     int i;
     int* talley;
     int winner = -1;

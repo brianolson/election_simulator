@@ -11,7 +11,7 @@ public:
     int quantization;
     FuzzyVotePickOne( const char* name, int doCounterweightI, int quantizeI );
     virtual void init( const char** envp );
-    virtual void runElection( int* winnerR, const VoterArray& they );
+    virtual void runElection( int* winnerR, const VoterArray& they ) const;
 };
 
 #endif

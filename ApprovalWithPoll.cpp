@@ -6,7 +6,7 @@
  with optimizations and integration by Brian Olson
  */
 
-void ApprovalWithPoll::runElection( int* winnerR, const VoterArray& they ) {
+void ApprovalWithPoll::runElection( int* winnerR, const VoterArray& they ) const {
 	int i,j;
     int* talley;
     int winner = -1;

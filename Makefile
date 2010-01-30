@@ -13,18 +13,20 @@ EMOBJS += IRNR.o RandomElection.o STV.o IRNRP.o MaybeDebugLog.o
 EMOBJS += ApprovalNoInfo.o ApprovalWithPoll.o
 EMOBJS += VoteForAndAgainst.o Bucklin.o
 EMOBJS += IteratedNormalizedRatings.o
+EMOBJS += CIVSP.o
 
 OBJS := ResultFile.o DBResultFile.o VoterArray.o VoterSim.o WorkQueue.o
 OBJS += ThreadSafeDBRF.o voter_main.o NameBlock.o
+OBJS += GaussianRandom.o
 OBJS += ${EMOBJS}
 #OBJS += voter.o
 
 VSMALLOBJS := ResultFile.o VoterArray.o VoterSim.o WorkQueue.o voter.o
-VSMALLOBJS += voter_main_sm.o gauss.o NameBlock.o
+VSMALLOBJS += voter_main_sm.o gauss.o NameBlock.o GaussianRandom.o
 VSMALLOBJS += ${EMOBJS}
 
 VPBOBJS := ResultFile.o VoterArray.o VoterSim.o WorkQueue.o voter.o gauss.o
-VPBOBJS += ResultLog.o ProtoResultLog.o trial.pb.o NameBlock.o
+VPBOBJS += ResultLog.o ProtoResultLog.o trial.pb.o NameBlock.o GaussianRandom.o
 VPBOBJS += ${EMOBJS}
 
 FROBOB := ResultFile.o DBResultFile.o resultFileFrob.o NameBlock.o
@@ -33,18 +35,18 @@ TOPLOTOB := resultDBToGnuplot.o ResultFile.o DBResultFile.o WorkQueue.o NameBloc
 
 NNSVOBJS := ${EMOBJS}
 NNSVOBJS += ResultFile.o DBResultFile.o VoterArray.o VoterSim.o WorkQueue.o
-NNSVOBJS += ThreadSafeDBRF.o voter.o
+NNSVOBJS += ThreadSafeDBRF.o voter.o GaussianRandom.o
 NNSVOBJS += NNSVSim.o NameBlock.o
 NNSVOBJS += NNStrategicVoter.o
 
 SGOBJS := ${EMOBJS}
-SGOBJS += VoterArray.o spacegraph.o
+SGOBJS += VoterArray.o spacegraph.o GaussianRandom.o
 SGOBJS += ResultFile.o voter.o gauss.o
 SGOBJS += VoterSim.o WorkQueue.o NameBlock.o
 SGOBJS += PlaneSim.o XYSource.o
 
 STOBJS := VoterArray.o WorkQueue.o voter.o speed_test.o gauss.o
-STOBJS += ${EMOBJS} NameBlock.o
+STOBJS += ${EMOBJS} NameBlock.o GaussianRandom.o
 
 UNAME := $(shell uname)
 

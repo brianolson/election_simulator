@@ -7,8 +7,8 @@ class STV : public VotingSystem {
 public:
     STV() : VotingSystem( "STV" ), seatsDefault(1) {};
     virtual void init( const char** envp );
-    virtual void runElection( int* winnerR, const VoterArray& they );
-	virtual bool runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats );
+    virtual void runElection( int* winnerR, const VoterArray& they ) const;
+	virtual bool runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats ) const;
     virtual ~STV();
 
 private:

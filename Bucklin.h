@@ -8,7 +8,7 @@ class Bucklin : public VotingSystem {
 public:
 	Bucklin() : VotingSystem( "Bucklin" ) {};
 	//virtual void init( const char** envp );
-	virtual void runElection( int* winnerR, const VoterArray& they );
+	virtual void runElection( int* winnerR, const VoterArray& they ) const;
 	virtual ~Bucklin();
 };
 

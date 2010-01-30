@@ -30,7 +30,7 @@ IRNR::IRNR( const char* nameIn, double offsetIn )
 {
 }
 #define rmsnorm 0
-void IRNR::runElection( int* winnerR, const VoterArray& they ) {
+void IRNR::runElection( int* winnerR, const VoterArray& they ) const {
     bool* active;
     double* talley;
     int numActive;

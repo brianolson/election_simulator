@@ -6,7 +6,7 @@
 class VoteForAndAgainst : public VotingSystem {
 public:
     VoteForAndAgainst() : VotingSystem( "VoteForAndAgainst" ) {};
-    virtual void runElection( int* winnerR, const VoterArray& they );
+    virtual void runElection( int* winnerR, const VoterArray& they ) const;
     virtual ~VoteForAndAgainst();
 };
 

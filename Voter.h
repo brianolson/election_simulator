@@ -81,6 +81,8 @@ public:
     virtual ~Strategy();
 };
 
+class GaussianRandom;
+
 class VoterArray {
 public:
     VoterArray();
@@ -119,7 +121,7 @@ public:
 	// choicePositions is interpreted as 2D, [choice one x, y, z, ...][choice two x, y, z, ...]...
 	// center can be NULL or double[dimensions] defining the center of the N-cube.
 	// prefenece for a choice is (sigma - voter_choice_distance)
-	void randomizeGaussianNSpace(int dimensions, double* choicePositions, double* center = NULL, double sigma = 1.0);
+	void randomizeGaussianNSpace(int dimensions, double* choicePositions, double* center = NULL, double sigma = 1.0, GaussianRandom* gr = NULL);
 
 	// poisitions is written into, must be allocated double[numc*dimensions]
 	static void randomGaussianChoicePositions(double* positions, int numc, int dimensions, double sigma = 1.0);

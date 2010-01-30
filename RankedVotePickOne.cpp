@@ -8,7 +8,7 @@
  
  * TO DO, modify for Nanson/Baldwin progrissive mode. (Instant Runoff Borda?)
  */
-void RankedVotePickOne::runElection( int* winnerR, const VoterArray& they ) {
+void RankedVotePickOne::runElection( int* winnerR, const VoterArray& they ) const {
     int i;
     unsigned int* talley;
     int winner;

@@ -7,22 +7,50 @@ import re
 import string
 import sys
 import time
+import urllib
 
 int_pattern = re.compile("^[-+]?[0-9]+$")
 float_pattern = re.compile(r"^[-+]?[0-9]*\.?[0-9]+[eE]?[0-9]*$")
 
 free_variables = ['Happiness', 'System Std', 'Voter Happiness Std', 'Gini']
 
-default_format = "l${sets}_x${x}/${combos}_${y}.svg"
+default_format = 'l${sets}_x${x}/${combos}_${y}.svg'
 default_template = string.Template(default_format)
 
-def buildPath(xname, yname, setsname, combo_names, combo_values, tpl=default_template):
+index_path_template = string.Template('l${sets}_x${x}__${combos}.html')
+
+index_head = string.Template(
+    '<html><head><title>l${sets}_x${x}/${combos}</title></head><body>'
+    '<p>Various ${sets} over ${x} for:')
+
+def comboString(combo_names, combo_values):
 	combo_tuples = zip(combo_names, combo_values)
-	combos = "_".join(["%s=%s" % x for x in combo_tuples])
+	return "_".join(["%s=%s" % x for x in combo_tuples])
+
+def buildPath(xname, yname, setsname, combo_names, combo_values, tpl=default_template):
+	combos = comboString(combo_names, combo_values)
 	path = tpl.safe_substitute(
 		{'x': xname, 'y': yname, 'sets': setsname, 'combos': combos})
 	return path
-	
+
+def buildIndexPath(xname, setsname, combo_names, combo_values, tpl=index_path_template):
+	combos = comboString(combo_names, combo_values)
+	path = tpl.safe_substitute(
+		{'x': xname, 'sets': setsname, 'combos': combos})
+	return path
+
+def indexPageTop(xname, setsname, combo_names, combo_values, tpl=index_path_template):
+	combos = comboString(combo_names, combo_values)
+	out = index_head.safe_substitute({
+	    'x': xname, 'sets': setsname, 'combos': combos})
+	for name, value in zip(combo_names, combo_values):
+		out += '<br />\n%s = %s' % (name, value)
+	out += '</p>\n<table>'
+	return out
+
+def imageCell(svgpath):
+	return '<td><a href="' + urllib.quote(svgpath) + '"><img src="' + urllib.quote(svgpath.replace('svg','png')) + '"></a></td>'
+
 def openWithMakedirs(path, mode):
 	(dir, fname) = os.path.split(path)
 	if dir and not os.path.isdir(dir):
@@ -60,6 +88,7 @@ class column(object):
 		for x in self.data:
 			h[x] = 1
 		out = h.keys()
+		out.sort()
 		self.numvals = len(out)
 		return out
 		
@@ -163,6 +192,8 @@ svg_colors = [
 
 def svgSets(out, sets, xlabel=None, ylabel=None):
 	setnames = sets.keys()
+	if not setnames:
+		return
 	ytop = 50
 	ybottom = 900
 	xleft = 100
@@ -185,7 +216,7 @@ def svgSets(out, sets, xlabel=None, ylabel=None):
 			county += 1
 		avhighs[sn] = sumy / county
 	setnames.sort(lambda a,b: cmp(avhighs[a], avhighs[b]), reverse=True)
-	print "plotting sets: " + ", ".join(setnames)
+	print "plotting sets: " + ", ".join(map(str, setnames))
 	xmult = (xright - xleft) / (maxx - minx)
 	ymult = (ytop - ybottom) / (maxy - miny)
 	gx = None
@@ -254,6 +285,7 @@ noshowMethods = [
 	"Rating Summation, 1..num choices",
 	"Rating Summation, 1..10",
 	"Instant Runoff Normalized Ratings, positive shifted",
+	"Iterated Normalized Ratings",
 	]
 
 def eqbut(eq):
@@ -292,7 +324,11 @@ def permute_choices(l, choose):
 def permute_sets(*sets):
 	"""Generate lists of combinations of elements from lists in sets."""
 	iterators = [x.__iter__() for x in sets]
+	if len(iterators) == 0:
+		raise StopIteration
 	values = [x.next() for x in iterators]
+	if len(values) == 0:
+		raise StopIteration
 	while True:
 		yield list(values)
 		pos = 0
@@ -397,6 +433,21 @@ def truefalse(x):
 	# only false on empty string
 	return bool(x)
 
+
+def matchOutput(oot, combo_names, comboi, pagename, pagevalue):
+	ootparams = oot[1]
+	if pagename not in ootparams:
+		return False
+	if ootparams[pagename] != pagevalue:
+		return False
+	for n,v in zip(combo_names, comboi):
+		if n not in ootparams:
+			return False
+		if ootparams[n] != v:
+			return False
+	return True
+
+
 usage = """./plotrlog.py foo.csv [options]
  -x a/--x=a  limit x axis to 'a'
  --set=a     only run set axis 'a'
@@ -461,6 +512,8 @@ def main(argv):
 		colhash[x.name] = x
 		if x.name in free_variables:
 			print "%s (int=%s, float=%s): free" % (x.name, x.is_int, x.is_float)
+		elif x.name == 'Runs':
+			pass
 		else:
 			uvals = x.getUniqueValues()
 			if len(uvals) > 30:
@@ -475,23 +528,24 @@ def main(argv):
 	
 	graph_combo_count = 0
 	for (xaxis, setaxis, graphsets) in generateSteppable(steppable_columns):
-		if (xaxis_opt is not None) and (xaxis_opt != xaxis.name):
+		if (xaxis_opt is not None) and (xaxis.name not in xaxis_opt):
 			continue
 		if (setaxis_opt is not None) and (setaxis_opt != setaxis.name):
 			continue
 		combo_names = [x.name for x in graphsets]
-		graph_combos = product(map(lambda x: x.getNumValues(), graphsets))
-		graph_combo_count += graph_combos
-		print "x axis = %s, sets = %s: %d graphs over {%s}" % (
-			xaxis.name, setaxis.name, graph_combos,
-			", ".join(map(lambda x: x.name, graphsets))
-			)
-		dirname_spaces = "x %s l %s" % (xaxis.name, setaxis.name)
-		dirname = filename_sanitize(dirname_spaces)
+		#graph_combos = product(map(lambda x: x.getNumValues(), graphsets))
+		#graph_combo_count += graph_combos
+		#print "x axis = %s, sets = %s: %d graphs over {%s}" % (
+		#	xaxis.name, setaxis.name, graph_combos,
+		#	", ".join(map(lambda x: x.name, graphsets))
+		#	)
+		outputs = []
 		for comboi in permute_sets(*(l.getUniqueValues() for l in graphsets)):
 			for y in free_variables:
 				outpath = buildPath(xaxis.name, y, setaxis.name, combo_names, comboi)
+				outputs.append( (outpath, dict(zip(combo_names, comboi)), y) )
 				print outpath
+				graph_combo_count += 1
 				sets = getPlotSets(
 					xaxis.name, y, setaxis.name, colhash,
 					combo_names, eqbut(comboi))
@@ -501,11 +555,28 @@ def main(argv):
 					svgSets(outfile, sets, xaxis.name, y)
 					outfile.write("</svg>\n")
 					outfile.close()
-#			print repr(zip(combo_names, comboi))
-#		print dirname
-#def buildPath(xname, yname, setsname, combo_names, combo_values, tpl=default_template):
+		for pageset in graphsets:
+			othersets = list(graphsets)
+			othersets.remove(pageset)
+			combo_names = [x.name for x in othersets]
+			for comboi in permute_sets(*(l.getUniqueValues() for l in othersets)):
+				outpath = buildIndexPath(xaxis.name, setaxis.name, combo_names, comboi)
+				indexfile = openWithMakedirs(outpath, "w")
+				indexfile.write(indexPageTop(xaxis.name, setaxis.name, combo_names, comboi))
+				for pagevalue in pageset.getUniqueValues():
+					indexfile.write('<tr><td>%s = %s</td>' % (pageset.name, pagevalue))
+					for oot in outputs:
+						if matchOutput(oot, combo_names, comboi, pageset.name, pagevalue):
+							indexfile.write(imageCell(oot[0]))
+					indexfile.write('</tr>\n')
+				indexfile.write('</table></body></html>\n')
+				indexfile.close()
+							
+					
+		#TODO vary one of graphsets/free_variables and make HTML page
 	print "total graphs: %d" % graph_combo_count
 	return
+# TODO: what was this below the return? old stuff? delete?
 #	for column_combo in permute(steppable_columns, len(steppable_columns) - 1):
 #		graph_combo_count += product(map(lambda x: x.getNumValues(), column_combo))
 #	print "steppable combinations: %d" % product(map(lambda x: x.getNumValues(), steppable_columns))

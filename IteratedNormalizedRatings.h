@@ -20,7 +20,7 @@ public:
     IteratedNormalizedRatings( const char* name,
         int (*decr)(double*,double*,bool*,int,double));
     virtual void init( const char** envp );
-    virtual void runElection( int* winnerR, const VoterArray& they );
+    virtual void runElection( int* winnerR, const VoterArray& they ) const;
 
 protected:
     double offset;

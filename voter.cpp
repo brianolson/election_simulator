@@ -275,7 +275,7 @@ void VotingSystem::init( const char** envp ) {
 	}
 }
 
-bool VotingSystem::runMultiSeatElection(int* winnerArray, const VoterArray& they, int seats) {
+bool VotingSystem::runMultiSeatElection(int* winnerArray, const VoterArray& they, int seats) const {
 	if (seats == 1) {
 		runElection(winnerArray, they);
 		return true;
@@ -428,7 +428,7 @@ VotingSystem::~VotingSystem(){}
 class MaxHappiness : public VotingSystem {
 public:
 	MaxHappiness() : VotingSystem("Max Happiness") {};
-	virtual void runElection( int* winnerR, const VoterArray& they ) {
+	virtual void runElection( int* winnerR, const VoterArray& they ) const {
 		double maxh;
 		int c = 0;
 		int numc = they.numc;
@@ -445,11 +445,11 @@ public:
 		}
 		if ( winnerR ) *winnerR = c;
 	};
-	virtual bool runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats );
+	virtual bool runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats ) const;
 	virtual ~MaxHappiness(){};
-	double miniMultiHappiness( const VoterArray& they, int* winners, int seats );
+	double miniMultiHappiness( const VoterArray& they, int* winners, int seats ) const;
 };
-double MaxHappiness::miniMultiHappiness( const VoterArray& they, int* winners, int seats ) {
+double MaxHappiness::miniMultiHappiness( const VoterArray& they, int* winners, int seats ) const {
   // Like multiseatHappiness, but doesn't clamp output
   double happiness = 0.0;
   for ( int i = 0; i < they.numv; i++ ) {
@@ -462,7 +462,7 @@ double MaxHappiness::miniMultiHappiness( const VoterArray& they, int* winners, i
   happiness = happiness / (they.numv * seats);
   return happiness;
 }
-bool MaxHappiness::runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats ) {
+bool MaxHappiness::runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats ) const {
 	int* testWinners = new int[seats];	// increments over combinations
 	int* bestWinners = new int[seats];
 	for (int s = 0; s < seats; ++s) {

@@ -6,7 +6,7 @@
  with optimizations and integration by Brian Olson
  */
 
-void VoteForAndAgainst::runElection( int* winnerR, const VoterArray& they ) {
+void VoteForAndAgainst::runElection( int* winnerR, const VoterArray& they ) const {
     int i;
     int* fptally;
     int* lptally;

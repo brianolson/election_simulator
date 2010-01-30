@@ -17,7 +17,7 @@ class IRNR : public VotingSystem {
 public:
     IRNR( const char* name );
     IRNR( const char* name, double offsetIn );
-    virtual void runElection( int* winnerR, const VoterArray& they );
+    virtual void runElection( int* winnerR, const VoterArray& they ) const;
 	double offset;
 };
 

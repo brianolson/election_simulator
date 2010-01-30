@@ -8,11 +8,10 @@ public:
     TopNRunoff()
      : VotingSystem("Top N Runoff") {};
 	virtual void init( const char** envp );
-    virtual void runElection( int* winnerR, const VoterArray& they );
+    virtual void runElection( int* winnerR, const VoterArray& they ) const;
 	
 protected:
 	int finalRoundSize;
 };
 
 #endif
-

@@ -1,7 +1,7 @@
 #include "Voter.h"
 #include "OneVotePickOne.h"
 
-void OneVotePickOne::runElection( int* winnerR, const VoterArray& they ) {
+void OneVotePickOne::runElection( int* winnerR, const VoterArray& they ) const {
     int i;
     int* talley;
     int winner;

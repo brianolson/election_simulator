@@ -12,7 +12,7 @@ public:
      : VotingSystem( n ), dontCountNegPref( 0 ) {};
     RankedVotePickOne( const char* n, int dcnp )
      : VotingSystem( n ), dontCountNegPref( dcnp ) {};
-    virtual void runElection( int* winnerR, const VoterArray& they );
+    virtual void runElection( int* winnerR, const VoterArray& they ) const;
     virtual ~RankedVotePickOne();
 };
 

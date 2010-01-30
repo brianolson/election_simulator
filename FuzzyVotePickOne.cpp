@@ -121,7 +121,7 @@ void FuzzyVotePickOne::init( const char** envp ) {
 	}\
 }
 
-void FuzzyVotePickOne::runElection( int* winnerR, const VoterArray& they ) {
+void FuzzyVotePickOne::runElection( int* winnerR, const VoterArray& they ) const {
     int i;
     double* talley;
     int winner;

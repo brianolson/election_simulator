@@ -1,5 +1,7 @@
 #include "Voter.h"
 #include "gauss.h"
+#include "GaussianRandom.h"
+
 #include <assert.h>
 #include <math.h>
 
@@ -83,13 +85,17 @@ void VoterArray::randomizeNSpace(int dimensions, double* choicePositions, double
 // choicePositions is interpreted as 2D, [choice one x, y, z, ...][choice two x, y, z, ...]...
 // center can be NULL or double[dimensions] defining the center of the N-cube.
 // prefenece for a choice is (approvalDistance - voter_choice_distance)
-void VoterArray::randomizeGaussianNSpace(int dimensions, double* choicePositions, double* center, double sigma) {
+void VoterArray::randomizeGaussianNSpace(int dimensions, double* choicePositions, double* center, double sigma, GaussianRandom* gr) {
+	bool temp_gr = gr == NULL;
+        if (temp_gr) {
+		gr = new GaussianRandom();
+        }
 	double* dimholder = new double[dimensions];
-	struct random_gaussian_context gc = INITIAL_GAUSSIAN_CONTEXT;
+	//struct random_gaussian_context gc = INITIAL_GAUSSIAN_CONTEXT;
 	for (int v = 0; v < numv; ++v) {
 		// random position for this voter
 		for (int d = 0; d < dimensions; ++d) {
-			dimholder[d] = random_gaussian_r(&gc) * sigma;
+                  dimholder[d] = gr->get() * sigma;
 			if (center != NULL) {
 				dimholder[d] += center[d];
 			}
@@ -118,6 +124,9 @@ void VoterArray::randomizeGaussianNSpace(int dimensions, double* choicePositions
 		}
 #endif
 	}
+        if (temp_gr) {
+          delete gr;
+        }
 	delete [] dimholder;
 }
 

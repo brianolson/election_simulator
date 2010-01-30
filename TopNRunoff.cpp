@@ -36,7 +36,7 @@ void TopNRunoff::init( const char** envp ) {
 	}
 }
 
-void TopNRunoff::runElection( int* winnerR, const VoterArray& they ) {
+void TopNRunoff::runElection( int* winnerR, const VoterArray& they ) const {
     int i;
     int* talley;
     int winner;

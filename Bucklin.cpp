@@ -18,7 +18,7 @@ void Bucklin::init( const char** envp ) {
 
 // http://en.wikipedia.org/wiki/Bucklin_voting
 // Like IRV but accumulate Nth choices on Nth round.
-void Bucklin::runElection( int* winnerR, const VoterArray& they ) {
+void Bucklin::runElection( int* winnerR, const VoterArray& they ) const {
 	int* tally;
 	int winner = -1;
 	int numc = they.numc;

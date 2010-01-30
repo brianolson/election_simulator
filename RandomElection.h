@@ -14,7 +14,7 @@
 class RandomElection : public VotingSystem {
 public:
     RandomElection( const char* name );
-    virtual void runElection( int* winnerR, const VoterArray& they );
+    virtual void runElection( int* winnerR, const VoterArray& they ) const;
 };
 
 #endif

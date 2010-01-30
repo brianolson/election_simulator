@@ -10,7 +10,7 @@ public:
     VotingSystem(const char* nin):name(nin){};
     /*! @function runElection
 	 * return winner in winnerArray[0], second place in [1], and so on */
-    virtual void runElection( int* winnerArray, const VoterArray& they ) = 0;
+    virtual void runElection( int* winnerArray, const VoterArray& they ) const = 0;
 	/*! @var name
 		Descriptive user-visible name. Often modulated by options set. */
     const char* name;
@@ -25,7 +25,7 @@ public:
     // Like runElection but for multi-seat methods.
 	// Default implementation calls runElection() if seats==1, returns false otherwise.
     // Return true unless there was an internal error.
-    virtual bool runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats );
+    virtual bool runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats ) const;
 	
     /*! @function pickOneHappiness
 	 * calculate average happiness of the voters for the winner */

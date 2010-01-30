@@ -6,7 +6,7 @@
 class OneVotePickOne : public VotingSystem {
 public:
     OneVotePickOne() : VotingSystem( "One Vote" ) {};
-    virtual void runElection( int* winnerR, const VoterArray& they );
+    virtual void runElection( int* winnerR, const VoterArray& they ) const;
     virtual ~OneVotePickOne();
 };
 

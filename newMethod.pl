@@ -35,19 +35,19 @@ void ${name}::init( const char** envp ) {
 }
 #endif
 
-void ${name}::runElection( int* winnerR, const VoterArray& they ) {
+void ${name}::runElection( int* winnerR, const VoterArray& they ) const {
     int i;
     int* tally;
     int winner;
     int numc = they.numc;
     int numv = they.numv;
-    
+
     // init things
     tally = new int[numc];
     for ( i = 0; i  < numc; i++ ) {
         tally[i] = 0;
     }
-    
+
     // count votes for each candidate
     for ( i = 0; i < numv; i++ ) {
         tally[they[i].getMax()]++;
@@ -68,7 +68,7 @@ void ${name}::runElection( int* winnerR, const VoterArray& they ) {
 }
 
 #if 0
-bool ${name}::runMultiSeatElection( int* winnerR, const VoterArray& they, int seats ) {
+bool ${name}::runMultiSeatElection( int* winnerR, const VoterArray& they, int seats ) const {
 	if (seats == 1) {
 		runElection(winnerR, they);
 		return true;
@@ -98,8 +98,8 @@ class ${name} : public VotingSystem {
 public:
 	${name}() : VotingSystem( "${name}" ) {};
 	//virtual void init( const char** envp );
-	virtual void runElection( int* winnerR, const VoterArray& they );
-	//virtual bool runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats );
+	virtual void runElection( int* winnerR, const VoterArray& they ) const;
+	//virtual bool runMultiSeatElection( int* winnerArray, const VoterArray& they, int seats ) const;
 	virtual ~${name}();
 };
 

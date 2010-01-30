@@ -6,7 +6,7 @@
 class AcceptanceVotePickOne : public VotingSystem {
 public:
     AcceptanceVotePickOne() : VotingSystem( "Approval" ) {};
-    virtual void runElection( int* winnerR, const VoterArray& they );
+    virtual void runElection( int* winnerR, const VoterArray& they ) const;
 };
 
 #endif

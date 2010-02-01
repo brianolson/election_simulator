@@ -173,6 +173,7 @@
 		3244E5D01114ADEF000938EC /* GaussianRandom.h in Headers */ = {isa = PBXBuildFile; fileRef = 3244E5CB1114ADEF000938EC /* GaussianRandom.h */; };
 		3244E5D11114ADEF000938EC /* GaussianRandom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3244E5CA1114ADEF000938EC /* GaussianRandom.cpp */; };
 		3244E5D21114ADEF000938EC /* GaussianRandom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3244E5CA1114ADEF000938EC /* GaussianRandom.cpp */; };
+		327442A3111794E700956726 /* spacegraph_util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 327442A2111794E700956726 /* spacegraph_util.cpp */; };
 		3286DBF20F4688E00059D26D /* DBResultFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0805E5E87E00994248 /* DBResultFile.h */; };
 		3286DBF30F4688E10059D26D /* DBResultFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0705E5E87E00994248 /* DBResultFile.cpp */; };
 		3286DBF40F4688E70059D26D /* AcceptanceVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0305E5E87E00994248 /* AcceptanceVotePickOne.cpp */; };
@@ -296,6 +297,7 @@
 		1FF81B7F102D9494005E4B04 /* STV.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = STV.cpp; sourceTree = "<group>"; };
 		3244E5CA1114ADEF000938EC /* GaussianRandom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GaussianRandom.cpp; sourceTree = "<group>"; };
 		3244E5CB1114ADEF000938EC /* GaussianRandom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GaussianRandom.h; sourceTree = "<group>"; };
+		327442A2111794E700956726 /* spacegraph_util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spacegraph_util.cpp; sourceTree = "<group>"; };
 		3286DBE70F4636010059D26D /* vsmall */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = vsmall; sourceTree = BUILT_PRODUCTS_DIR; };
 		3286DC080F46896C0059D26D /* IteratedNormalizedRatings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IteratedNormalizedRatings.h; sourceTree = "<group>"; };
 		3286DC090F46896C0059D26D /* IteratedNormalizedRatings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IteratedNormalizedRatings.cpp; sourceTree = "<group>"; };
@@ -433,6 +435,7 @@
 				1F4392720F59048D006BE973 /* ProtoResultLog.cpp */,
 				1F4392730F59048D006BE973 /* ResultLog.h */,
 				1F21108A09FD256A00B5C0AB /* spacegraph.cpp */,
+				327442A2111794E700956726 /* spacegraph_util.cpp */,
 				1FF81B7E102D9494005E4B04 /* STV.h */,
 				1FF81B7F102D9494005E4B04 /* STV.cpp */,
 				1F5ECE1705E5E87E00994248 /* ThreadSafeDBRF.cpp */,
@@ -716,6 +719,7 @@
 				3244E5CC1114ADEF000938EC /* GaussianRandom.cpp in Sources */,
 				1FE0A1C9111602CD003AF73A /* PlaneSimDraw.cpp in Sources */,
 				1FE0A26911161C82003AF73A /* CIVSP.cpp in Sources */,
+				327442A3111794E700956726 /* spacegraph_util.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

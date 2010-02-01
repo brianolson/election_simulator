@@ -78,6 +78,7 @@ void PlaneSim::setVotingSystems(VotingSystem** systems_, int numSystems) {
 	accum = new ResultAccumulation*[systemsLength];
 	for (int i = 0; i < systemsLength; ++i) {
 		accum[i] = new ResultAccumulation(px, py, they.numc);
+		accum[i]->clear();
 	}
 }
 

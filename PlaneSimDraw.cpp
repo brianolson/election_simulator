@@ -124,8 +124,8 @@ void PlaneSimDraw::writePNG( const char* filename, PlaneSim* sim, const ResultAc
 				sum += accum->getAccum( x, y, i );
 			}
 			if ( sum != targetSum ) {
-				fprintf(stderr,"PlaneSim::writePNG error at (%d,%d), sum %f != targetSum %f\n",
-						x, y, sum, targetSum );
+				fprintf(stderr,"PlaneSimDraw::writePNG(%s) error at (%d,%d), sum %f != targetSum %f\n",
+						filename, x, y, sum, targetSum );
 				sumErrors++;
 			}
 			for ( i = 0; i < they.numc; i++ ) {

@@ -1,4 +1,6 @@
+#include "GaussianRandom.h"
 #include "PlaneSim.h"
+#include "PlaneSimDraw.h"
 #include "VotingSystem.h"
 #include "XYSource.h"
 
@@ -35,10 +37,68 @@ static void printEMList(void) {
 	}
 }
 
+// return a newly malloc()ed string with path templating done.
+// replace "%m" with methodName
+// replace "%p" with decimal plane number
+char* fileTemplate(const char* tpl, const char* methodName, const char* plane) {
+	if (methodName == NULL) {
+		methodName = "";
+	}
+	if (plane == NULL) {
+		plane = "";
+	}
+	const char* methodIndex = strstr(tpl, "%m");
+	const char* planeIndex = strstr(tpl, "%p");
+	int newlen = strlen(tpl) + 1;
+	if (methodIndex != NULL) {
+		newlen += strlen(methodName) - 2;
+	}
+	if (planeIndex != NULL) {
+		// allocate enough for any decimal int32
+		newlen += strlen(plane) - 2;
+	}
+	char* out = (char*)malloc(newlen);
+	const char* in = tpl;
+	char* pos = out;
+	while (*in != '\0') {
+		if (in[0] == '%') {
+			if (in[1] == 'm') {
+				in += 2;
+				while (*methodName != '\0') {
+					*pos = *methodName;
+					pos++;
+					methodName++;
+				}
+			} else if (in[1] == 'p') {
+				in += 2;
+				while (*plane != '\0') {
+					*pos = *plane;
+					pos++;
+					plane++;
+				}
+			} else {
+				*pos = *in;
+				in++;
+				pos++;
+			}
+		} else {
+			*pos = *in;
+			in++;
+			pos++;
+		}
+	}
+	*pos = '\0';
+	return out;
+}
+
 const char* usage =
-"usage: spacegraph [-o foo.png][-tg][-minx f][-miny f][-maxx f][-maxy f]\n"
+"usage: spacegraph [-o main output png file name template]\n"
+"\t[-tg test gauss png file name]\n"
+"\t[-minx f][-miny f][-maxx f][-maxy f]\n"
 "\t[-px i][-py i][-v voters][-n iter per pix][-Z sigma]\n"
-"\t[-c \"candidateX Y\"][--list][--method electionmethod]\n"
+"\t[-c \"candidateX Y\"][--list]\n"
+"\t[--method electionmethod[,...]]\n"
+"\t[--random random device][--planes plane file template]\n"
 ;
 
 #ifndef MAX_METHOD_ENV
@@ -76,9 +136,7 @@ static bool maybeLongarg(const char* arg, const char* prefix, const char** optar
 }
 
 int main( int argc, char** argv ) {
-	// trivial main
 	const char* votingSystemName = NULL;
-	VotingSystem* vs = NULL;
 	const char** methodEnv = new const char*[MAX_METHOD_ENV];
 	int methodEnvCount = 0;
 	PlaneSim sim;
@@ -89,6 +147,7 @@ int main( int argc, char** argv ) {
 	int nthreads = 1;
 	const char* planesPrefix = NULL;
 	const char* optarg;
+	const char* randomDevice = NULL;
 
 	for ( i = 1; i < argc; i++ ) {
 		if ( ! strcmp( argv[i], "-o" ) ) {
@@ -156,6 +215,9 @@ int main( int argc, char** argv ) {
 			planesPrefix = optarg;
 		} else if (maybeLongarg(argv[i], "--combine", NULL)) {
 			sim.doCombinatoricExplode = true;
+		} else if (maybeLongarg(argv[i], "--random", &optarg)) {
+			if (!optarg) { i++; optarg = argv[i]; }
+			randomDevice = optarg;
 		} else {
 			fprintf( stderr, "bogus arg \"%s\"\n", argv[i] );
 			fputs( usage, stderr );
@@ -169,27 +231,69 @@ int main( int argc, char** argv ) {
 		fprintf( stderr, "error, no candidate positions specified\n");
 		exit(1);
 	}
+	if ( randomDevice != NULL ) {
+		sim.rootRandom = new FileDoubleRandom(randomDevice, 8*1024);
+	} else {
+		sim.rootRandom = new ClibDoubleRandom();
+	}
+	PlaneSimDraw* psd = new PlaneSimDraw(sim.px, sim.py, 3);
 	if ( testgauss != NULL ) {
+		sim.gRandom = new GaussianRandom(sim.rootRandom);
 		sim.addCandidateArg("0,0");
 		sim.build( 1 );
-		sim.gaussTest( testgauss, nvoters );
+		psd->gaussTest( testgauss, nvoters, &sim );
 		return 0;
 	}
+	int numVotingSystems = 1;
+	VotingSystem** systems = NULL;
 	if ( votingSystemName == NULL ) {
-		vs = new Condorcet();
+		systems = new VotingSystem*[numVotingSystems];
+		systems[0] = new Condorcet();
 	} else {
 		const VSFactory* cf;
-		cf = VSFactory::byName(votingSystemName);
+		char* vsnameScratch = strdup(votingSystemName);
+		char* vsstart = vsnameScratch;
+		char* pos = vsnameScratch;
+		while (*pos != '\0') {
+			if (*pos == ',') {
+				numVotingSystems++;
+			}
+			pos++;
+		}
+		pos = vsnameScratch;
+		systems = new VotingSystem*[numVotingSystems];
+		int si = 0;
+		while (*pos != '\0') {
+			if (*pos == ',') {
+				*pos = '\0';
+				cf = VSFactory::byName(vsstart);
+				if ( cf == NULL ) {
+					fprintf(stderr,"no such election method \"%s\", have:\n", vsstart );
+					printEMList();
+					exit(1);
+				}
+				systems[si] = cf->make();
+				si++;
+				vsstart = pos + 1;
+			}
+			pos++;
+		}
+		cf = VSFactory::byName(vsstart);
 		if ( cf == NULL ) {
-			fprintf(stderr,"no such election method \"%s\", have:\n", votingSystemName );
+			fprintf(stderr,"no such election method \"%s\", have:\n", vsstart );
 			printEMList();
 			exit(1);
 		}
-		vs = cf->make();
+		systems[si] = cf->make();
+		si++;
+		assert(si == numVotingSystems);
+		free(vsnameScratch);
 	}
 	if ( methodEnvCount > 0 ) {
 		methodEnv[methodEnvCount] = NULL;
-		vs->init( methodEnv );
+		for (int vi = 0; vi < numVotingSystems; ++vi) {
+			systems[vi]->init( methodEnv );
+		}
 	}
 	sim.build( nvoters );
 	{
@@ -198,21 +302,24 @@ int main( int argc, char** argv ) {
 	    fputs( cfgstr, stdout );
 	    fputs( "\n", stdout );
 	}
+	sim.setVotingSystems(systems, numVotingSystems);
+	XYSource* source = new XYSource(sim.px, sim.py);
 	if ( nthreads <= 1 ) {
-		sim.run( vs );
+		sim.gRandom = new GaussianRandom(sim.rootRandom);
+		sim.runXYSource( source );
 	} else {
+		sim.rootRandom = new LockingDoubleRandomWrapper(sim.rootRandom);
+		sim.gRandom = new GaussianRandom(
+			new BufferDoubleRandomWrapper(sim.rootRandom, 512, true));
 		PlaneSim* sims = new PlaneSim[nthreads-1];
 		PlaneSimThread* threads = new PlaneSimThread[nthreads];
-		XYSource* source = new XYSource(sim.px, sim.py);
 		int i;
 		for (i = 0; i < nthreads-1; ++i) {
 			sims[i].coBuild(sim);
 			threads[i].sim = &(sims[i]);
-			threads[i].vs = vs;
 			threads[i].source = source;
 		}
 		threads[i].sim = &sim;
-		threads[i].vs = vs;
 		threads[i].source = source;
 		for (i = 0; i < nthreads; ++i) {
 			pthread_create(&(threads[i].thread), NULL, runPlaneSimThread, &(threads[i]));
@@ -221,16 +328,22 @@ int main( int argc, char** argv ) {
 			pthread_join(threads[i].thread, NULL);
 		}
 	}
-	if (planesPrefix) {
-		int prefixlen = strlen(planesPrefix);
-		char* pfilename = new char[prefixlen + 20];
-		strcpy(pfilename, planesPrefix);
-		for (int plane = 0; plane < sim.they.numc; ++plane) {
-			sprintf(pfilename + prefixlen, "%d.png", plane);
-			sim.writePlanePNG(pfilename, plane);
+	for (int vi = 0; vi < numVotingSystems; ++vi) {
+		char* pfilename;
+		if (planesPrefix) {
+			static char planeStr[20];
+			for (int plane = 0; plane < sim.they.numc; ++plane) {
+				snprintf(planeStr, sizeof(planeStr), "%d", plane);
+				pfilename = fileTemplate(planesPrefix, sim.systems[vi]->name, planeStr);
+				psd->writePlanePNG(pfilename, plane, &sim, sim.accum[vi]);
+				free(pfilename);
+			}
+			pfilename = fileTemplate(planesPrefix, sim.systems[vi]->name, "_sum.png");
+			psd->writeSumPNG(pfilename, &sim, sim.accum[vi]);
+			free(pfilename);
 		}
-		strcpy(pfilename + prefixlen, "_sum.png");
-		sim.writeSumPNG(pfilename);
+		pfilename = fileTemplate(foutname, sim.systems[vi]->name, NULL);
+		psd->writePNG( pfilename, &sim, sim.accum[vi] );
+		free(pfilename);
 	}
-	sim.writePNG( foutname );
 }

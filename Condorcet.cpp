@@ -247,15 +247,12 @@ void Condorcet::runElection( int* winnerR, const VoterArray& they ) const {
 	    delete [] bpm;
 	}
 	if ( winner == -1 ) {
-#if 01
-	    // fall back to borda to get one
-	    RankedVotePickOne::runElection( winnerR, they );
-#elif 0
+#if 0
 	    // FIXME write an option to return ties
 #elif 0
 	    // another alternative, random pick from tie (not for real-world)
 #else
-	    printf("no Condorcet-beatpath winner, going with 0\n");
+	    fprintf(stderr, "no Condorcet-beatpath winner, going with 0\n");
 	    winner = 0;
 #endif
 	}

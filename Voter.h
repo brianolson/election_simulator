@@ -44,6 +44,11 @@ public:
     int getMax() const;
     // return index of lowest preference
     int getMin() const;
+	
+	// Copy top N candidate index,pref pairs into indecies,prefs; highest first.
+	void getTopN(int* indecies, float* prefs, int n);
+	
+	void getSortedPrefs(int* indecies, float* prefs, const int* choices, int seats);
     
     /* For each candidate preference, randomly add/subtract as much as error,
        then bound to -1.0 to 1.0 */

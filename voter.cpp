@@ -130,6 +130,66 @@ int Voter::getMin() const {
     return toret;
 }
 
+void Voter::getTopN(int* indecies, float* prefs, int seats) {
+	indecies[0] = 0;
+	prefs[0] = preference[0];
+	int c;
+	for (c = 1; c < seats; ++c) {
+		float p = preference[c];
+		int ci = c;
+		while (((ci - 1) >= 0) && (p > prefs[ci - 1])) {
+			prefs[ci] = prefs[ci - 1];
+			indecies[ci] = indecies[ci - 1];
+			ci--;
+		}
+		prefs[ci] = p;
+		indecies[ci] = c;
+	}
+	for (; c < preflen; ++c) {
+		int ci = seats;
+		float p = preference[c];
+		while (((ci - 1) >= 0) && (p > prefs[ci - 1])) {
+			if (ci < seats) {
+				prefs[ci] = prefs[ci - 1];
+				indecies[ci] = indecies[ci - 1];
+			}
+			ci--;
+		}
+		if (ci < seats) {
+			prefs[ci] = p;
+			indecies[ci] = c;
+		}
+	}
+#ifndef NDEBUG
+	for (int c = 0; c < seats - 1; ++c) {
+		assert(prefs[c] > prefs[c+1]);
+	}
+#endif
+}
+
+void Voter::getSortedPrefs(int* indecies, float* prefs, const int* choices, int seats) {
+	for (int ci = 0; ci < seats; ++ci) {
+		indecies[ci] = choices[ci];
+		prefs[ci] = preference[choices[ci]];
+	}
+	// bubble sort!
+	bool notdone = true;
+	while (notdone) {
+		notdone = false;
+		for (int i = 0; i < seats - 1; ++i) {
+			if (prefs[i+1] > prefs[i]) {
+				int ti = indecies[i];
+				float tp = prefs[i];
+				indecies[i] = indecies[i+1];
+				prefs[i] = prefs[i+1];
+				indecies[i+1] = ti;
+				prefs[i+1] = tp;
+				notdone = true;
+			}
+		}
+	}
+}
+
 Voter::Voter()
     : preference( NULL ), preflen( 0 ) {
 }

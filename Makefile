@@ -43,7 +43,7 @@ SGOBJS := ${EMOBJS}
 SGOBJS += VoterArray.o spacegraph.o GaussianRandom.o
 SGOBJS += ResultFile.o voter.o gauss.o
 SGOBJS += VoterSim.o WorkQueue.o NameBlock.o
-SGOBJS += PlaneSim.o XYSource.o
+SGOBJS += PlaneSim.o PlaneSimDraw.o XYSource.o
 
 STOBJS := VoterArray.o WorkQueue.o voter.o speed_test.o gauss.o
 STOBJS += ${EMOBJS} NameBlock.o GaussianRandom.o

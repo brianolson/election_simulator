@@ -143,6 +143,14 @@
 		1FC0F9BB0F599717006B5D1C /* trial.pb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F4392760F5904A9006BE973 /* trial.pb.cc */; };
 		1FC0F9BD0F59972C006B5D1C /* processProtoResultLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FC0F9BC0F59972C006B5D1C /* processProtoResultLog.cpp */; };
 		1FC0F9DE0F59977E006B5D1C /* ResultFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1505E5E87E00994248 /* ResultFile.cpp */; };
+		1FE0A1C9111602CD003AF73A /* PlaneSimDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0A1C7111602CD003AF73A /* PlaneSimDraw.cpp */; };
+		1FE0A26911161C82003AF73A /* CIVSP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0A26711161C82003AF73A /* CIVSP.cpp */; };
+		1FE0A26A11161C82003AF73A /* CIVSP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0A26711161C82003AF73A /* CIVSP.cpp */; };
+		1FE0A26B11161C82003AF73A /* CIVSP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE0A26811161C82003AF73A /* CIVSP.h */; };
+		1FE0A26C11161C82003AF73A /* CIVSP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0A26711161C82003AF73A /* CIVSP.cpp */; };
+		1FE0A26D11161C82003AF73A /* CIVSP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE0A26811161C82003AF73A /* CIVSP.h */; };
+		1FE0A26E11161C82003AF73A /* CIVSP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0A26711161C82003AF73A /* CIVSP.cpp */; };
+		1FE0A26F11161C82003AF73A /* CIVSP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0A26711161C82003AF73A /* CIVSP.cpp */; };
 		1FF4BB660B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */; };
 		1FF4BB670B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */; };
 		1FF4BB680B33719500B5D49D /* ApprovalNoInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */; };
@@ -158,6 +166,13 @@
 		1FF81B82102D9494005E4B04 /* STV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF81B7F102D9494005E4B04 /* STV.cpp */; };
 		1FF81B83102D9494005E4B04 /* STV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF81B7F102D9494005E4B04 /* STV.cpp */; };
 		1FF81B84102D9494005E4B04 /* STV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF81B7F102D9494005E4B04 /* STV.cpp */; };
+		3244E5CC1114ADEF000938EC /* GaussianRandom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3244E5CA1114ADEF000938EC /* GaussianRandom.cpp */; };
+		3244E5CD1114ADEF000938EC /* GaussianRandom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3244E5CA1114ADEF000938EC /* GaussianRandom.cpp */; };
+		3244E5CE1114ADEF000938EC /* GaussianRandom.h in Headers */ = {isa = PBXBuildFile; fileRef = 3244E5CB1114ADEF000938EC /* GaussianRandom.h */; };
+		3244E5CF1114ADEF000938EC /* GaussianRandom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3244E5CA1114ADEF000938EC /* GaussianRandom.cpp */; };
+		3244E5D01114ADEF000938EC /* GaussianRandom.h in Headers */ = {isa = PBXBuildFile; fileRef = 3244E5CB1114ADEF000938EC /* GaussianRandom.h */; };
+		3244E5D11114ADEF000938EC /* GaussianRandom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3244E5CA1114ADEF000938EC /* GaussianRandom.cpp */; };
+		3244E5D21114ADEF000938EC /* GaussianRandom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3244E5CA1114ADEF000938EC /* GaussianRandom.cpp */; };
 		3286DBF20F4688E00059D26D /* DBResultFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5ECE0805E5E87E00994248 /* DBResultFile.h */; };
 		3286DBF30F4688E10059D26D /* DBResultFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0705E5E87E00994248 /* DBResultFile.cpp */; };
 		3286DBF40F4688E70059D26D /* AcceptanceVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0305E5E87E00994248 /* AcceptanceVotePickOne.cpp */; };
@@ -269,12 +284,18 @@
 		1FBE2D62105C3783009E5FF6 /* MaybeDebugLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MaybeDebugLog.h; sourceTree = "<group>"; };
 		1FC0F9B40F5996F5006B5D1C /* proces_prl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = proces_prl; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FC0F9BC0F59972C006B5D1C /* processProtoResultLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = processProtoResultLog.cpp; sourceTree = "<group>"; };
+		1FE0A1C7111602CD003AF73A /* PlaneSimDraw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlaneSimDraw.cpp; sourceTree = "<group>"; };
+		1FE0A1C8111602CD003AF73A /* PlaneSimDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaneSimDraw.h; sourceTree = "<group>"; };
+		1FE0A26711161C82003AF73A /* CIVSP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CIVSP.cpp; sourceTree = "<group>"; };
+		1FE0A26811161C82003AF73A /* CIVSP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIVSP.h; sourceTree = "<group>"; };
 		1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ApprovalNoInfo.cpp; sourceTree = "<group>"; };
 		1FF4BB720B33763C00B5D49D /* ApprovalNoInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ApprovalNoInfo.h; sourceTree = "<group>"; };
 		1FF4BB9D0B33961700B5D49D /* ApprovalWithPoll.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ApprovalWithPoll.h; sourceTree = "<group>"; };
 		1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ApprovalWithPoll.cpp; sourceTree = "<group>"; };
 		1FF81B7E102D9494005E4B04 /* STV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STV.h; sourceTree = "<group>"; };
 		1FF81B7F102D9494005E4B04 /* STV.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = STV.cpp; sourceTree = "<group>"; };
+		3244E5CA1114ADEF000938EC /* GaussianRandom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GaussianRandom.cpp; sourceTree = "<group>"; };
+		3244E5CB1114ADEF000938EC /* GaussianRandom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GaussianRandom.h; sourceTree = "<group>"; };
 		3286DBE70F4636010059D26D /* vsmall */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = vsmall; sourceTree = BUILT_PRODUCTS_DIR; };
 		3286DC080F46896C0059D26D /* IteratedNormalizedRatings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IteratedNormalizedRatings.h; sourceTree = "<group>"; };
 		3286DC090F46896C0059D26D /* IteratedNormalizedRatings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IteratedNormalizedRatings.cpp; sourceTree = "<group>"; };
@@ -365,6 +386,8 @@
 				1FF4BB9D0B33961700B5D49D /* ApprovalWithPoll.h */,
 				1F1C5B2610DA6FED00C10D84 /* Bucklin.cpp */,
 				1F1C5B2710DA6FED00C10D84 /* Bucklin.h */,
+				1FE0A26711161C82003AF73A /* CIVSP.cpp */,
+				1FE0A26811161C82003AF73A /* CIVSP.h */,
 				1F5ECE0505E5E87E00994248 /* Condorcet.cpp */,
 				1F5ECE0605E5E87E00994248 /* Condorcet.h */,
 				1F5ECE0705E5E87E00994248 /* DBResultFile.cpp */,
@@ -372,6 +395,8 @@
 				1F5ECE0905E5E87E00994248 /* FuzzyVotePickOne.cpp */,
 				1F5ECE0A05E5E87E00994248 /* FuzzyVotePickOne.h */,
 				32E9DA330D651C3600EC3419 /* gauss.c */,
+				3244E5CA1114ADEF000938EC /* GaussianRandom.cpp */,
+				3244E5CB1114ADEF000938EC /* GaussianRandom.h */,
 				3286DC080F46896C0059D26D /* IteratedNormalizedRatings.h */,
 				3286DC090F46896C0059D26D /* IteratedNormalizedRatings.cpp */,
 				1F5ECE0B05E5E87E00994248 /* InstantRunoffVotePickOne.cpp */,
@@ -401,6 +426,8 @@
 				1F5ECE1605E5E87E00994248 /* ResultFile.h */,
 				32F86DD4110CD7F500DDAC49 /* PlaneSim.h */,
 				32F86DD5110CD7F500DDAC49 /* PlaneSim.cpp */,
+				1FE0A1C7111602CD003AF73A /* PlaneSimDraw.cpp */,
+				1FE0A1C8111602CD003AF73A /* PlaneSimDraw.h */,
 				1F4392700F59048D006BE973 /* ResultLog.cpp */,
 				1F4392710F59048D006BE973 /* ProtoResultLog.h */,
 				1F4392720F59048D006BE973 /* ProtoResultLog.cpp */,
@@ -480,6 +507,8 @@
 				1F2AAFCB0B339C8200AFA56C /* VoteForAndAgainst.h in Headers */,
 				328C83050F602CF100C872DA /* NameBlock.h in Headers */,
 				1F1C5B2E10DA6FED00C10D84 /* Bucklin.h in Headers */,
+				3244E5D01114ADEF000938EC /* GaussianRandom.h in Headers */,
+				1FE0A26B11161C82003AF73A /* CIVSP.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -513,6 +542,8 @@
 				1F76849A1037B475005E8425 /* IRNRP.h in Headers */,
 				1FBE2D63105C3783009E5FF6 /* MaybeDebugLog.h in Headers */,
 				1F1C5B2C10DA6FED00C10D84 /* Bucklin.h in Headers */,
+				3244E5CE1114ADEF000938EC /* GaussianRandom.h in Headers */,
+				1FE0A26D11161C82003AF73A /* CIVSP.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -682,6 +713,9 @@
 				1F1C5B2910DA6FED00C10D84 /* Bucklin.cpp in Sources */,
 				32F86DD6110CD7F500DDAC49 /* PlaneSim.cpp in Sources */,
 				32F86E1D110CFADB00DDAC49 /* XYSource.cpp in Sources */,
+				3244E5CC1114ADEF000938EC /* GaussianRandom.cpp in Sources */,
+				1FE0A1C9111602CD003AF73A /* PlaneSimDraw.cpp in Sources */,
+				1FE0A26911161C82003AF73A /* CIVSP.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -716,6 +750,8 @@
 				1F7684971037B475005E8425 /* IRNRP.cpp in Sources */,
 				1FBE2D06105C20D6009E5FF6 /* MaybeDebugLog.cpp in Sources */,
 				1F1C5B2810DA6FED00C10D84 /* Bucklin.cpp in Sources */,
+				3244E5D21114ADEF000938EC /* GaussianRandom.cpp in Sources */,
+				1FE0A26F11161C82003AF73A /* CIVSP.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -746,6 +782,8 @@
 				1F2AAFCA0B339C8200AFA56C /* VoteForAndAgainst.cpp in Sources */,
 				328C83000F602CE900C872DA /* NameBlock.cpp in Sources */,
 				1F1C5B2D10DA6FED00C10D84 /* Bucklin.cpp in Sources */,
+				3244E5CF1114ADEF000938EC /* GaussianRandom.cpp in Sources */,
+				1FE0A26A11161C82003AF73A /* CIVSP.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -790,6 +828,8 @@
 				1F7684991037B475005E8425 /* IRNRP.cpp in Sources */,
 				1FBE2D08105C20D6009E5FF6 /* MaybeDebugLog.cpp in Sources */,
 				1F1C5B2A10DA6FED00C10D84 /* Bucklin.cpp in Sources */,
+				3244E5D11114ADEF000938EC /* GaussianRandom.cpp in Sources */,
+				1FE0A26E11161C82003AF73A /* CIVSP.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -824,6 +864,8 @@
 				1F76849B1037B475005E8425 /* IRNRP.cpp in Sources */,
 				1FBE2D09105C20D6009E5FF6 /* MaybeDebugLog.cpp in Sources */,
 				1F1C5B2B10DA6FED00C10D84 /* Bucklin.cpp in Sources */,
+				3244E5CD1114ADEF000938EC /* GaussianRandom.cpp in Sources */,
+				1FE0A26C11161C82003AF73A /* CIVSP.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

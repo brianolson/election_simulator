@@ -1,14 +1,14 @@
 #ifndef CONDORCET_H
 #define CONDORCET_H
 
-#include "RankedVotePickOne.h"
+#include "VotingSystem.h"
 
-class Condorcet : public RankedVotePickOne {
+class Condorcet : public VotingSystem {
 public:
     Condorcet()
-     : RankedVotePickOne( "Condorcet" ){};
+     : VotingSystem( "Condorcet" ){};
     Condorcet( const char* n )
-     : RankedVotePickOne( n ){};
+     : VotingSystem( n ){};
     virtual void runElection( int* winnerR, const VoterArray& they ) const;
 	
 	static int electionsRun;

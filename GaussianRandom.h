@@ -52,7 +52,7 @@ class FileDoubleRandom : public DoubleRandom {
  public:
   // /dev/urandom
   FileDoubleRandom();
-  // use /dev/urandom or /dev/random
+  // use /dev/urandom or /dev/random, buffer_size in bytes
   FileDoubleRandom(const char* path, size_t buffer_size);
   virtual ~FileDoubleRandom();
 

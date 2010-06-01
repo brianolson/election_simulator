@@ -2,6 +2,7 @@
 
 #include "GaussianRandom.h"
 #include "PlaneSim.h"
+#include "ResultAccumulation.h"
 
 #include <assert.h>
 #include <png.h>
@@ -9,7 +10,8 @@
 #include <string.h>
 
 PlaneSimDraw::PlaneSimDraw(int sizex, int sizey, int bytesPerPixel_)
-: px(sizex), py(sizey), bytesPerPixel(bytesPerPixel_) {
+: px(sizex), py(sizey), bytesPerPixel(bytesPerPixel_),
+variableAccum(false) {
 	pix = (uint8_t*)malloc(sizex * sizey * bytesPerPixel);
 	assert(pix != NULL);
 }
@@ -100,35 +102,39 @@ void PlaneSimDraw::drawDiamond( int cx, int cy, const uint8_t* color ) {
 	::drawDiamond(cx, cy, px, py, color, PC_getpxp, this);
 }
 
-static void writeImageDataToPNGFile( const char* outname, unsigned char** rows, int height, int width, char* args );
+static void writeImageDataToPNGFile( const char* outname, unsigned char** rows, int height, int width, const char* args );
 
-void PlaneSimDraw::writePNG( const char* filename, PlaneSim* sim, const ResultAccumulation* accum ) {
-	assert(px == sim->px);
-	assert(py == sim->py);
-	const VoterArray& they = sim->they;
-	const pos* candidates = sim->candidates;
+// Write blended single winner pixels.
+void PlaneSimDraw::writePNG( const char* filename, int numc, const ResultAccumulation* accum, int* candidateXY, const char* args ) {
+	//assert(px == sim->px);
+	//assert(py == sim->py);
+	//const VoterArray& they = sim->they;
+	//int numc = sim->they.numc;
+	//const pos* candidates = sim->candidates;
 	memset(pix, 0, px*py*bytesPerPixel);
 	uint8_t** rows = new uint8_t*[py];
-	int i;
-	int sumErrors = 0;
-	double targetSum = sim->electionsPerPixel * sim->seats;
-	fprintf(stderr,"making image %dx%d for %d choices\n", px, py, they.numc );
-	for ( i = 0; i < py; i++ ) {
+	//int i;
+	//int sumErrors = 0;
+	//double targetSum = sim->electionsPerPixel * sim->seats;
+	fprintf(stderr,"making image %dx%d for %d choices\n", px, py, numc );
+	for ( int i = 0; i < py; i++ ) {
 		rows[i] = pix + 3*px*i;
 	}
 	for ( int y = 0; y < py; y++ ) {
 		for ( int x = 0; x < px; x++ ) {
 			double sum;
 			sum = 0.0;
-			for ( i = 0; i < they.numc; i++ ) {
+			for ( int i = 0; i < numc; i++ ) {
 				sum += accum->getAccum( x, y, i );
 			}
-			if ( sum != targetSum ) {
+#if 0
+			if ( (!variableAccum) && (sum != targetSum) ) {
 				fprintf(stderr,"PlaneSimDraw::writePNG(%s) error at (%d,%d), sum %f != targetSum %f\n",
 						filename, x, y, sum, targetSum );
 				sumErrors++;
 			}
-			for ( i = 0; i < they.numc; i++ ) {
+#endif
+			for ( int i = 0; i < numc; i++ ) {
 				double weight = accum->getAccum( x, y, i ) / sum;
 				const uint8_t* color = candidateColors + ((i % numCandidateColors) * 3);
 				uint8_t* p;
@@ -141,32 +147,37 @@ void PlaneSimDraw::writePNG( const char* filename, PlaneSim* sim, const ResultAc
 			}
 		}
 	}
-	for ( i = 0; i < they.numc; i++ ) {
-	    printf("cd %f,%f -> ", candidates[i].x, candidates[i].y );
-	    drawDiamond( sim->xCoordToIndex( candidates[i].x ),
-					sim->yCoordToIndex( candidates[i].y ),
-					candidateColors + ((i % numCandidateColors) * 3) );
-	}
-	char* args = new char[1024];
-	if ( args != NULL ) {
-	    sim->configStr( args, 1024 );
+	if (candidateXY != NULL) {
+		for ( int i = 0; i < numc; i++ ) {
+#if 1
+			drawDiamond(candidateXY[i*2], candidateXY[i*2 + 1], candidateColors + ((i % numCandidateColors) * 3));
+#else
+			printf("cd %f,%f -> ", candidates[i].x, candidates[i].y );
+			drawDiamond( sim->xCoordToIndex( candidates[i].x ),
+						sim->yCoordToIndex( candidates[i].y ),
+						candidateColors + ((i % numCandidateColors) * 3) );
+#endif
+		}
 	}
 	writeImageDataToPNGFile( filename, rows, px, py, args );
 	delete [] rows;
 	rows = NULL;
 	//delete [] pix;
 	//pix = NULL;
+#if 0
 	if (sumErrors != 0) {
 		fprintf(stderr, "%d targetSum errors out of (%dx%d=%d) pixels\n", sumErrors, px, py, px*py);
 	}
+#endif
 }
 
+// Write one plane of where a choice wins in multi-winner elections.
 void PlaneSimDraw::writePlanePNG(
-		const char* filename, int c, PlaneSim* sim, const ResultAccumulation* accum ) {
-	assert(px == sim->px);
-	assert(py == sim->py);
+		const char* filename, int c, const ResultAccumulation* accum, int cpx, int cpy, const char* args ) {
+	//assert(px == sim->px);
+	//assert(py == sim->py);
 	memset(pix, 0, px*py*bytesPerPixel);
-	const pos* candidates = sim->candidates;
+	//const pos* candidates = sim->candidates;
 	uint8_t** rows = new uint8_t*[py];
 	int i;
 	fprintf(stderr,"making image %dx%d for choices %d\n", px, py, c );
@@ -176,7 +187,15 @@ void PlaneSimDraw::writePlanePNG(
 	for ( int y = 0; y < py; y++ ) {
 		for ( int x = 0; x < px; x++ ) {
 			double weight = accum->getAccum( x, y, c );
+#if 1
+			double sum = 0.0;
+			for ( int i = 0; i < accum->getPlanes(); i++ ) {
+				sum += accum->getAccum( x, y, i );
+			}
+			weight = weight / sum;
+#else
 			weight = weight / sim->electionsPerPixel;
+#endif
 			weight *= 255.0;
 			assert(weight <= 255.0);
 			assert(weight >= 0.0);
@@ -189,6 +208,9 @@ void PlaneSimDraw::writePlanePNG(
 			*p = (uint8_t)(weight);
 		}
 	}
+#if 1
+	drawDiamond( cpx, cpy, candidateColors + ((c % numCandidateColors) * 3) );
+#else
 	printf("cd %f,%f -> ", candidates[c].x, candidates[c].y );
 	drawDiamond( sim->xCoordToIndex( candidates[c].x ),
 				sim->yCoordToIndex( candidates[c].y ),
@@ -197,11 +219,13 @@ void PlaneSimDraw::writePlanePNG(
 	if ( args != NULL ) {
 	    sim->configStr( args, 1024 );
 	}
+#endif
 	writeImageDataToPNGFile( filename, rows, px, py, args );
 	delete [] rows;
 }
 
-void PlaneSimDraw::writeSumPNG( const char* filename, PlaneSim* sim, const ResultAccumulation* accum ) {
+// Sum across multiple winner planes.
+void PlaneSimDraw::writeSumPNG( const char* filename, PlaneSim* sim, const ResultAccumulation* accum, const char* args ) {
 	assert(px == sim->px);
 	assert(py == sim->py);
 	memset(pix, 0, px*py*bytesPerPixel);
@@ -243,15 +267,11 @@ void PlaneSimDraw::writeSumPNG( const char* filename, PlaneSim* sim, const Resul
 					sim->yCoordToIndex( candidates[i].y ),
 					candidateColors + ((i % numCandidateColors) * 3) );
 	}
-	char* args = new char[1024];
-	if ( args != NULL ) {
-	    sim->configStr( args, 1024 );
-	}
 	writeImageDataToPNGFile( filename, rows, px, py, args );
 	delete [] rows;
 }
 
-void PlaneSimDraw::gaussTest( const char* filename, int nvoters, PlaneSim* sim ) {
+void PlaneSimDraw::gaussTest( const char* filename, int nvoters, PlaneSim* sim, const char* args ) {
 	assert(px == sim->px);
 	assert(py == sim->py);
 	int i;
@@ -301,10 +321,6 @@ void PlaneSimDraw::gaussTest( const char* filename, int nvoters, PlaneSim* sim )
 			*p += value;
 		}
 	}
-	char* args = new char[1024];
-	if ( args != NULL ) {
-	    sim->configStr( args, 1024 );
-	}
 	writeImageDataToPNGFile( filename, rows, px, py, args );
 	delete [] rows;
 	//delete [] pix;
@@ -320,7 +336,7 @@ static void user_warning_fn( png_structp png_ptr, const char* str ) {
 	fprintf( stderr, "warning: %s", str );
 }
 
-static void writeImageDataToPNGFile( const char* outname, unsigned char** rows, int height, int width, char* args ) {
+static void writeImageDataToPNGFile( const char* outname, unsigned char** rows, int height, int width, const char* args ) {
 	FILE* fout;
 	
     fout = fopen( outname, "wb");
@@ -370,7 +386,7 @@ static void writeImageDataToPNGFile( const char* outname, unsigned char** rows, 
 		png_text t;
 		t.compression = PNG_TEXT_COMPRESSION_zTXt;
 		t.key = strdup("spacegraph_args");
-		t.text = args;
+		t.text = strdup(args);
 		t.text_length = strlen( args );
 #ifdef PNG_iTXt_SUPPORTED
 		t.itxt_length = 0;

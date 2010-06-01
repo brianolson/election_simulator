@@ -148,7 +148,7 @@ double FileDoubleRandom::get() {
 		}
 		pos = 0;
 	}
-	double out = buffer[pos] / ((double)0xffffffffffffffff);
+	double out = buffer[pos] / ((double)0xffffffffffffffffULL);
 	pos++;
 	return out;
 }

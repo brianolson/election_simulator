@@ -8,6 +8,54 @@
 
 /* Begin PBXBuildFile section */
 		1F01291D0A27F8D600B0A401 /* libdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F01291B0A27F8D600B0A401 /* libdb.dylib */; };
+		1F038F3C11B29F670018A5AC /* AcceptanceVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0305E5E87E00994248 /* AcceptanceVotePickOne.cpp */; };
+		1F038F3D11B29F670018A5AC /* Condorcet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0505E5E87E00994248 /* Condorcet.cpp */; };
+		1F038F3E11B29F670018A5AC /* FuzzyVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0905E5E87E00994248 /* FuzzyVotePickOne.cpp */; };
+		1F038F3F11B29F670018A5AC /* InstantRunoffVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0B05E5E87E00994248 /* InstantRunoffVotePickOne.cpp */; };
+		1F038F4011B29F670018A5AC /* IRNR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0D05E5E87E00994248 /* IRNR.cpp */; };
+		1F038F4111B29F670018A5AC /* spacegraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F21108A09FD256A00B5C0AB /* spacegraph.cpp */; };
+		1F038F4211B29F670018A5AC /* OneVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE0F05E5E87E00994248 /* OneVotePickOne.cpp */; };
+		1F038F4311B29F670018A5AC /* RandomElection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1105E5E87E00994248 /* RandomElection.cpp */; };
+		1F038F4411B29F670018A5AC /* RankedVotePickOne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1305E5E87E00994248 /* RankedVotePickOne.cpp */; };
+		1F038F4511B29F670018A5AC /* ResultFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1505E5E87E00994248 /* ResultFile.cpp */; };
+		1F038F4611B29F670018A5AC /* voter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1905E5E87E00994248 /* voter.cpp */; };
+		1F038F4711B29F670018A5AC /* VoterArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1B05E5E87E00994248 /* VoterArray.cpp */; };
+		1F038F4811B29F670018A5AC /* VoterSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE1D05E5E87E00994248 /* VoterSim.cpp */; };
+		1F038F4911B29F670018A5AC /* WorkQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F5ECE2005E5E87E00994248 /* WorkQueue.cpp */; };
+		1F038F4A11B29F670018A5AC /* ApprovalNoInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BB650B33719500B5D49D /* ApprovalNoInfo.cpp */; };
+		1F038F4B11B29F670018A5AC /* ApprovalWithPoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF4BBA00B33961F00B5D49D /* ApprovalWithPoll.cpp */; };
+		1F038F4C11B29F670018A5AC /* VoteForAndAgainst.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F2AAFC50B339C8200AFA56C /* VoteForAndAgainst.cpp */; };
+		1F038F4D11B29F670018A5AC /* gauss.c in Sources */ = {isa = PBXBuildFile; fileRef = 32E9DA330D651C3600EC3419 /* gauss.c */; };
+		1F038F4E11B29F670018A5AC /* IteratedNormalizedRatings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3286DC090F46896C0059D26D /* IteratedNormalizedRatings.cpp */; };
+		1F038F4F11B29F670018A5AC /* NameBlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 328C82FC0F602CE900C872DA /* NameBlock.cpp */; };
+		1F038F5011B29F670018A5AC /* STV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FF81B7F102D9494005E4B04 /* STV.cpp */; };
+		1F038F5111B29F670018A5AC /* IRNRP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F7684961037B475005E8425 /* IRNRP.cpp */; };
+		1F038F5211B29F670018A5AC /* MaybeDebugLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE2D05105C20D6009E5FF6 /* MaybeDebugLog.cpp */; };
+		1F038F5311B29F670018A5AC /* Bucklin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C5B2610DA6FED00C10D84 /* Bucklin.cpp */; };
+		1F038F5411B29F670018A5AC /* PlaneSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32F86DD5110CD7F500DDAC49 /* PlaneSim.cpp */; };
+		1F038F5511B29F670018A5AC /* XYSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32F86E1B110CFADB00DDAC49 /* XYSource.cpp */; };
+		1F038F5611B29F670018A5AC /* GaussianRandom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3244E5CA1114ADEF000938EC /* GaussianRandom.cpp */; };
+		1F038F5711B29F670018A5AC /* PlaneSimDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0A1C7111602CD003AF73A /* PlaneSimDraw.cpp */; };
+		1F038F5811B29F670018A5AC /* CIVSP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0A26711161C82003AF73A /* CIVSP.cpp */; };
+		1F038F5911B29F670018A5AC /* spacegraph_util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 327442A2111794E700956726 /* spacegraph_util.cpp */; };
+		1F038F5C11B29F670018A5AC /* libpng.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E9DA2E0D651BD900EC3419 /* libpng.dylib */; };
+		1F038F6311B29F9A0018A5AC /* libprotobuf.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F1C5B3310DA702500C10D84 /* libprotobuf.dylib */; };
+		1F038F8C11B2DD950018A5AC /* trial.pb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F4392760F5904A9006BE973 /* trial.pb.cc */; };
+		1F038FAB11B2F9A90018A5AC /* MessageLiteWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F038FAA11B2F9A90018A5AC /* MessageLiteWriter.cpp */; };
+		1F038FAC11B2F9A90018A5AC /* MessageLiteWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F038FAA11B2F9A90018A5AC /* MessageLiteWriter.cpp */; };
+		1F03904A11B34D080018A5AC /* PlaneSimDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0A1C7111602CD003AF73A /* PlaneSimDraw.cpp */; };
+		1F03904D11B34D080018A5AC /* trial.pb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F4392760F5904A9006BE973 /* trial.pb.cc */; };
+		1F03905011B34D080018A5AC /* libpng.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E9DA2E0D651BD900EC3419 /* libpng.dylib */; };
+		1F03905111B34D080018A5AC /* libprotobuf.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F1C5B3310DA702500C10D84 /* libprotobuf.dylib */; };
+		1F03905B11B34DAA0018A5AC /* render_mcpb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F03905A11B34DAA0018A5AC /* render_mcpb.cpp */; };
+		1F03906311B34ED10018A5AC /* ResultAccumulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F03906211B34ED10018A5AC /* ResultAccumulation.cpp */; };
+		1F03906411B34ED10018A5AC /* ResultAccumulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F03906211B34ED10018A5AC /* ResultAccumulation.cpp */; };
+		1F03906511B34ED10018A5AC /* ResultAccumulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F03906211B34ED10018A5AC /* ResultAccumulation.cpp */; };
+		1F03906611B34ED10018A5AC /* ResultAccumulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F03906211B34ED10018A5AC /* ResultAccumulation.cpp */; };
+		1F03906711B34ED10018A5AC /* ResultAccumulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F03906211B34ED10018A5AC /* ResultAccumulation.cpp */; };
+		1F03906811B34ED10018A5AC /* ResultAccumulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F03906211B34ED10018A5AC /* ResultAccumulation.cpp */; };
+		1F03907A11B34F680018A5AC /* GaussianRandom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3244E5CA1114ADEF000938EC /* GaussianRandom.cpp */; };
+		1F03907D11B34F770018A5AC /* MessageLiteWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F038FAA11B2F9A90018A5AC /* MessageLiteWriter.cpp */; };
 		1F1C5B2810DA6FED00C10D84 /* Bucklin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C5B2610DA6FED00C10D84 /* Bucklin.cpp */; };
 		1F1C5B2910DA6FED00C10D84 /* Bucklin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C5B2610DA6FED00C10D84 /* Bucklin.cpp */; };
 		1F1C5B2A10DA6FED00C10D84 /* Bucklin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C5B2610DA6FED00C10D84 /* Bucklin.cpp */; };
@@ -227,6 +275,14 @@
 
 /* Begin PBXFileReference section */
 		1F01291B0A27F8D600B0A401 /* libdb.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libdb.dylib; path = /usr/local/BerkeleyDB.4.4/lib/libdb.dylib; sourceTree = "<absolute>"; };
+		1F038F6111B29F670018A5AC /* spacegraph */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = spacegraph; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F038F7D11B2D3410018A5AC /* trial.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trial.proto; sourceTree = "<group>"; };
+		1F038FAA11B2F9A90018A5AC /* MessageLiteWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MessageLiteWriter.cpp; sourceTree = "<group>"; };
+		1F038FAD11B2F9B20018A5AC /* MessageLiteWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageLiteWriter.h; sourceTree = "<group>"; };
+		1F03905611B34D080018A5AC /* render_mcpb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = render_mcpb; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F03905A11B34DAA0018A5AC /* render_mcpb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render_mcpb.cpp; sourceTree = "<group>"; };
+		1F03906211B34ED10018A5AC /* ResultAccumulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ResultAccumulation.cpp; sourceTree = "<group>"; };
+		1F03906911B34EEC0018A5AC /* ResultAccumulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResultAccumulation.h; sourceTree = "<group>"; };
 		1F1C5B2610DA6FED00C10D84 /* Bucklin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Bucklin.cpp; sourceTree = "<group>"; };
 		1F1C5B2710DA6FED00C10D84 /* Bucklin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bucklin.h; sourceTree = "<group>"; };
 		1F1C5B3310DA702500C10D84 /* libprotobuf.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libprotobuf.dylib; path = /usr/local/lib/libprotobuf.dylib; sourceTree = "<absolute>"; };
@@ -314,6 +370,24 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		1F038F5B11B29F670018A5AC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F038F5C11B29F670018A5AC /* libpng.dylib in Frameworks */,
+				1F038F6311B29F9A0018A5AC /* libprotobuf.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F03904F11B34D080018A5AC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F03905011B34D080018A5AC /* libpng.dylib in Frameworks */,
+				1F03905111B34D080018A5AC /* libprotobuf.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1F21107909FD250100B5C0AB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -409,6 +483,8 @@
 				1F7684961037B475005E8425 /* IRNRP.cpp */,
 				1FBE2D05105C20D6009E5FF6 /* MaybeDebugLog.cpp */,
 				1FBE2D62105C3783009E5FF6 /* MaybeDebugLog.h */,
+				1F038FAA11B2F9A90018A5AC /* MessageLiteWriter.cpp */,
+				1F038FAD11B2F9B20018A5AC /* MessageLiteWriter.h */,
 				328C82FC0F602CE900C872DA /* NameBlock.cpp */,
 				328C83030F602CF100C872DA /* NameBlock.h */,
 				1F5ECE5B05E5EFB100994248 /* NNStrategicVoter.cpp */,
@@ -424,6 +500,9 @@
 				1F5ECE1205E5E87E00994248 /* RandomElection.h */,
 				1F5ECE1305E5E87E00994248 /* RankedVotePickOne.cpp */,
 				1F5ECE1405E5E87E00994248 /* RankedVotePickOne.h */,
+				1F03905A11B34DAA0018A5AC /* render_mcpb.cpp */,
+				1F03906211B34ED10018A5AC /* ResultAccumulation.cpp */,
+				1F03906911B34EEC0018A5AC /* ResultAccumulation.h */,
 				1F5ECE1505E5E87E00994248 /* ResultFile.cpp */,
 				1F5ECE1605E5E87E00994248 /* ResultFile.h */,
 				32F86DD4110CD7F500DDAC49 /* PlaneSim.h */,
@@ -440,6 +519,7 @@
 				1FF81B7F102D9494005E4B04 /* STV.cpp */,
 				1F5ECE1705E5E87E00994248 /* ThreadSafeDBRF.cpp */,
 				1F5ECE1805E5E87E00994248 /* ThreadSafeDBRF.h */,
+				1F038F7D11B2D3410018A5AC /* trial.proto */,
 				1F4392760F5904A9006BE973 /* trial.pb.cc */,
 				1F4392770F5904A9006BE973 /* trial.pb.h */,
 				1F5ECE1905E5E87E00994248 /* voter.cpp */,
@@ -468,6 +548,8 @@
 				3286DBE70F4636010059D26D /* vsmall */,
 				1F43924A0F5903FE006BE973 /* vpb */,
 				1FC0F9B40F5996F5006B5D1C /* proces_prl */,
+				1F038F6111B29F670018A5AC /* spacegraph */,
+				1F03905611B34D080018A5AC /* render_mcpb */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -553,6 +635,40 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		1F038F3A11B29F670018A5AC /* spacegraph pb */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F038F5D11B29F670018A5AC /* Build configuration list for PBXNativeTarget "spacegraph pb" */;
+			buildPhases = (
+				1F038F7711B2D29B0018A5AC /* ShellScript */,
+				1F038F3B11B29F670018A5AC /* Sources */,
+				1F038F5B11B29F670018A5AC /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "spacegraph pb";
+			productName = spacegraph;
+			productReference = 1F038F6111B29F670018A5AC /* spacegraph */;
+			productType = "com.apple.product-type.tool";
+		};
+		1F03902C11B34D080018A5AC /* render_mcpb */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F03905211B34D080018A5AC /* Build configuration list for PBXNativeTarget "render_mcpb" */;
+			buildPhases = (
+				1F03902D11B34D080018A5AC /* ShellScript */,
+				1F03902E11B34D080018A5AC /* Sources */,
+				1F03904F11B34D080018A5AC /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = render_mcpb;
+			productName = spacegraph;
+			productReference = 1F03905611B34D080018A5AC /* render_mcpb */;
+			productType = "com.apple.product-type.tool";
+		};
 		1F21107A09FD250100B5C0AB /* spacegraph */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F0129080A27F7E000B0A401 /* Build configuration list for PBXNativeTarget "spacegraph" */;
@@ -671,6 +787,8 @@
 				3286DBE60F4636010059D26D /* vsmall */,
 				1F4392490F5903FE006BE973 /* vpb */,
 				1FC0F9B30F5996F5006B5D1C /* procesprl */,
+				1F038F3A11B29F670018A5AC /* spacegraph pb */,
+				1F03902C11B34D080018A5AC /* render_mcpb */,
 			);
 		};
 /* End PBXProject section */
@@ -685,7 +803,95 @@
 		};
 /* End PBXRezBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		1F038F7711B2D29B0018A5AC /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/trial.proto",
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/trial.pb.cc",
+				"$(DERIVED_FILE_DIR)/trial.pb.h",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/protoc trial.proto --cpp_out=$(DERIVED_FILE_DIR)";
+		};
+		1F03902D11B34D080018A5AC /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/trial.proto",
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/trial.pb.cc",
+				"$(DERIVED_FILE_DIR)/trial.pb.h",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/protoc trial.proto --cpp_out=$(DERIVED_FILE_DIR)";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		1F038F3B11B29F670018A5AC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F038F3C11B29F670018A5AC /* AcceptanceVotePickOne.cpp in Sources */,
+				1F038F3D11B29F670018A5AC /* Condorcet.cpp in Sources */,
+				1F038F3E11B29F670018A5AC /* FuzzyVotePickOne.cpp in Sources */,
+				1F038F3F11B29F670018A5AC /* InstantRunoffVotePickOne.cpp in Sources */,
+				1F038F4011B29F670018A5AC /* IRNR.cpp in Sources */,
+				1F038F4111B29F670018A5AC /* spacegraph.cpp in Sources */,
+				1F038F4211B29F670018A5AC /* OneVotePickOne.cpp in Sources */,
+				1F038F4311B29F670018A5AC /* RandomElection.cpp in Sources */,
+				1F038F4411B29F670018A5AC /* RankedVotePickOne.cpp in Sources */,
+				1F038F4511B29F670018A5AC /* ResultFile.cpp in Sources */,
+				1F038F4611B29F670018A5AC /* voter.cpp in Sources */,
+				1F038F4711B29F670018A5AC /* VoterArray.cpp in Sources */,
+				1F038F4811B29F670018A5AC /* VoterSim.cpp in Sources */,
+				1F038F4911B29F670018A5AC /* WorkQueue.cpp in Sources */,
+				1F038F4A11B29F670018A5AC /* ApprovalNoInfo.cpp in Sources */,
+				1F038F4B11B29F670018A5AC /* ApprovalWithPoll.cpp in Sources */,
+				1F038F4C11B29F670018A5AC /* VoteForAndAgainst.cpp in Sources */,
+				1F038F4D11B29F670018A5AC /* gauss.c in Sources */,
+				1F038F4E11B29F670018A5AC /* IteratedNormalizedRatings.cpp in Sources */,
+				1F038F4F11B29F670018A5AC /* NameBlock.cpp in Sources */,
+				1F038F5011B29F670018A5AC /* STV.cpp in Sources */,
+				1F038F5111B29F670018A5AC /* IRNRP.cpp in Sources */,
+				1F038F5211B29F670018A5AC /* MaybeDebugLog.cpp in Sources */,
+				1F038F5311B29F670018A5AC /* Bucklin.cpp in Sources */,
+				1F038F5411B29F670018A5AC /* PlaneSim.cpp in Sources */,
+				1F038F5511B29F670018A5AC /* XYSource.cpp in Sources */,
+				1F038F5611B29F670018A5AC /* GaussianRandom.cpp in Sources */,
+				1F038F5711B29F670018A5AC /* PlaneSimDraw.cpp in Sources */,
+				1F038F5811B29F670018A5AC /* CIVSP.cpp in Sources */,
+				1F038F5911B29F670018A5AC /* spacegraph_util.cpp in Sources */,
+				1F038F8C11B2DD950018A5AC /* trial.pb.cc in Sources */,
+				1F038FAC11B2F9A90018A5AC /* MessageLiteWriter.cpp in Sources */,
+				1F03906411B34ED10018A5AC /* ResultAccumulation.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F03902E11B34D080018A5AC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F03904A11B34D080018A5AC /* PlaneSimDraw.cpp in Sources */,
+				1F03904D11B34D080018A5AC /* trial.pb.cc in Sources */,
+				1F03905B11B34DAA0018A5AC /* render_mcpb.cpp in Sources */,
+				1F03906311B34ED10018A5AC /* ResultAccumulation.cpp in Sources */,
+				1F03907A11B34F680018A5AC /* GaussianRandom.cpp in Sources */,
+				1F03907D11B34F770018A5AC /* MessageLiteWriter.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1F21107809FD250100B5C0AB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -720,6 +926,7 @@
 				1FE0A1C9111602CD003AF73A /* PlaneSimDraw.cpp in Sources */,
 				1FE0A26911161C82003AF73A /* CIVSP.cpp in Sources */,
 				327442A3111794E700956726 /* spacegraph_util.cpp in Sources */,
+				1F03906711B34ED10018A5AC /* ResultAccumulation.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -756,6 +963,8 @@
 				1F1C5B2810DA6FED00C10D84 /* Bucklin.cpp in Sources */,
 				3244E5D21114ADEF000938EC /* GaussianRandom.cpp in Sources */,
 				1FE0A26F11161C82003AF73A /* CIVSP.cpp in Sources */,
+				1F038FAB11B2F9A90018A5AC /* MessageLiteWriter.cpp in Sources */,
+				1F03906511B34ED10018A5AC /* ResultAccumulation.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,6 +1043,7 @@
 				1F1C5B2A10DA6FED00C10D84 /* Bucklin.cpp in Sources */,
 				3244E5D11114ADEF000938EC /* GaussianRandom.cpp in Sources */,
 				1FE0A26E11161C82003AF73A /* CIVSP.cpp in Sources */,
+				1F03906611B34ED10018A5AC /* ResultAccumulation.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -870,6 +1080,7 @@
 				1F1C5B2B10DA6FED00C10D84 /* Bucklin.cpp in Sources */,
 				3244E5CD1114ADEF000938EC /* GaussianRandom.cpp in Sources */,
 				1FE0A26C11161C82003AF73A /* CIVSP.cpp in Sources */,
+				1F03906811B34ED10018A5AC /* ResultAccumulation.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1127,6 +1338,182 @@
 			};
 			name = Default;
 		};
+		1F038F5E11B29F670018A5AC /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_PROTOBUF=1";
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/BerkeleyDB.4.4/lib,
+					/usr/local/lib64,
+				);
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = spacegraph;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		1F038F5F11B29F670018A5AC /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_PROTOBUF=1";
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/BerkeleyDB.4.4/lib,
+					/usr/local/lib64,
+				);
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = spacegraph;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		1F038F6011B29F670018A5AC /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_PROTOBUF=1";
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/BerkeleyDB.4.4/lib,
+					/usr/local/lib64,
+				);
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = spacegraph;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+		1F03905311B34D080018A5AC /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_PROTOBUF=1";
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/BerkeleyDB.4.4/lib,
+					/usr/local/lib64,
+				);
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = render_mcpb;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		1F03905411B34D080018A5AC /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_PROTOBUF=1";
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/BerkeleyDB.4.4/lib,
+					/usr/local/lib64,
+				);
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = render_mcpb;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		1F03905511B34D080018A5AC /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_PROTOBUF=1";
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/BerkeleyDB.4.4/lib,
+					/usr/local/lib64,
+				);
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = render_mcpb;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
 		1F43924C0F5903FF006BE973 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1325,6 +1712,26 @@
 				1F01290D0A27F7E000B0A401 /* Development */,
 				1F01290E0A27F7E000B0A401 /* Deployment */,
 				1F01290F0A27F7E000B0A401 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		1F038F5D11B29F670018A5AC /* Build configuration list for PBXNativeTarget "spacegraph pb" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F038F5E11B29F670018A5AC /* Development */,
+				1F038F5F11B29F670018A5AC /* Deployment */,
+				1F038F6011B29F670018A5AC /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		1F03905211B34D080018A5AC /* Build configuration list for PBXNativeTarget "render_mcpb" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F03905311B34D080018A5AC /* Development */,
+				1F03905411B34D080018A5AC /* Deployment */,
+				1F03905511B34D080018A5AC /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;

@@ -8,9 +8,26 @@
 #include "IRNRP.h"
 #include "STV.h"
 
+#if HAVE_PROTOBUF
+#include "google/protobuf/io/coded_stream.h"
+#include "google/protobuf/io/gzip_stream.h"
+#include "google/protobuf/io/zero_copy_stream_impl.h"
+#include "google/protobuf/message_lite.h"
+#include "MessageLiteWriter.h"
+#include "trial.pb.h"
+
+using google::protobuf::io::CodedOutputStream;
+using google::protobuf::io::FileOutputStream;
+using google::protobuf::io::GzipOutputStream;
+using google::protobuf::io::ZeroCopyOutputStream;
+#endif
+
+#include <fcntl.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "arghandler.h"
 
 #ifndef MAX_METHOD_ARGS
 #define MAX_METHOD_ARGS 64
@@ -46,127 +63,87 @@ const char* usage =
 #ifndef MAX_METHOD_ENV
 #define MAX_METHOD_ENV 200
 #endif
-char defaultFoutname[] = "tsg.png";
+const char defaultFoutname[] = "tsg.png";
 
-static bool maybeLongarg(const char* arg, const char* prefix, const char** optarg) {
-	const char* a = arg;
-	const char* b = prefix;
-	while (*a == *b) {
-		a++;
-		b++;
-		if (*a == '\0') {
-			if (*b == '\0') {
-				if (optarg != NULL) {
-					*optarg = NULL;
-				}
-				return true;
-			} else {
-				return false;
-			}
-		} else if (*a == '=') {
-			if (*b != '\0') {
-				return false;
-			}
-			if (optarg == NULL) {
-				return false;
-			}
-			*optarg = a + 1;
-			return true;
-		}
-	}
-	return false;
+
+// Command line arg helpers
+class MethodEnvReference {
+public:
+	const char** methodEnv;
+	int* methodEnvCount;
+	MethodEnvReference(const char** me, int* mer) : methodEnv(me), methodEnvCount(mer){}
+};
+static void addMethodEnv(const MethodEnvReference& mer, const char* arg) {
+	mer.methodEnv[*(mer.methodEnvCount)] = arg;
+	*(mer.methodEnvCount) = *(mer.methodEnvCount) + 1;
+}
+static void addCandidateArgWrapper(PlaneSim* sim, const char* arg) {
+	sim->addCandidateArg(arg);
 }
 
-int main( int argc, char** argv ) {
+int main( int argc, const char** argv ) {
 	const char* votingSystemName = NULL;
 	const char** methodEnv = new const char*[MAX_METHOD_ENV];
 	int methodEnvCount = 0;
 	PlaneSim sim;
-	int i;
-	char* foutname = defaultFoutname;
-	char* testgauss = NULL;
+	const char* foutname = defaultFoutname;
+	const char* testgauss = NULL;
 	int nvoters = 1000;
 	int nthreads = 1;
 	const char* planesPrefix = NULL;
-	const char* optarg;
 	const char* randomDevice = NULL;
+	int randomTests = 0;
+	const char* pblog_name = "mc.pb";
+	int configId = -1;
+	const char* configOut = NULL;
 
-	for ( i = 1; i < argc; i++ ) {
-		if ( ! strcmp( argv[i], "-o" ) ) {
-			i++;
-			foutname = argv[i];
-		} else if ( ! strcmp( argv[i], "-tg" ) ) {
-			i++;
-			testgauss = argv[i];
-		} else if ( ! strcmp( argv[i], "-minx" ) ) {
-			i++;
-			sim.minx = strtod( argv[i], NULL );
-		} else if ( ! strcmp( argv[i], "-maxx" ) ) {
-			i++;
-			sim.maxx = strtod( argv[i], NULL );
-		} else if ( ! strcmp( argv[i], "-miny" ) ) {
-			i++;
-			sim.miny = strtod( argv[i], NULL );
-		} else if ( ! strcmp( argv[i], "-maxy" ) ) {
-			i++;
-			sim.maxy = strtod( argv[i], NULL );
-		} else if ( ! strcmp( argv[i], "-px" ) ) {
-			i++;
-			sim.px = strtol( argv[i], NULL, 10 );
-		} else if ( ! strcmp( argv[i], "-py" ) ) {
-			i++;
-			sim.py = strtol( argv[i], NULL, 10 );
-		} else if ( ! strcmp( argv[i], "-v" ) ) {
-			i++;
-			nvoters = strtol( argv[i], NULL, 10 );
-		} else if ( ! strcmp( argv[i], "-n" ) ) {
-			i++;
-			sim.electionsPerPixel = strtol( argv[i], NULL, 10 );
-		} else if ( ! strcmp( argv[i], "-Z" ) ) {
-			i++;
-			sim.voterSigma = strtod( argv[i], NULL );
-		} else if ( ! strcmp( argv[i], "-c" ) ) {
-			i++;
-			sim.addCandidateArg( argv[i] );
-		} else if ( ! strcmp( argv[i], "--list" ) ) {
+	int argi = 1;
+	while (argi < argc) {
+		StringArgWithCallback("c", addCandidateArgWrapper, &sim);
+		BoolArg("combine", &(sim.doCombinatoricExplode));
+#if HAVE_PROTOBUF
+		// configuration in a protobuf in a file.
+		IntArg("config-id", &configId);
+		StringArg("config-out", &configOut);
+#endif
+		BoolArg("linearFallof", &(sim.linearFalloff));
+		BoolArg("manhattan", &(sim.manhattanDistance));
+		DoubleArg("maxx", &(sim.maxx));
+		DoubleArg("maxy", &(sim.maxy));
+		DoubleArg("minx", &(sim.minx));
+		DoubleArg("miny", &(sim.miny));
+		StringArg("mc-out", &pblog_name);
+		IntArg("mc-tests", &randomTests);
+		StringArg("method", &votingSystemName);
+		IntArg("n", &(sim.electionsPerPixel));
+		StringArg("o", &foutname);
+		StringArgWithCallback("opt", addMethodEnv, MethodEnvReference(methodEnv, &methodEnvCount));
+		IntArg("px", &(sim.px));
+		IntArg("py", &(sim.py));
+		StringArg("planes", &planesPrefix);
+		StringArg("random", &randomDevice);
+		IntArg("seats", &(sim.seats));
+		StringArg("tg", &testgauss);
+		IntArg("threads", &nthreads);
+		IntArg("v", &nvoters);
+		DoubleArg("Z", &(sim.voterSigma));
+		if ( ! strcmp( argv[argi], "--list" ) ) {
 			printEMList();
 			exit(0);
-		} else if ( ! strcmp( argv[i], "--manhattan" ) ) {
-			sim.manhattanDistance = true;
-		} else if ( ! strcmp( argv[i], "--linearFalloff" ) ) {
-			sim.linearFalloff = true;
-		} else if (maybeLongarg(argv[i], "--method", &optarg)) {
-			if (!optarg) { i++; optarg = argv[i]; }
-			votingSystemName = optarg;
-		} else if ( ! strcmp( argv[i], "--opt" ) ) {
-			i++;
-			methodEnv[methodEnvCount] = argv[i];
-			methodEnvCount++;
-		} else if ( ! strcmp( argv[i], "--threads" ) ) {
-			i++;
-			nthreads = strtol( argv[i], NULL, 10 );
-		} else if (maybeLongarg(argv[i], "--seats", &optarg)) {
-			if (!optarg) { i++; optarg = argv[i]; }
-			sim.seats = strtol( optarg, NULL, 10 );
-			char* seatsMethodArg = new char[20];  // FIXME: this leaks
-			sprintf(seatsMethodArg, "seats=%d", sim.seats);
-			methodEnv[methodEnvCount] = seatsMethodArg;
-			methodEnvCount++;
-		} else if (maybeLongarg(argv[i], "--planes", &optarg)) {
-			if (!optarg) { i++; optarg = argv[i]; }
-			planesPrefix = optarg;
-		} else if (maybeLongarg(argv[i], "--combine", NULL)) {
-			sim.doCombinatoricExplode = true;
-		} else if (maybeLongarg(argv[i], "--random", &optarg)) {
-			if (!optarg) { i++; optarg = argv[i]; }
-			randomDevice = optarg;
 		} else {
-			fprintf( stderr, "bogus arg \"%s\"\n", argv[i] );
+			fprintf( stderr, "bogus argv[%d] \"%s\"\n", argi, argv[argi] );
 			fputs( usage, stderr );
 			fputs( "Known election methods:\n", stderr );
 			printEMList();
 			exit(1);
 		}
+		argi++;
+	}
+	if (sim.seats != 1) {
+		char* seatsMethodArg = new char[20];  // TODO: this leaks
+		sprintf(seatsMethodArg, "seats=%d", sim.seats);
+		methodEnv[methodEnvCount] = seatsMethodArg;
+		methodEnvCount++;
 	}
 
 	if ( sim.candcount == 0 && testgauss == NULL ) {
@@ -178,12 +155,16 @@ int main( int argc, char** argv ) {
 	} else {
 		sim.rootRandom = new ClibDoubleRandom();
 	}
-	PlaneSimDraw* psd = new PlaneSimDraw(sim.px, sim.py, 3);
 	if ( testgauss != NULL ) {
 		sim.gRandom = new GaussianRandom(sim.rootRandom);
 		sim.addCandidateArg("0,0");
 		sim.build( 1 );
-		psd->gaussTest( testgauss, nvoters, &sim );
+		char* argtext = new char[1024];
+		sim.configStr(argtext, 1024);
+		PlaneSimDraw* drawGauss = new PlaneSimDraw(sim.px, sim.py, 3);
+		drawGauss->gaussTest( testgauss, nvoters, &sim, argtext );
+		delete drawGauss;
+		delete [] argtext;
 		return 0;
 	}
 	int numVotingSystems = 1;
@@ -208,30 +189,114 @@ int main( int argc, char** argv ) {
 	    fputs( "\n", stdout );
 	}
 	sim.setVotingSystems(systems, numVotingSystems);
-	XYSource* source = new XYSource(sim.px, sim.py);
+	PlaneSim* sims = NULL;
+	PlaneSimThread* threads = NULL;
 	if ( nthreads <= 1 ) {
 		sim.gRandom = new GaussianRandom(sim.rootRandom);
-		sim.runXYSource( source );
 	} else {
 		sim.rootRandom = new LockingDoubleRandomWrapper(sim.rootRandom);
 		sim.gRandom = new GaussianRandom(
 			new BufferDoubleRandomWrapper(sim.rootRandom, 512, true));
-		PlaneSim* sims = new PlaneSim[nthreads-1];
-		PlaneSimThread* threads = new PlaneSimThread[nthreads];
+		sims = new PlaneSim[nthreads-1];
+		threads = new PlaneSimThread[nthreads];
 		int i;
 		for (i = 0; i < nthreads-1; ++i) {
 			sims[i].coBuild(sim);
 			threads[i].sim = &(sims[i]);
-			threads[i].source = source;
 		}
 		threads[i].sim = &sim;
-		threads[i].source = source;
-		for (i = 0; i < nthreads; ++i) {
+	}
+#if HAVE_PROTOBUF
+	if (configOut != NULL) {
+		Configuration config;
+		if (configId >= 0) {
+			config.set_config_id(configId);
+		}
+		config.set_voters(nvoters);
+		config.set_choices(sim.they.numc);
+		config.set_error(0.0);
+		config.set_dimensions(2);
+		config.set_voter_model(Configuration::CANDIDATE_COORDS);
+		config.set_seats(sim.seats);
+		for (int c = 0; c < sim.candcount; ++c) {
+			config.add_candidate_coords(sim.candidates[c].x);
+			config.add_candidate_coords(sim.candidates[c].y);
+		}
+		config.set_voter_sigma(sim.voterSigma);
+		for (int s = 0; s < numVotingSystems; ++s) {
+			config.add_system_names(systems[s]->name);
+		}
+		config.set_minx(sim.minx);
+		config.set_miny(sim.miny);
+		config.set_maxx(sim.maxx);
+		config.set_maxy(sim.maxy);
+		if (config.Initialized()) {
+			int fd = open(configOut, O_WRONLY|O_CREAT, 0666);
+		}
+	}
+#endif
+	if ( randomTests > 0 ) {
+#if HAVE_PROTOBUF
+		int fd = open(pblog_name, O_WRONLY|O_APPEND|O_CREAT, 0666);
+		if (fd < 0) {
+			perror(pblog_name);
+			exit(1);
+		}
+		ZeroCopyOutputStream* raw_output = new FileOutputStream(fd);
+		assert(raw_output);
+		ZeroCopyOutputStream* gz_output = new GzipOutputStream(raw_output);
+		assert(gz_output);
+		CodedOutputStream* coded_output = new CodedOutputStream(gz_output);
+		assert(coded_output);
+		MessageLiteWriter* writer = new CSMessageLiteWriter(coded_output);
+		assert(writer);
+		Result2** resultsOut = new Result2*[sim.systemsLength];
+		assert(resultsOut);
+		for (int i = 0; i < sim.systemsLength; ++i) {
+			resultsOut[i] = NULL;
+		}
+		for (int mct = 0; mct < randomTests; ++mct) {
+			// TODO: multithread
+			sim.runRandomXY(resultsOut);
+			for (int i = 0; i < sim.systemsLength; ++i) {
+				writer->writeMessage(resultsOut[i]);
+			}
+		}
+		for (int i = 0; i < sim.systemsLength; ++i) {
+			delete resultsOut[i];
+		}
+		delete resultsOut;
+		delete writer;
+		delete coded_output;
+		delete gz_output;
+		delete raw_output;
+		close(fd);
+		exit(0);
+#else
+		perror("not compiled with protobuf support");
+		exit(1);
+#endif
+	} else if ( nthreads <= 1 ) {
+		sim.runXYSource( new XYSource(sim.px, sim.py) );
+	} else {
+		XYSource* source = new XYSource(sim.px, sim.py);
+		for (int i = 0; i < nthreads; ++i) {
+			threads[i].source = source;
+		}
+		for (int i = 0; i < nthreads; ++i) {
 			pthread_create(&(threads[i].thread), NULL, runPlaneSimThread, &(threads[i]));
 		}
-		for (i = 0; i < nthreads; ++i) {
+		for (int i = 0; i < nthreads; ++i) {
 			pthread_join(threads[i].thread, NULL);
 		}
+	}
+	PlaneSimDraw* psd = new PlaneSimDraw(sim.px, sim.py, 3);
+	char* configString = new char[1024];
+	sim.configStr(configString, 1024);
+	int* choiceXYpxPos = new int[sim.they.numc * 2];
+	for (int i = 0; i < sim.they.numc; ++i) {
+		choiceXYpxPos[i*2    ] = sim.xCoordToIndex(sim.candidates[i].x);
+		choiceXYpxPos[i*2 + 1] = sim.yCoordToIndex(sim.candidates[i].y);
 	}
 	for (int vi = 0; vi < numVotingSystems; ++vi) {
 		char* pfilename;
@@ -240,15 +305,20 @@ int main( int argc, char** argv ) {
 			for (int plane = 0; plane < sim.they.numc; ++plane) {
 				snprintf(planeStr, sizeof(planeStr), "%d", plane);
 				pfilename = fileTemplate(planesPrefix, sim.systems[vi]->name, planeStr);
-				psd->writePlanePNG(pfilename, plane, &sim, sim.accum[vi]);
+				psd->writePlanePNG(
+					pfilename, plane, sim.accum[vi],
+					sim.xCoordToIndex(sim.candidates[plane].x),
+					sim.yCoordToIndex(sim.candidates[plane].y),
+					configString);
 				free(pfilename);
 			}
 			pfilename = fileTemplate(planesPrefix, sim.systems[vi]->name, "_sum.png");
-			psd->writeSumPNG(pfilename, &sim, sim.accum[vi]);
+			psd->writeSumPNG(pfilename, &sim, sim.accum[vi], configString);
 			free(pfilename);
 		}
 		pfilename = fileTemplate(foutname, sim.systems[vi]->name, NULL);
-		psd->writePNG( pfilename, &sim, sim.accum[vi] );
+		psd->writePNG( pfilename, sim.they.numc, sim.accum[vi], choiceXYpxPos, configString );
 		free(pfilename);
 	}
+	delete [] configString;
 }

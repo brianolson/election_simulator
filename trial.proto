@@ -29,3 +29,75 @@ message TrialResult {
 message Systems {
 	repeated string names = 1;
 }
+
+message ElectionMethodSpec {
+	// human-meaningful name
+	required string name = 1;
+
+	// class name that implements the election method
+	required string class = 2;
+	
+	// Options to modify operation of implementing class for variations on em.
+	repeated string argv = 3;
+}
+
+message Configuration {
+	// May be implicit in where the Configuration is stored.
+	optional int32 config_id = 1;
+	
+	// Parameters
+	optional int32 voters = 2;
+	optional int32 choices = 3;
+	optional float error = 4;
+	optional int32 system_index = 5;
+	optional int32 dimensions = 6;
+	
+	enum Model {
+		// this is in sync with VoterSim.h
+		//BOGUS_PREFERENCE_MODE = 0;
+		INDEPENDENT_PREFERENCES = 1;
+		NSPACE_PREFERENCES = 2;
+		NSPACE_GAUSSIAN_PREFERENCES = 3;
+		CANDIDATE_COORDS = 4;
+	}
+	optional Model voter_model = 7;
+
+	optional int32 seats = 8 [default = 1];
+	
+	// Empty unless voter_model == CANDIDATE_COORDS
+	// $dimensions sets of coordinates. [x,y,x,y,...] or [x,y,z,x,y,z,...] etc
+	repeated double candidate_coords = 9;
+	
+	// Voters exist on a gaussian distribution of voter_sigma around Result2.coords
+	optional double voter_sigma = 10;
+	
+	repeated string system_names = 11;
+	
+	// Bounds for plane of opinion space to run voter centers over candidate_coords
+	optional double minx = 12;
+	optional double miny = 13;
+	optional double maxx = 14;
+	optional double maxy = 15;
+}
+
+message Result2 {
+	// Points to a Configuration.
+	// May be implicit by where it is stored.
+	optional int32 config_id = 1;
+
+	optional float mean_happiness = 2;
+	optional float voter_happiness_stddev = 3;
+	optional float gini_index = 4;
+	
+	// Empty unless Configuration.voter_model == CANDIDATE_COORDS
+	// Center of population distribution.
+	repeated double coords = 5;
+	
+	// Center of population distribution.
+	repeated int32 pixel_coords = 6;
+	
+	// Index into array of Systems names.
+	optional int32 system = 7;
+	
+	repeated int32 winners = 8;
+}

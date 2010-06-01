@@ -2,14 +2,14 @@
 #include "PlaneSimDraw.h"
 #include "XYSource.h"
 #include "GaussianRandom.h"
+#include "ResultAccumulation.h"
 #include "gauss.h"
+#if HAVE_PROTOBUF
+#include "trial.pb.h"
+#endif
 
 #include <assert.h>
 #include <string.h>
-
-void ResultAccumulation::clear() {
-	memset(accum, 0, sizeof(int) * px * py * planes);
-}
 
 void PlaneSim::addCandidateArg( const char* arg ) {
 	candroot = new candidatearg( arg, candroot );
@@ -140,6 +140,72 @@ void PlaneSim::runXYSource(XYSource* source) {
 		}
 	}
 	delete [] winners;
+}
+
+#if HAVE_PROTOBUF
+Result2** PlaneSim::runRandomXY(Result2** resultsOut) {
+	//Result2** resultsOut = new Result2*[systemsLength];
+	// TODO: lift this alloc/free
+	int* winners = new int[they.numc];
+	double x = rootRandom->get() * (maxx - minx) + minx;
+	double y = rootRandom->get() * (maxy - miny) + miny;
+	randomizeVoters(x, y, voterSigma);
+	for ( int vi = 0; vi < systemsLength; ++vi ) {
+		Result2* out;
+		if (resultsOut[vi] == NULL) {
+			out = new Result2();
+			resultsOut[vi] = out;
+		} else {
+			out = resultsOut[vi];
+			out->Clear();
+		}
+		out->add_coords(x);
+		out->add_coords(y);
+		out->set_system(vi);
+		int* twinners;
+		if (doCombinatoricExplode) {
+			if (combos == NULL) {
+				combos = new int[seats*VoterArray::nChooseK(they.numc, seats)];
+			}
+			exploded.combinatoricExplode(they, seats, combos);
+			systems[vi]->runMultiSeatElection( winners, exploded, seats );
+			assert( winners[0] >= 0 );
+			assert( winners[0] < exploded.numc );
+			twinners = combos + (seats*winners[0]);
+		} else {
+			systems[vi]->runMultiSeatElection( winners, they, seats );
+			assert( winners[0] >= 0 );
+			assert( winners[0] < they.numc );
+			twinners = winners;
+		}
+		for (int s = 0; s < seats; ++s) {
+			out->add_winners(twinners[s]);
+		}
+		double td, tg, th;
+		calculateHappiness( twinners, &th, &td, &tg );
+		out->set_mean_happiness(th);
+		out->set_voter_happiness_stddev(td);
+		out->set_gini_index(tg);
+	}
+	delete [] winners;
+	return resultsOut;
+}
+#endif
+
+void PlaneSim::calculateHappiness(int* winners, double* happinessP, double* stddevP, double* giniP) {
+	if (seats == 1) {
+		if ((stddevP == NULL) && (giniP == NULL)) {
+			*happinessP = VotingSystem::pickOneHappiness(they, they.numv, winners[0]);
+		} else {
+			*happinessP = VotingSystem::pickOneHappiness(they, they.numv, winners[0], stddevP, giniP, 0);
+		}
+	} else {
+		if ((stddevP == NULL) && (giniP == NULL)) {
+			*happinessP = multiseatHappiness(they, they.numv, winners, seats);
+		} else {
+			*happinessP = multiseatHappiness(they, they.numv, winners, seats, stddevP, giniP, 0);
+		}
+	}
 }
 
 size_t PlaneSim::configStr( char* dest, size_t len ) {

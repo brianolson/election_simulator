@@ -12,39 +12,16 @@
 class XYSource;
 class DoubleRandom;
 class GaussianRandom;
+#if HAVE_PROTOBUF
+class Result2;
+#endif
 
 class pos {
 public:
 	double x, y;
 };
 
-class ResultAccumulation {
-public:
-	ResultAccumulation(int x, int y, int z)
-		: accum(NULL), px(x), py(y), planes(z) {
-		accum = new int[px * py * planes];
-	}
-	~ResultAccumulation() {
-		delete [] accum;
-	}
-	inline int getAccum( int x, int y, int c ) const {
-		return accum[c + x*planes + y*planes*px];
-	}
-	inline void incAccum( int x, int y, int c ) {
-		accum[c + x*planes + y*planes*px]++;
-	}
-	inline void setAccum( int x, int y, int c, int v ) {
-		accum[c + x*planes + y*planes*px] = v;
-	}
-
-	void clear();
-
-protected:
-	int* accum;
-	int px;
-	int py;
-	int planes;
-};
+class ResultAccumulation;
 
 class PlaneSim {
 public:
@@ -131,6 +108,11 @@ public:
 
 	void addCandidateArg( const char* arg );
 	void addCandidateArg( double x, double y );
+	
+#if HAVE_PROTOBUF
+	Result2** runRandomXY(Result2**);
+#endif
+	void calculateHappiness(int* winners, double* happinessP, double* stddevP, double* giniP);
 	
 	public:
 	class candidatearg {

@@ -14,6 +14,8 @@ public:
 	int bytesPerPixel;
 	uint8_t* pix;
 	
+	bool variableAccum;
+	
 	PlaneSimDraw(int sizex, int sizey, int bytesPerPixel_);
 	~PlaneSimDraw();
 	
@@ -38,10 +40,10 @@ public:
 			color++;
 		}
 	}
-	void gaussTest( const char* filename, int nvoters, PlaneSim* sim );
-	void writePNG( const char* filename, PlaneSim* sim, const ResultAccumulation* accum );
-	void writePlanePNG( const char* filename, int choice, PlaneSim* sim, const ResultAccumulation* accum );
-	void writeSumPNG( const char* filename, PlaneSim* sim, const ResultAccumulation* accum );
+	void gaussTest( const char* filename, int nvoters, PlaneSim* sim, const char* args );
+	void writePNG( const char* filename, int numc, /*PlaneSim* sim, */const ResultAccumulation* accum, int* candidateXY, const char* args );
+	void writePlanePNG( const char* filename, int c, const ResultAccumulation* accum, int cpx, int cpy, const char* args );
+	void writeSumPNG( const char* filename, PlaneSim* sim, const ResultAccumulation* accum, const char* args );
 	
 	void drawDiamond( int x, int y, const uint8_t* color );
 };

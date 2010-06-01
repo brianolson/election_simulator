@@ -46,6 +46,12 @@ SGOBJS += VoterSim.o WorkQueue.o NameBlock.o
 SGOBJS += PlaneSim.o PlaneSimDraw.o XYSource.o ResultAccumulation.o
 SGOBJS += spacegraph_util.o
 
+SGSRCS := VoterArray.cpp spacegraph.cpp GaussianRandom.cpp
+SGSRCS += ResultFile.cpp voter.cpp gauss.c
+SGSRCS += VoterSim.cpp WorkQueue.cpp NameBlock.cpp
+SGSRCS += PlaneSim.cpp PlaneSimDraw.cpp XYSource.cpp ResultAccumulation.cpp
+SGSRCS += spacegraph_util.cpp
+
 STOBJS := VoterArray.o WorkQueue.o voter.o speed_test.o gauss.o
 STOBJS += ${EMOBJS} NameBlock.o GaussianRandom.o
 
@@ -66,7 +72,7 @@ vsmall:	${VSMALLOBJS}
 	${CXX} -o vsmall ${VSMALLOBJS} ${CXXFLAGS} ${LDFLAGS}
 
 # everything protobuf-needing, for bulk sim runs
-pball:	vpb processprl render_mcpb
+pball:	vpb processprl render_mcpb sgpb
 
 vpb:	${VPBOBJS} voter_main.cpp
 	${CXX} -o vpb ${VPBOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf -DHAVE_PROTOBUF -DNO_DB voter_main.cpp
@@ -82,6 +88,12 @@ RMCPBOBJS += GaussianRandom.o trial.pb.o render_mcpb.o
 render_mcpb:	${RMCPBOBJS}
 	${CXX} -o render_mcpb ${RMCPBOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf -lpng12 -lz
 
+
+sgpb:	CXXFLAGS+=-DHAVE_PROTOBUF
+sgpb:	LDFLAGS+=-lprotobuf -lpng12 -lz
+sgpb:	${EMOBJS} ${SGSRCS} trial.pb.o MessageLiteWriter.o
+	${CXX} ${CXXFLAGS} ${EMOBJS} trial.pb.o MessageLiteWriter.o ${SGSRCS} ${LDFLAGS} -o sgpb 
+
 nnsv:   ${NNSVOBJS}
 
 frob:	$(FROBOB)
@@ -90,7 +102,7 @@ frob:	$(FROBOB)
 resultDBToGnuplot:	$(TOPLOTOB)
 resultDBToGnuplot:	CC=${CXX}
 
-spacegraph: LDFLAGS+=-lpng12 -lz -g
+spacegraph: LDFLAGS+=-lpng12 -lz
 spacegraph:	${SGOBJS}
 	${CXX} ${CXXFLAGS} ${SGOBJS} ${LDFLAGS} -o spacegraph
 #spacegraph: CC=${CXX}

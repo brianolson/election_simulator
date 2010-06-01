@@ -230,8 +230,9 @@ int main( int argc, const char** argv ) {
 		config.set_miny(sim.miny);
 		config.set_maxx(sim.maxx);
 		config.set_maxy(sim.maxy);
-		if (config.Initialized()) {
+		if (config.IsInitialized()) {
 			int fd = open(configOut, O_WRONLY|O_CREAT, 0666);
+			close(fd);
 		}
 	}
 #endif

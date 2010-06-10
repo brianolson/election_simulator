@@ -55,7 +55,7 @@ static int _IntArg(int argc, const char** argv, int* argi,
 	return 1;
 }
 #define IntArg(optname, value) switch(_IntArg(argc, argv, &argi, (optname), (value))) { \
-case -1: fprintf(stderr, "bogus arg \"%s\"\n", argv[argi]); exit(1); break; \
+case -1: fprintf(stderr, "bogus argv[%d] \"%s\"\n", argi, argv[argi]); exit(1); break; \
 case 0: break; \
 case 1: argi++; continue; \
 default: fprintf(stderr, "ICE %d\n", __LINE__); exit(1); return 1;}
@@ -99,7 +99,7 @@ static int _DoubleArg(int argc, const char** argv, int* argi,
 	return 1;
 }
 #define DoubleArg(optname, value) switch(_DoubleArg(argc, argv, &argi, (optname), (value))) { \
-case -1: fprintf(stderr, "bogus arg \"%s\"\n", argv[argi]); exit(1); break; \
+case -1: fprintf(stderr, "bogus argv[%d] \"%s\"\n", argi, argv[argi]); exit(1); break; \
 case 0: break; \
 case 1: argi++; continue; \
 default: fprintf(stderr, "ICE %d\n", __LINE__); exit(1); return 1;}
@@ -151,7 +151,7 @@ default: fprintf(stderr, "ICE %d\n", __LINE__); exit(1); return 1;} \
 // return { 0: not claimed, 1: claimed, -1: error }
 // --name or --name=true sets true, --name=false sets false.
 // ["--name", "false"] is _not_ accepted.
-static int _BoolArg(int argc, const char** argv, int* argi,
+static inline int _BoolArg(int argc, const char** argv, int* argi,
 					  const char* optname, bool* value) {
 	const char* arg = argv[*argi];
 	// skip "-" or "--"

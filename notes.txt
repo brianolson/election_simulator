@@ -88,3 +88,8 @@ http://www.cs.cornell.edu/w8/~andru/civs/proportional.html
 http://www.mcdougall.org.uk/VM/ISSUE3/P5.HTM
 http://www.mcdougall.org.uk/VM/ISSUE6/P4.HTM
 http://www.mail-archive.com/election-methods@lists.electorama.com/msg04001.html
+
+./sgpb --candidates -0.52,-0.54,-0.62,0.24,-0.92,0.28,0.70,0.10 --method=IRNR,IRV,Condorcet,Bucklin,Borda,Max,Approval,OneVote,Random --minx=-1.0 --maxx=1.0 --miny=-1.0 --maxy=1.0 --mc_tests=50000 --mc_out=/tmp/mcm.pb --config_out=/tmp/configM.pb
+
+./render_mcpb --px=100 --py=100 --in=/tmp/mcm.pb --config=/tmp/configM.pb --out=/tmp/mc_%m.png --planes=/tmp/mc_%m_%p.png
+

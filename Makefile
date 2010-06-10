@@ -1,6 +1,7 @@
 #GO2=-O2 -DNDEBUG
 #GO2=-O2 -DNDEBUG -g
-GO2=-g
+#GO2=-g
+GO2=-O2
 #CXXFLAGS=-Wall -g
 CXXFLAGS=-Wall ${GO2} -m64
 #CXXFLAGS+=-pg -g
@@ -44,7 +45,7 @@ SGOBJS += VoterArray.o spacegraph.o GaussianRandom.o
 SGOBJS += ResultFile.o voter.o gauss.o
 SGOBJS += VoterSim.o WorkQueue.o NameBlock.o
 SGOBJS += PlaneSim.o PlaneSimDraw.o XYSource.o ResultAccumulation.o
-SGOBJS += spacegraph_util.o
+SGOBJS += spacegraph_util.o file_template.o
 
 SGSRCS := VoterArray.cpp spacegraph.cpp GaussianRandom.cpp
 SGSRCS += ResultFile.cpp voter.cpp gauss.c
@@ -83,7 +84,7 @@ processprl:	${PPLOBJS}
 	${CXX} -o processprl ${PPLOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf
 
 RMCPBOBJS := PlaneSimDraw.o MessageLiteWriter.o ResultAccumulation.o
-RMCPBOBJS += GaussianRandom.o trial.pb.o render_mcpb.o
+RMCPBOBJS += GaussianRandom.o trial.pb.o render_mcpb.o file_template.o
 
 render_mcpb:	${RMCPBOBJS}
 	${CXX} -o render_mcpb ${RMCPBOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf -lpng12 -lz
@@ -91,8 +92,8 @@ render_mcpb:	${RMCPBOBJS}
 
 sgpb:	CXXFLAGS+=-DHAVE_PROTOBUF
 sgpb:	LDFLAGS+=-lprotobuf -lpng12 -lz
-sgpb:	${EMOBJS} ${SGSRCS} trial.pb.o MessageLiteWriter.o
-	${CXX} ${CXXFLAGS} ${EMOBJS} trial.pb.o MessageLiteWriter.o ${SGSRCS} ${LDFLAGS} -o sgpb 
+sgpb:	${EMOBJS} ${SGSRCS} trial.pb.o MessageLiteWriter.o file_template.o
+	${CXX} ${CXXFLAGS} ${EMOBJS} trial.pb.o MessageLiteWriter.o file_template.o ${SGSRCS} ${LDFLAGS} -o sgpb 
 
 nnsv:   ${NNSVOBJS}
 

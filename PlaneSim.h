@@ -13,6 +13,7 @@ class XYSource;
 class DoubleRandom;
 class GaussianRandom;
 #if HAVE_PROTOBUF
+class MessageLiteWriter;
 class Result2;
 #endif
 
@@ -130,9 +131,18 @@ public:
 	PlaneSim* sim;
 	pthread_t thread;
 	XYSource* source;
+#if HAVE_PROTOBUF
+	int* countToDo;
+	pthread_mutex_t* countLock;
+	MessageLiteWriter* writer;
+	pthread_mutex_t* writerLock;
+#endif
 };
 
 // for pthread_create, arg is PlaneSimThread*
 extern "C" void* runPlaneSimThread(void* arg);
+#if HAVE_PROTOBUF
+extern "C" void* runRandomTestThread(void* arg);
+#endif
 
 #endif /* PLANE_SIM_H */

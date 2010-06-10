@@ -1,27 +1,36 @@
 #include "MessageLiteWriter.h"
 
+using google::protobuf::uint32;
+
+MessageLiteWriter::~MessageLiteWriter(){}
+MessageLiteReader::~MessageLiteReader(){}
+
 CSMessageLiteWriter::CSMessageLiteWriter(
-	google::protobuf::io::CodedOutputStream* oat)
+	CodedOutputStream* oat)
 : out(oat)
 {
 }
 
-bool CSMessageLiteWriter::writeMessage(const google::protobuf::MessageLite* m) {
+CSMessageLiteWriter::~CSMessageLiteWriter(){}
+
+bool CSMessageLiteWriter::writeMessage(const MessageLite* m) {
 	out->WriteVarint32(m->ByteSize());
 	return m->SerializeToCodedStream(out);
 }
 
 CSMessageLiteReader::CSMessageLiteReader(
-	google::protobuf::io::CodedInputStream* input)
+	CodedInputStream* input)
 : fin(input)
 {
 }
 
-bool CSMessageLiteReader::readMessage(google::protobuf::MessageLite* m) {
-	google::protobuf::uint32 size;
+CSMessageLiteReader::~CSMessageLiteReader(){}
+
+bool CSMessageLiteReader::readMessage(MessageLite* m) {
+	uint32 size;
 	bool ok = fin->ReadVarint32(&size);
 	if (!ok) return ok;
-	google::protobuf::io::CodedInputStream::Limit l = fin->PushLimit(size);
+	CodedInputStream::Limit l = fin->PushLimit(size);
 	ok = m->ParseFromCodedStream(fin);
 	fin->PopLimit(l);
 	return ok;

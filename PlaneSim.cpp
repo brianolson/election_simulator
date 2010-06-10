@@ -66,9 +66,8 @@ void PlaneSim::coBuild( const PlaneSim& it ) {
 	
 	candroot = it.candroot;
 
-	gRandom = new GaussianRandom(
-		new BufferDoubleRandomWrapper(
-			it.rootRandom, 512, false));
+	rootRandom = new BufferDoubleRandomWrapper(it.rootRandom, 512, false);
+	gRandom = new GaussianRandom(rootRandom);
 }
 
 void PlaneSim::setVotingSystems(VotingSystem** systems_, int numSystems) {
@@ -246,3 +245,39 @@ void* runPlaneSimThread(void* arg) {
 	it->sim->runXYSource(it->source);
 	return NULL;
 }
+
+#if HAVE_PROTOBUF
+#include "MessageLiteWriter.h"
+
+void* runRandomTestThread(void* arg) {
+	PlaneSimThread* it = (PlaneSimThread*)arg;
+	Result2** resultsOut = new Result2*[it->sim->systemsLength];
+	assert(resultsOut);
+	for (int i = 0; i < it->sim->systemsLength; ++i) {
+		resultsOut[i] = NULL;
+	}
+	while (*(it->countToDo) > 0) {
+		bool ok = true;
+		pthread_mutex_lock(it->countLock);
+		if (*(it->countToDo) > 0) {
+			*(it->countToDo) = *(it->countToDo) - 1;
+		} else {
+			ok = false;
+		}
+		pthread_mutex_unlock(it->countLock);
+		if (ok) {
+			it->sim->runRandomXY(resultsOut);
+			pthread_mutex_lock(it->writerLock);
+			for (int i = 0; i < it->sim->systemsLength; ++i) {
+				it->writer->writeMessage(resultsOut[i]);
+			}
+			pthread_mutex_unlock(it->writerLock);
+		}
+	}
+	for (int i = 0; i < it->sim->systemsLength; ++i) {
+		delete resultsOut[i];
+	}
+	delete resultsOut;
+	return NULL;
+}
+#endif /* HAVE_PROTOBUF */

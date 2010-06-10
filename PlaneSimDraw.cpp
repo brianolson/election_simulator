@@ -192,7 +192,11 @@ void PlaneSimDraw::writePlanePNG(
 			for ( int i = 0; i < accum->getPlanes(); i++ ) {
 				sum += accum->getAccum( x, y, i );
 			}
-			weight = weight / sum;
+			if (sum == 0.0) {
+				weight = 0.0;
+			} else {
+				weight = weight / sum;
+			}
 #else
 			weight = weight / sim->electionsPerPixel;
 #endif
@@ -225,15 +229,15 @@ void PlaneSimDraw::writePlanePNG(
 }
 
 // Sum across multiple winner planes.
-void PlaneSimDraw::writeSumPNG( const char* filename, PlaneSim* sim, const ResultAccumulation* accum, const char* args ) {
-	assert(px == sim->px);
-	assert(py == sim->py);
+void PlaneSimDraw::writeSumPNG( const char* filename, int numc, const ResultAccumulation* accum, int* candidateXY, const char* args, double targetSum ) {
+	//assert(px == sim->px);
+	//assert(py == sim->py);
 	memset(pix, 0, px*py*bytesPerPixel);
-	const VoterArray& they = sim->they;
-	const pos* candidates = sim->candidates;
+	//const VoterArray& they = sim->they;
+	//const pos* candidates = sim->candidates;
 	uint8_t** rows = new uint8_t*[py];
 	int i;
-	double targetSum = sim->electionsPerPixel * sim->seats;
+	//double targetSum = sim->electionsPerPixel * sim->seats;
 	fprintf(stderr,"making sum image %dx%d\n", px, py );
 	for ( i = 0; i < py; i++ ) {
 		rows[i] = pix + 3*px*i;
@@ -242,14 +246,14 @@ void PlaneSimDraw::writeSumPNG( const char* filename, PlaneSim* sim, const Resul
 		for ( int x = 0; x < px; x++ ) {
 			double sum;
 			sum = 0.0;
-			for ( i = 0; i < they.numc; i++ ) {
+			for ( i = 0; i < numc; i++ ) {
 				sum += accum->getAccum( x, y, i );
 			}
 			if ( sum > targetSum ) {
 				fprintf(stderr,"error at (%d,%d), sum %f > targetSum %f\n",
 						x, y, sum, targetSum );
 			}
-			for ( i = 0; i < they.numc; i++ ) {
+			for ( i = 0; i < numc; i++ ) {
 				double weight = (sum / targetSum) * 255.0;
 				uint8_t* p;
 				p = getpxp( x, y );
@@ -261,11 +265,15 @@ void PlaneSimDraw::writeSumPNG( const char* filename, PlaneSim* sim, const Resul
 			}
 		}
 	}
-	for ( i = 0; i < they.numc; i++ ) {
+	for ( i = 0; i < numc; i++ ) {
+#if 1
+		drawDiamond(candidateXY[i*2], candidateXY[i*2 + 1], candidateColors + ((i % numCandidateColors) * 3));
+#else
 	    printf("cd %f,%f -> ", candidates[i].x, candidates[i].y );
 	    drawDiamond( sim->xCoordToIndex( candidates[i].x ),
 					sim->yCoordToIndex( candidates[i].y ),
 					candidateColors + ((i % numCandidateColors) * 3) );
+#endif
 	}
 	writeImageDataToPNGFile( filename, rows, px, py, args );
 	delete [] rows;

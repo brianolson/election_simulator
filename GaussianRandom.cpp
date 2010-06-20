@@ -111,11 +111,11 @@ FileDoubleRandom::~FileDoubleRandom() {
 }
 
 namespace {
-	static ssize_t readWithRetry(int fd, void* buf, size_t count, int retries) {
+	static ssize_t readWithRetry(int fd, void* buf, ssize_t count, int retries) {
 		ssize_t err;
 		ssize_t total_read = 0;
 		void* tbuf = buf;
-		size_t countr = count;
+		ssize_t countr = count;
 		while (retries > 0) {
 			retries--;
 			err = read(fd, tbuf, countr);

@@ -1,3 +1,6 @@
+#ifndef MESSAGE_LITE_WRITER_H
+#define MESSAGE_LITE_WRITER_H
+
 #include "google/protobuf/io/coded_stream.h"
 #include "google/protobuf/message_lite.h"
 
@@ -36,3 +39,5 @@ public:
 protected:
 	CodedInputStream* fin;
 };
+
+#endif /* MESSAGE_LITE_WRITER_H */

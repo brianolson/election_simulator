@@ -19,6 +19,11 @@ using google::protobuf::io::ZeroCopyInputStream;
 #include <stdio.h>
 #include <string.h>
 
+#include "MessageLiteWriter.h"
+#include "PlaneSimDraw.h"
+#include "ResultAccumulation.h"
+#include "arghandler.h"
+#include "file_template.h"
 
 /**
    0     px-1
@@ -139,6 +144,8 @@ int main(int argc, const char** argv) {
 	
 	Result2 result;
 	int resultCount = 0;
+	// TODO: do multiple systems at once and do planes.
+	input->SetTotalBytesLimit(1024*1024*1024, 1024*1024*1024);
 	while (reader->readMessage(&result)) {
 		int systemIndex = 0;
 		if (result.has_system()) {

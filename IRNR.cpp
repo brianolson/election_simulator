@@ -7,6 +7,10 @@
  *
  */
 
+// TODO: test strategy of -1..1 vs 0..1 voters
+// TODO: test global utility of L1 norm vs L2 norm
+// TODO: test strategy vs L1/L2 norms
+
 #include "IRNR.h"
 #include "Voter.h"
 #include <stdio.h>

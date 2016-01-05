@@ -104,7 +104,7 @@ public:
 
 class ResultHolderCompare {
 public:
-	int operator()(const ResultHolder& a, const ResultHolder& b) {
+	int operator()(const ResultHolder& a, const ResultHolder& b) const {
 		// is a less than b?
 		if (a.voters < b.voters) {
 			return 1;

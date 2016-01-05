@@ -5,9 +5,6 @@
 #include "Voter.h"
 #include "ResultFile.h"
 
-#ifndef NO_DB
-class DBResultFile;
-#endif
 class Result;
 class NameBlock;
 class VotingSystem;
@@ -29,11 +26,6 @@ public:
     VoterSim();
     ~VoterSim();
 
-#ifndef NO_DB
-    void run( DBResultFile* drf, NameBlock& nb );
-    void runSteps( DBResultFile* drf, NameBlock& nb );
-    void runFromWorkQueue( DBResultFile* drf, NameBlock& nb, WorkSource* q );
-#endif
     void run( Result* );
     void runNoPrintcrap( Result* r );
     void run( ResultFile* drf, NameBlock& nb );

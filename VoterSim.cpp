@@ -6,9 +6,6 @@
 #include <math.h>
 #include "ResultFile.h"
 #include "ResultLog.h"
-#ifndef NO_DB
-#include "DBResultFile.h"
-#endif
 #include "VotingSystem.h"
 #include "WorkQueue.h"
 

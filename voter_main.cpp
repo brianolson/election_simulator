@@ -26,11 +26,6 @@
 
 #include "ResultFile.h"
 #include "ResultLog.h"
-#if NO_DB
-#else
-#include "DBResultFile.h"
-#include "ThreadSafeDBRF.h"
-#endif
 #include "WorkQueue.h"
 #include "workQThread.h"
 
@@ -100,9 +95,6 @@ int main( int argc, char** argv ) {
     VoterSim* s;
     workQThread** wqts;
     ResultFile* drf = NULL;
-#if !NO_DB
-    char* drfname = NULL;
-#endif
     NameBlock nb;
     int j = 0, i;
     int nsys;
@@ -122,15 +114,7 @@ int main( int argc, char** argv ) {
 		if ( j != i ) {
 			argv[j] = argv[i];
 		}
-		if ( ! strcmp( argv[i], "-F" ) ) {
-#if NO_DB
-			fprintf(stderr, "database result file compiled out\n");
-			exit(1);
-#else
-			i++;
-			drfname = argv[i];
-#endif
-		} else if ( ! strcmp( argv[i], "--textout" ) ) {
+		if ( ! strcmp( argv[i], "--textout" ) ) {
 			i++;
 			drf = TextDumpResultFile::open(argv[i]);
 			if (drf == NULL) {
@@ -242,21 +226,6 @@ int main( int argc, char** argv ) {
 	}
 	votingSystemArrayToNameBlock( &nb, systems, nsys );
 	
-#if !NO_DB
-    if ( drfname != NULL ) {
-		printf("opening result db \"%s\"...", drfname );
-		if ( numThreads == 1 ) {
-			drf = DBResultFile::open( drfname );
-		} else {
-			drf = ThreadSafeDBRF::open( drfname );
-		}
-		if ( drf ) {
-			printf("success\n");
-		} else {
-			printf("failed\n");
-		}
-    }
-#endif
     if (drf == NULL) {
 #if 0
       fprintf(stderr, "error, no result output configured\n");

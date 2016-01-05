@@ -2,6 +2,7 @@
 #define RESULT_FILE_H
 
 #include <sys/types.h>
+#include <stdint.h>
 
 // struct on disk
 struct SystemResult {
@@ -16,14 +17,51 @@ typedef struct SystemResult SystemResult;
 /*!
  @struct Result
 */
-struct Result {
+class Result {
+    public:
     u_int32_t trials;
 
     /*! @var systems size is numSystems * numStrategies
      * accessed as systems[strategy * numSystems + system] */
     SystemResult systems[1];
 };
-typedef struct Result Result;
+//typedef struct Result Result;
+
+
+#if 0
+// Result 3
+//
+// Result for a single trial of some parameters.
+// A trial is one set of voters tested against various election methods and strategy-sets against an election method.
+struct Result3 {
+    double happinessAvg;
+    double happinessStd;
+    double happinessGini;
+};
+
+struct Params {
+    uint32_t voters;
+    uint32_t choices;
+    uint32_t seats;
+    double error;
+};
+
+struct Result3Set {
+    // systems and results are arrays of length [numSystems]
+    // C++ ish this would be std::vector<uint32_t> systems; std::vector<Result2> results;
+    uint32_t numSystems;
+    uint32_t* systems;
+    Result3* results;
+};
+
+// Full record of one parameter trial and result
+struct ParamResult {
+    Params param;
+    Result3Set result;
+};
+#endif
+
+// File-per-param-values should store a list of Result2Set objects
 
 #ifndef INLINE
 #ifdef __cplusplus

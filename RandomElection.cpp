@@ -11,12 +11,6 @@
 #include "Voter.h"
 #include <stdlib.h>
 
-#ifdef USE_OLD_RAND
-/* only use this if your libc doesn't have the newer better random() */
-static inline long random() {
-    return rand();
-}
-#endif
 
 RandomElection::RandomElection( const char* nameIn )
 : VotingSystem( nameIn )

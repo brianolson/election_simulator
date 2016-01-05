@@ -2,13 +2,6 @@
 #include "ApprovalNoInfo.h"
 #include <stdlib.h>
 
-#ifdef USE_OLD_RAND
-/* only use this if your libc doesn't have the newer better random() */
-static inline long random() {
-    return rand();
-}
-#endif
-
 /*
  Contributed by Raphfrk
  with optimizations and integration by Brian Olson

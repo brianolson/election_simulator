@@ -2,18 +2,12 @@
 #include <stdlib.h>
 #include <math.h>
 
-#ifdef USE_OLD_RAND
-/* only use this if your libc doesn't have the newer better random() */
-static __inline double ranf() {
-	return rand() / (RAND_MAX * 1.0);
-}
-#else
 // returns [0..1.0]
 static __inline double ranf() {
 	// random() returns [0..2147483647]
 	return random() / 2147483647.0;
 }
-#endif
+
 double random_gaussian() {
     static int mode = 0;
     static double y2;

@@ -49,6 +49,9 @@ include ${UNAME}.make
 
 all:	spacegraph speedtest vsmall
 
+# everything protobuf-needing, for bulk sim runs
+pball:	vpb processprl render_mcpb sgpb
+
 voter:	$(OBJS)
 voter:	CC=${CXX}
 
@@ -57,9 +60,6 @@ voter_main_sm.o:	voter_main.cpp
 
 vsmall:	${VSMALLOBJS}
 	${CXX} -o vsmall ${VSMALLOBJS} ${CXXFLAGS} ${LDFLAGS}
-
-# everything protobuf-needing, for bulk sim runs
-pball:	vpb processprl render_mcpb sgpb
 
 vpb:	${VPBOBJS} voter_main.cpp
 	${CXX} -o vpb ${VPBOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf -DHAVE_PROTOBUF voter_main.cpp

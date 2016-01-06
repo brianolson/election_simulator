@@ -1,11 +1,13 @@
 #include "ProtoResultLog.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 
 #include "trial.pb.h"
 #include <google/protobuf/io/zero_copy_stream_impl.h>
+#include <google/protobuf/io/gzip_stream.h>
 #include <google/protobuf/io/coded_stream.h>
 
 using google::protobuf::uint32;
@@ -41,11 +43,21 @@ ProtoResultLog* ProtoResultLog::openForReading(const char* filename) {
 
 void ProtoResultLog::setupForAppend() {
 	zcos = new FileOutputStream(fd);
-	cos = new CodedOutputStream(zcos);
+        if (strstr(fname, ".pb.gz") != NULL) {
+            gzcos = new GzipOutputStream(zcos);
+            cos = new CodedOutputStream(gzcos);
+        } else {
+            cos = new CodedOutputStream(zcos);
+        }
 }
 void ProtoResultLog::setupForRead() {
 	zcis = new FileInputStream(fd);
-	cis = new CodedInputStream(zcis);
+        if (strstr(fname, ".pb.gz") != NULL) {
+            gzcis = new GzipInputStream(zcis);
+            cis = new CodedInputStream(gzcis);
+        } else {
+            cis = new CodedInputStream(zcis);
+        }
 	cis->SetTotalBytesLimit(1024*1024*1024, 1024*1024*1024);
 }
 
@@ -59,7 +71,8 @@ static char* namefilename(const char* fname) {
 // protected
 ProtoResultLog::ProtoResultLog(char* fname_, int fd_)
 	: ResultLog(), fname(fname_), fd(fd_),
-	zcis(NULL), cis(NULL), zcos(NULL), cos(NULL)
+          zcis(NULL), gzcis(NULL), cis(NULL),
+          zcos(NULL), gzcos(NULL), cos(NULL)
 {
 	int err = pthread_mutex_init(&lock, NULL);
 	assert(err == 0);
@@ -93,8 +106,10 @@ ProtoResultLog::ProtoResultLog(char* fname_, int fd_)
 
 ProtoResultLog::~ProtoResultLog() {
 	if (cos != NULL) delete cos;
+	if (gzcos != NULL) delete gzcos;
 	if (zcos != NULL) delete zcos;
 	if (cis != NULL) delete cis;
+	if (gzcis != NULL) delete gzcis;
 	if (zcis != NULL) delete zcis;
 	if (fd >= 0) {
 		close(fd);

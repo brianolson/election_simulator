@@ -93,6 +93,8 @@ void VoterArray::randomizeGaussianNSpace(int dimensions, double* choicePositions
 	double* dimholder = new double[dimensions];
 	//struct random_gaussian_context gc = INITIAL_GAUSSIAN_CONTEXT;
 	for (int v = 0; v < numv; ++v) {
+            int trycount = 0;
+            retryvoter: // the goto is exceptional and should be very rare
 		// random position for this voter
 		for (int d = 0; d < dimensions; ++d) {
                   dimholder[d] = gr->get() * sigma;
@@ -120,6 +122,10 @@ void VoterArray::randomizeGaussianNSpace(int dimensions, double* choicePositions
 		}
 		if (!somedifferent) {
 			fprintf(stderr, "all prefs for they[%d] are %f\n", v, they[v].getPref(0));
+                        trycount++;
+                        if (trycount < 10) {
+                            goto retryvoter;
+                        }
 			assert(somedifferent);
 		}
 #endif

@@ -216,7 +216,7 @@ def svgSets(out, sets, xlabel=None, ylabel=None):
 			county += 1
 		avhighs[sn] = sumy / county
 	setnames.sort(lambda a,b: cmp(avhighs[a], avhighs[b]), reverse=True)
-	print "plotting sets: " + ", ".join(map(str, setnames))
+	#print "plotting sets: " + ", ".join(map(str, setnames))
 	xmult = (xright - xleft) / (maxx - minx)
 	ymult = (ytop - ybottom) / (maxy - miny)
 	gx = None
@@ -251,13 +251,25 @@ def svgSets(out, sets, xlabel=None, ylabel=None):
 		if False:
 			out.write("""<text x="%d" y="%d" alignment-baseline="middle" stroke="%s">%s</text>\n""" %
 				(gx, gy, svg_colors[colori], sn))
+	colori = -1
+        yNameColors = []
+	for sn in setnames:
+		setdata = sets[sn]
+                _, lasty = setdata[-1]
+                lasty = gy = ((lasty - miny) * ymult) + ybottom
+		colori = (colori + 1) % len(svg_colors)
+                yNameColors.append( (lasty, sn, colori) )
+
+        yNameColors.sort()
+        print yNameColors
 	lx = xright
 	ly = ytop
-	colori = -1
-	for sn in setnames:
-		colori = (colori + 1) % len(svg_colors)
+        for lasty, sn, colori in yNameColors:
+                if lasty > ly:
+                        ly = lasty
 		out.write("""<text x="%d" y="%d" alignment-baseline="middle" fill="%s">%s</text>\n""" %
 			(lx, ly, svg_colors[colori], sn))
+                # set minimum next label y
 		ly += text_height * (9/7)
 	lastgx = None
 	xvallist = xvals.keys();
@@ -575,30 +587,6 @@ def main(argv):
 					
 		#TODO vary one of graphsets/free_variables and make HTML page
 	print "total graphs: %d" % graph_combo_count
-	return
-# TODO: what was this below the return? old stuff? delete?
-#	for column_combo in permute(steppable_columns, len(steppable_columns) - 1):
-#		graph_combo_count += product(map(lambda x: x.getNumValues(), column_combo))
-#	print "steppable combinations: %d" % product(map(lambda x: x.getNumValues(), steppable_columns))
-#	print "columns: %s\n" % ", ".join(colhash.keys())
-	sets = getPlotSets(
-		"Error", "Happiness", "System", colhash,
-		["Voters", "Choices", "System"], eqbut([100, 7]))
-	# lambda a: (a[0:2] == [1000, 7]) and (a[2] not in nowshowMethods)
-	if do_gnuplot:
-		gpf = open("r.gnuplot","w")
-		gpf.write("""set style data linespoints
-	set terminal png
-	""")
-		gpf.write("""set output 'v1000c7.png'\n""")
-		gnuplotSets(gpf, sets)
-		gpf.close()
-	if do_svgplot:
-		svgout = open("v1000c7.svg", "w")
-		svgout.write(svg_prologue)
-		svgSets(svgout, sets, "Error", "Happiness")
-		svgout.write("</svg>\n")
-		svgout.close()
 
 if __name__ == "__main__":
 	main(sys.argv)

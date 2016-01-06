@@ -5,7 +5,7 @@
 
 class ApprovalWithPoll : public VotingSystem {
 public:
-    ApprovalWithPoll() : VotingSystem( "ApprovalWithPoll" ) {};
+    ApprovalWithPoll() : VotingSystem( "Approval With Poll" ) {};
     virtual void runElection( int* winnerR, const VoterArray& they ) const;
     virtual ~ApprovalWithPoll();
 };

@@ -12,12 +12,16 @@ namespace google {
 			class FileOutputStream;
 			class CodedOutputStream;
 			class CodedInputStream;
+                        class GzipInputStream;
+                        class GzipOutputStream;
 		}
 	}
 }
 using google::protobuf::io::CodedOutputStream;
+using google::protobuf::io::GzipOutputStream;
 using google::protobuf::io::FileOutputStream;
 using google::protobuf::io::CodedInputStream;
+using google::protobuf::io::GzipInputStream;
 using google::protobuf::io::FileInputStream;
 
 class ProtoResultLog : public ResultLog {
@@ -49,8 +53,10 @@ protected:
 	int fd;
 	pthread_mutex_t lock;
 	FileInputStream* zcis;
+	GzipInputStream* gzcis;
 	CodedInputStream* cis;
 	FileOutputStream* zcos;
+	GzipOutputStream* gzcos;
 	CodedOutputStream* cos;
 	
 	void setupForAppend();

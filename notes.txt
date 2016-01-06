@@ -61,13 +61,14 @@ time /usr/bin/nice -20 ./vpb \
 --csteps "2 3 4 5" \
 --esteps "-1.0 0.00 0.01 0.02 0.50 1.41 2.00" \
 --ngauss --dimensions 3 \
---rlog rlog.pb \
+--rlog rlog.pb.gz \
 -n 10
 
 vpb -v 10000 -c 10 -e 0.01 --ngauss --dimensions 2 --rlog /tmp/rlog.pb -n 100 -M debug=/tmp/irnrpdebug -M seats=4 -e IRNRP
 
-./processprl rlog.pb
+./processprl rlog.pb.gz
 
+./plotrlog.py --dosvg rlog.pb.gz.csv
 
 
 ./spacegraph -c -0.20,0.14 -c -0.68,0.08 -c -0.90,0.24 -c 0.82,0.40 \
@@ -83,6 +84,7 @@ vpb --vsteps 10000 --CSsteps "10,4 8,3" --esteps 0.01 --ngauss --dimensions 2 --
 
 ./processprl /tmp/rlog.pb
 
+./plotrlog.py --dosvg /tmp/rlog.pb.csv
 
 http://www.cs.cornell.edu/w8/~andru/civs/proportional.html
 http://www.mcdougall.org.uk/VM/ISSUE3/P5.HTM
@@ -93,3 +95,17 @@ http://www.mail-archive.com/election-methods@lists.electorama.com/msg04001.html
 
 ./render_mcpb --px=100 --py=100 --in=/tmp/mcm.pb --config=/tmp/configM.pb --out=/tmp/mc_%m.png --planes=/tmp/mc_%m_%p.png
 
+
+/usr/bin/nice -20 ./vpb \
+--vsteps "100 1000 10000" \
+--csteps "2 3 4 5 6 7 8 9 11 14 18 22 27 34 43" \
+--esteps "0.00 0.01 0.02 0.03 0.04 0.06 0.09 0.12 0.17 0.25 0.35 0.50 0.71 1.00 1.41 2.00" \
+--ngauss --dimensions 3 \
+--rlog Alog.pb.gz \
+--threads 2 \
+-q \
+-n 1000
+
+./processprl Alog.pb.gz
+
+./plotrlog.py --dosvg rlog.pb.gz.csv

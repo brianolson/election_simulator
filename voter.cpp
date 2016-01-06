@@ -14,6 +14,8 @@
 #include "VotingSystem.h"
 
 #include "AcceptanceVotePickOne.h"
+#include "ApprovalNoInfo.h"
+#include "ApprovalWithPoll.h"
 #include "Condorcet.h"
 #include "FuzzyVotePickOne.h"
 #include "gauss.h"
@@ -24,6 +26,7 @@
 #include "RandomElection.h"
 #include "RankedVotePickOne.h"
 #include "Bucklin.h"
+#include "VoteForAndAgainst.h"
 
 #include "WorkQueue.h"
 
@@ -596,6 +599,8 @@ VSConfig* VSConfig::defaultList( const char** a, VSConfig* n ) {
 	toret = new VSConfig( new OneVotePickOne(), toret );
 	toret = new VSConfig( new InstantRunoffVotePickOne(), toret );
 	toret = new VSConfig( new AcceptanceVotePickOne(), toret );
+	toret = new VSConfig( new ApprovalNoInfo(), toret );
+	toret = new VSConfig( new ApprovalWithPoll(), toret );
 	toret = new VSConfig( new FuzzyVotePickOne( "Raw Rating Summation", 0, 0 ), toret );
 	toret = new VSConfig( new FuzzyVotePickOne( "Normalized Rating Summation", 1, 0 ), toret );
 	toret = new VSConfig( new FuzzyVotePickOne( "Maximized Rating Summation", 2, 0 ), toret );
@@ -607,6 +612,7 @@ VSConfig* VSConfig::defaultList( const char** a, VSConfig* n ) {
 	toret = new VSConfig( new IRNR("Instant Runoff Normalized Ratings"), toret );
 	toret = new VSConfig( new IRNR("Instant Runoff Normalized Ratings, positive shifted", 1.0), toret );
 	toret = new VSConfig( new IteratedNormalizedRatings("Iterated Normalized Ratings"), toret );
+	toret = new VSConfig( new VoteForAndAgainst(), toret );
 	toret = new VSConfig( new RandomElection("Random"), toret );
 	toret = new VSConfig( new Bucklin(), toret );
 #else

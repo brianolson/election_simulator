@@ -40,7 +40,9 @@ if ( resultDumpHtml != NULL ) {
     }
 }
 they.build( numv, numc );
+int retries = 0;
 for ( i = 0; i < trials; i++ ) {
+  trialretry: // there are some ways that setting up a trial can fail and it's easiest to retry here
     if ( goGently ) return;
     if ( trials != 1 ) {
 		// if trials is 1, may have loaded voters from elsewhere
@@ -81,10 +83,18 @@ for ( i = 0; i < trials; i++ ) {
 		}
                 if(!they.validate()) {
                     fprintf(stderr, "some pre-error-voter failed validation with all preferences equal, pref mode: %d\n", preferenceMode);
+                    retries++;
+                    if (retries < trials) {
+                        goto trialretry;
+                    }
                     assert(false);
                 }
                 if(!theyWithError.validate()) {
                     fprintf(stderr, "some voter-with-error failed validation with all preferences equal, pref mode: %d\n", preferenceMode);
+                    retries++;
+                    if (retries < trials) {
+                        goto trialretry;
+                    }
                     assert(false);
                 }
     }

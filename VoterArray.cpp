@@ -149,7 +149,7 @@ void VoterArray::randomGaussianChoicePositions(double* positions, int numc, int 
 }
 
 #ifndef NDEBUG
-void VoterArray::validate() const {
+bool VoterArray::validate() const {
 	for (int v = 0; v < numv; ++v ) {
 		bool somedifferent = false;
 		for (int c = 1; c < numc; ++c) {
@@ -158,7 +158,10 @@ void VoterArray::validate() const {
 				break;
 			}
 		}
-		assert(somedifferent);
+                if (!somedifferent) {
+                    return false;
+                }
 	}
+        return true;
 }
 #endif

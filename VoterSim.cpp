@@ -508,7 +508,10 @@ void VoterSim::randomizeVoters() {
 			assert(0);
 			break;
 	}
-	they.validate();
+	if(!they.validate()) {
+            fprintf(stderr, "some voter failed validation with all preferences equal, pref mode: %d\n", preferenceMode);
+            assert(false);
+        }
 }
 
 double VoterSim::calculateHappiness(int start, int count, int* winners, double* stddevP, double* giniP) {

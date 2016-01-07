@@ -104,9 +104,9 @@ protected:
 
 public:
 #ifndef NDEBUG
-	void validate() const;
+	bool validate() const;
 #else
-	inline void validate() const {};
+	inline bool validate() const { return true; };
 #endif
     inline Voter& operator[]( int i ) const {
 	return *(they + i);

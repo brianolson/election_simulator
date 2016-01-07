@@ -79,8 +79,14 @@ for ( i = 0; i < trials; i++ ) {
 		for ( int v = 0; v < numv; v++ ) {
 			theyWithError[v].setWithError( they[v], confusionError );
 		}
-		they.validate();
-		theyWithError.validate();
+                if(!they.validate()) {
+                    fprintf(stderr, "some pre-error-voter failed validation with all preferences equal, pref mode: %d\n", preferenceMode);
+                    assert(false);
+                }
+                if(!theyWithError.validate()) {
+                    fprintf(stderr, "some voter-with-error failed validation with all preferences equal, pref mode: %d\n", preferenceMode);
+                    assert(false);
+                }
     }
     if ( printVoters ) {
 		fprintf(text,"voters = ");

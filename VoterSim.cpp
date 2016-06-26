@@ -11,6 +11,8 @@
 
 extern "C" char* strdup( const char* );
 
+extern volatile int goGently;
+
 Strategy::Strategy()
 : count( -1 ), next( NULL ),
   happiness( NULL ), happisum( NULL ), ginisum(NULL), happistdsum( NULL ),
@@ -313,8 +315,6 @@ int VoterSim::setLongOpt(const char* arg, int argc_after, char** argv_after) {
 	}
 }
 
-extern volatile int goGently;
-
 #if 0
 u_int32_t voterSteps[] = { 10, 100, 1000, 10000, 100000 };
 u_int32_t choiceSteps[] = { 2, 3, 4, 5, 6, 7, 8, 9, 11, 13, 16, 20, 25, 31, 38, 50, 65, 99 };
@@ -481,10 +481,6 @@ void pickOneHappinessV( const VoterArray& they, int numv, int numc, int start, d
     }
 }
 #endif
-
-void VoterSim::run( Result* r ) {
-#include "VoterSim_run.h"
-}
 
 void VoterSim::randomizeVoters() {
 	switch (preferenceMode) {

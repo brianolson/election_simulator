@@ -26,6 +26,7 @@
 
 #include "ResultFile.h"
 #include "ResultLog.h"
+#include "NopResultLog.h"
 #include "WorkQueue.h"
 #include "workQThread.h"
 
@@ -234,8 +235,11 @@ int main( int argc, char** argv ) {
     } else {
 		drf->useNames( &nb );
 	}
-	if (rlog != NULL) {
-		printf("main useNames\n");
+	if (rlog == NULL) {
+		rlog = new NopResultLog();
+	}
+	{
+		//printf("main useNames\n");
 		bool ok = rlog->useNames( &nb );
 		assert(ok);
 		if (!ok) {

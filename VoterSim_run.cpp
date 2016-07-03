@@ -11,12 +11,241 @@
 
 extern volatile int goGently;
 
+const int retryLimit = 5;
+
+void VoterSim::trialStrategySetup() {
+	Voter tv(numc);
+	int sti = 1;
+	Strategy* st = strategies[0];
+	int stlim = st->count;
+	for ( int v = 0; v < numv; v++ ) {
+		if ( st == NULL ) {
+			theyWithError[v].setWithError( they[v], confusionError );
+		} else {
+			if ( doError ) {
+				tv.setWithError( they[v], confusionError );
+				theyWithError[v].set( tv, st );
+			} else {
+				theyWithError[v].set( they[v], st );
+			}
+			if ( --stlim == 0 ) {
+				if ( sti < numStrat ) {
+					st = strategies[sti];
+					sti++;
+					stlim = st->count;
+				} else {
+					st = NULL;
+				}
+			}
+		}
+	}
+}
+
+void VoterSim::trailErrorSetup() {
+	for ( int v = 0; v < numv; v++ ) {
+		theyWithError[v].setWithError( they[v], confusionError );
+	}
+}
+
+bool VoterSim::validSetup() {
+	if(!they.validate()) {
+		fprintf(stderr, "some pre-error-voter failed validation with all preferences equal, pref mode: %d\n", preferenceMode);
+		return false;
+	}
+	if(!theyWithError.validate()) {
+		fprintf(stderr, "some voter-with-error failed validation with all preferences equal, pref mode: %d\n", preferenceMode);
+		return false;
+	}
+	return true;
+}
+
+void VoterSim::preTrialOutput() {
+	if ( printVoters ) {
+		fprintf(text,"voters = ");
+		for ( int v = 0; v < numv; v++ ) {
+			they[v].print(text);
+			if ( doError || strategies ) {
+				theyWithError[v].print(text);
+			}
+			putc('\n',text);
+		}
+	}
+	if ( voterDumpPrefix != NULL ) {
+		static char* voteDumpFilename = NULL;
+		if ( voteDumpFilename == NULL ) {
+			voteDumpFilename = (char*)malloc( voterDumpPrefixLen + 30 );
+		}
+		snprintf( voteDumpFilename, voterDumpPrefixLen + 30, "%s%.10d", voterDumpPrefix, currentTrialNumber );
+		voterDump( voteDumpFilename, they, numv, numc );
+	}
+	if ( voterBinDumpPrefix != NULL ) {
+		static char* voteBinDumpFilename = NULL;
+		if ( voteBinDumpFilename == NULL ) {
+			voteBinDumpFilename = (char*)malloc( voterBinDumpPrefixLen + 30 );
+		}
+		snprintf( voteBinDumpFilename, voterBinDumpPrefixLen + 30, "%s%.10d", voterBinDumpPrefix, currentTrialNumber );
+		voterBinDump( voteBinDumpFilename, they, numv, numc );
+	}
+	if ( resultDumpHtml != NULL ) {
+		if ( ! resultDumpHtmlVertical ) {
+			fprintf( resultDumpHtml, "<tr>" );
+		}
+	}
+}
+
+void VoterSim::postTrialOutput() {
+	for ( int osys = 0; osys < nsys; osys++ ) {
+		char* winnerstring = NULL;
+		if ( printAllResults || (resultDump != NULL) || (resultDumpHtml != NULL) ) {
+			winnerstring = new char[seats*15];
+			assert(winnerstring != NULL);
+			sprintf(winnerstring, "%d", winners[osys*numc + 0]);
+			char* opos = winnerstring;
+			for (int seat = 1; seat < seats; ++seat) {
+				while (*opos != '\0') {
+					opos++;
+				}
+				sprintf(opos, ",%d", winners[osys*numc + seat]);
+			}
+		}
+		if ( printAllResults ) {
+			fprintf(text,"%s\thappiness\t%f\twinner\t%s\n", systems[osys]->name,happiness[osys][currentTrialNumber],winnerstring);
+		}
+		if ( resultDump != NULL ) {
+			fprintf( resultDump, "%.15g\t%s\t", happiness[osys][currentTrialNumber], winnerstring );
+		}
+		if ( resultDumpHtml != NULL ) {
+			if ( resultDumpHtmlVertical ) {
+				fprintf( resultDumpHtml, "<tr ALIGN=\"center\"><th>%s</th><td>%.15g</td><td>%s</td></tr>\n", systems[osys]->name, happiness[osys][currentTrialNumber], winnerstring );
+			} else {
+				fprintf( resultDumpHtml, "<td>%.15g</td><td>%s</td>", happiness[osys][currentTrialNumber], winnerstring );
+			}
+		}
+		if (winnerstring != NULL) {
+			delete [] winnerstring;
+		}
+	}
+	if ( resultDump != NULL ) {
+		fprintf( resultDump, "\n" );
+	}
+	if ( resultDumpHtml != NULL && ! resultDumpHtmlVertical ) {
+		fprintf( resultDumpHtml, "</tr>\n" );
+	}
+}
+
+void VoterSim::oneTrial() {
+	int retries = 0;
+
+	// there are some ways that setting up a trial can fail and it's easiest to retry here
+	trialretry:
+	if ( goGently ) return;
+
+	if ( strategies ) {
+		trialStrategySetup();
+	} else if ( doError ) {
+		trailErrorSetup();
+	}
+	if (!validSetup()) {
+		if (retries < retryLimit) {
+			retries++;
+			goto trialretry;
+		}
+		assert(false);
+	}
+
+	preTrialOutput();
+
+	// Run elections for each system, recording all to winners.
+	for (int sys = 0; sys < nsys; sys++) {
+		if ( goGently ) return;
+		bool ok = true;
+		if ( tweValid ) {
+			ok = systems[sys]->runMultiSeatElection( winners + (sys*numc), theyWithError, seats );
+		} else {
+			ok = systems[sys]->runMultiSeatElection( winners + (sys*numc), they, seats );
+		}
+		if (!ok) {
+			fprintf(stderr, "sys %d failed\n", sys);
+			goGently = true;
+		}
+		happiness[sys][currentTrialNumber] = NAN;
+	}
+
+	ResultLog::Result logEntry;
+	logEntry.voters = numv;
+	logEntry.choices = numc;
+	logEntry.error = (doError ? confusionError : -1.0);
+	logEntry.seats = seats;
+	logEntry.mode = preferenceMode;
+	logEntry.dimensions = dimensions;
+
+	// Measure results for systems.
+	for ( int osys = 0; osys < nsys; osys++ ) {
+		//fprintf(stderr, "measure sys %d\n", osys);
+		if ( isnan(happiness[osys][currentTrialNumber]) ) {
+			double td, tg, th;
+			th = calculateHappiness( &(winners[osys*numc/*+0*/]), &td, &tg );
+			int sys = osys;
+			happisum[sys] += happiness[sys][currentTrialNumber] = th;
+			happistdsum[sys] += td;
+			ginisum[sys] += tg;
+
+			logEntry.systemIndex = osys;
+			logEntry.happiness = th;
+			logEntry.voterHappinessStd = td;
+			logEntry.gini = tg;
+			bool ok = rlog->logResult(logEntry);
+			if (!ok) { goGently = true; }
+			for ( sys = osys+1; sys < nsys; sys++ ) {
+				// Each later system that has the same result has the same resulting happiness.
+				// Apply the same happiness:std:gini to them.
+				bool samewinners = true;
+				for (int seat = 0; seat < seats; ++seat) {
+					if (winners[sys*numc + seat] != winners[osys*numc + seat]) {
+						samewinners = false;
+						break;
+					}
+				}
+				if ( samewinners ) {
+					happisum[sys] += happiness[sys][currentTrialNumber] = th;
+					happistdsum[sys] += td;
+					ginisum[sys] += tg;
+
+					logEntry.systemIndex = sys;
+					ok = rlog->logResult(logEntry);
+					if (!ok) { goGently = true; }
+				}
+			}
+		} else {
+			//fprintf(stderr, "non-nan result for %d\n", osys);
+		}
+	}
+
+	// measure results per-strategy
+	if ( strategies ) {
+		double td, tg;
+		for ( int sys = 0; sys < nsys; sys++ ) {
+			int stpos = 0;
+			for ( int st = 0; st < numStrat; st++ ) {
+				strategies[st]->happisum[sys] += strategies[st]->happiness[sys][currentTrialNumber] = calculateHappiness( stpos, strategies[st]->count, &(winners[sys*numc/*+0*/]), &td, &tg );
+				stpos += strategies[st]->count;
+				strategies[st]->happistdsum[sys] += td;
+				strategies[st]->ginisum[sys] += tg;
+			}
+		}
+	}
+
+	// post trial hook?
+	postTrialOutput();
+}
+
 void VoterSim::run( Result* r ) {
-	int i;
+	//int i;
 	int sys;
 	if ( r == NULL ) {
 		return;
 	}
+	assert(rlog != NULL);
 	for ( sys = 0; sys < nsys; sys++ ) {
 		happisum[sys] = 0;
 		ginisum[sys] = 0;
@@ -51,220 +280,15 @@ void VoterSim::run( Result* r ) {
 		}
 	}
 	they.build( numv, numc );
-	int retries = 0;
-	for ( i = 0; i < trials; i++ ) {
-		trialretry: // there are some ways that setting up a trial can fail and it's easiest to retry here
+	//int retries = 0;
+	for ( currentTrialNumber = 0; currentTrialNumber < trials; currentTrialNumber++ ) {
+		//trialretry: // there are some ways that setting up a trial can fail and it's easiest to retry here
 		if ( goGently ) return;
 		if ( trials != 1 ) {
 			// if trials is 1, may have loaded voters from elsewhere
 			randomizeVoters();
 		}
-		if ( strategies ) {
-			Voter tv(numc);
-			int sti = 1;
-			Strategy* st = strategies[0];
-			int stlim = st->count;
-			for ( int v = 0; v < numv; v++ ) {
-				if ( st == NULL ) {
-					theyWithError[v].setWithError( they[v], confusionError );
-				} else {
-					if ( doError ) {
-						tv.setWithError( they[v], confusionError );
-						theyWithError[v].set( tv, st );
-					} else {
-						theyWithError[v].set( they[v], st );
-					}
-					if ( --stlim == 0 ) {
-						if ( sti < numStrat ) {
-							st = strategies[sti];
-							sti++;
-							stlim = st->count;
-						} else {
-							st = NULL;
-						}
-					}
-				}
-			}
-		} else
-			if ( doError ) {
-				for ( int v = 0; v < numv; v++ ) {
-					theyWithError[v].setWithError( they[v], confusionError );
-				}
-                if(!they.validate()) {
-                    fprintf(stderr, "some pre-error-voter failed validation with all preferences equal, pref mode: %d\n", preferenceMode);
-                    retries++;
-                    if (retries < trials) {
-                        goto trialretry;
-                    }
-                    assert(false);
-                }
-                if(!theyWithError.validate()) {
-                    fprintf(stderr, "some voter-with-error failed validation with all preferences equal, pref mode: %d\n", preferenceMode);
-                    retries++;
-                    if (retries < trials) {
-                        goto trialretry;
-                    }
-                    assert(false);
-                }
-			}
-		if ( printVoters ) {
-			fprintf(text,"voters = ");
-			for ( int v = 0; v < numv; v++ ) {
-				they[v].print(text);
-				if ( doError || strategies ) {
-					theyWithError[v].print(text);
-				}
-				putc('\n',text);
-			}
-		}
-		if ( voterDumpPrefix != NULL ) {
-			static char* voteDumpFilename = NULL;
-			if ( voteDumpFilename == NULL ) {
-				voteDumpFilename = (char*)malloc( voterDumpPrefixLen + 30 );
-			}
-			snprintf( voteDumpFilename, voterDumpPrefixLen + 30, "%s%.10d", voterDumpPrefix, i );
-			voterDump( voteDumpFilename, they, numv, numc );
-		}
-		if ( voterBinDumpPrefix != NULL ) {
-			static char* voteBinDumpFilename = NULL;
-			if ( voteBinDumpFilename == NULL ) {
-				voteBinDumpFilename = (char*)malloc( voterBinDumpPrefixLen + 30 );
-			}
-			snprintf( voteBinDumpFilename, voterBinDumpPrefixLen + 30, "%s%.10d", voterBinDumpPrefix, i );
-			voterBinDump( voteBinDumpFilename, they, numv, numc );
-		}
-		if ( resultDumpHtml != NULL ) {
-			if ( ! resultDumpHtmlVertical ) {
-				fprintf( resultDumpHtml, "<tr>" );
-			}
-		}
-		// Run elections for each system, recording all to winners.
-		for ( sys = 0; sys < nsys; sys++ ) {
-			//fprintf(stderr, "run sys %d\n", sys);
-			if ( goGently ) return;
-			bool ok = true;
-			if ( tweValid ) {
-				ok = systems[sys]->runMultiSeatElection( winners + (sys*numc), theyWithError, seats );
-			} else {
-				ok = systems[sys]->runMultiSeatElection( winners + (sys*numc), they, seats );
-			}
-			if (!ok) {
-				fprintf(stderr, "sys %d failed\n", sys);
-				goGently = true;
-			}
-			happiness[sys][i] = NAN;
-		}
-		// Measure results for systems.
-		ResultLog::Result logEntry;
-		if (rlog != NULL) {
-			logEntry.voters = numv;
-			logEntry.choices = numc;
-			logEntry.error = (doError ? confusionError : -1.0);
-			logEntry.seats = seats;
-			logEntry.mode = preferenceMode;
-			logEntry.dimensions = dimensions;
-		}
-		for ( int osys = 0; osys < nsys; osys++ ) {
-			//fprintf(stderr, "measure sys %d\n", osys);
-			int sys;
-			//int winner = winners[osys*numc/*+0*/];
-			if ( isnan(happiness[osys][i]) ) {
-				double td, tg, th;
-				th = calculateHappiness( &(winners[osys*numc/*+0*/]), &td, &tg );
-				sys = osys;
-				happisum[sys] += happiness[sys][i] = th;
-				happistdsum[sys] += td;
-				ginisum[sys] += tg;
-				if ( rlog != NULL ) {
-					logEntry.systemIndex = osys;
-					logEntry.happiness = th;
-					logEntry.voterHappinessStd = td;
-					logEntry.gini = tg;
-					bool ok = rlog->logResult(logEntry);
-					if (!ok) {
-						goGently = true;
-					}
-				}
-				for ( sys = osys+1; sys < nsys; sys++ ) {
-					// Each later system that has the same result has the same resulting happiness.
-					// Apply the same happiness:std:gini to them.
-					bool samewinners = true;
-					for (int seat = 0; seat < seats; ++seat) {
-						if (winners[sys*numc + seat] != winners[osys*numc + seat]) {
-							samewinners = false;
-							break;
-						}
-					}
-					if ( samewinners ) {
-						happisum[sys] += happiness[sys][i] = th;
-						happistdsum[sys] += td;
-						ginisum[sys] += tg;
-						if ( rlog != NULL ) {
-							logEntry.systemIndex = sys;
-							rlog->logResult(logEntry);
-						}
-					}
-				}
-			} else {
-				//fprintf(stderr, "non-nan result for %d\n", osys);
-			}
-			sys = osys;
-			char* winnerstring = NULL;
-			if ( printAllResults || (resultDump != NULL) || (resultDumpHtml != NULL) ) {
-				winnerstring = new char[seats*15];
-				assert(winnerstring != NULL);
-				sprintf(winnerstring, "%d", winners[osys*numc + 0]);
-				char* opos = winnerstring;
-				for (int seat = 1; seat < seats; ++seat) {
-					while (*opos != '\0') {
-						opos++;
-					}
-					sprintf(opos, ",%d", winners[osys*numc + seat]);
-				}
-			}
-			if ( printAllResults ) {
-				fprintf(text,"%s\thappiness\t%f\twinner\t%s\n", systems[sys]->name,happiness[sys][i],winnerstring);
-			}
-			if ( resultDump != NULL ) {
-				fprintf( resultDump, "%.15g\t%s\t", happiness[sys][i], winnerstring );
-			}
-			if ( resultDumpHtml != NULL ) {
-				if ( resultDumpHtmlVertical ) {
-					fprintf( resultDumpHtml, "<tr ALIGN=\"center\"><th>%s</th><td>%.15g</td><td>%s</td></tr>\n", systems[sys]->name, happiness[sys][i], winnerstring );
-				} else {
-					fprintf( resultDumpHtml, "<td>%.15g</td><td>%s</td>", happiness[sys][i], winnerstring );
-				}
-			}
-			if (winnerstring != NULL) {
-				delete [] winnerstring;
-			}
-		}
-		if ( strategies ) {
-			double td, tg;
-			for ( sys = 0; sys < nsys; sys++ ) {
-				int stpos = 0;
-				for ( int st = 0; st < numStrat; st++ ) {
-					strategies[st]->happisum[sys] += strategies[st]->happiness[sys][i] = calculateHappiness( stpos, strategies[st]->count, &(winners[sys*numc/*+0*/]), &td, &tg );
-					stpos += strategies[st]->count;
-					strategies[st]->happistdsum[sys] += td;
-					strategies[st]->ginisum[sys] += tg;
-				}
-			}
-		}
-		if ( resultDump != NULL ) {
-			fprintf( resultDump, "\n" );
-		}
-		if ( resultDumpHtml != NULL && ! resultDumpHtmlVertical ) {
-			fprintf( resultDumpHtml, "</tr>\n" );
-		}
-#if 0
-		// randomize for next loop
-		if ( i+1 < trials ) {
-			for ( int v = 0; v < numv; v++ ) {
-				randomizeVoters();
-			}
-		}
-#endif
+		oneTrial();
 	}  // trials loop
 	if ( resultDumpHtml != NULL ) {
 		fprintf( resultDumpHtml, "</table>\n" );
@@ -278,7 +302,7 @@ void VoterSim::run( Result* r ) {
 		r->systems[sys].giniWelfare = (ginisum[sys] + r->systems[sys].giniWelfare * r->trials) / ttot;
 		happistdsum[sys] /= trials;
 		variance = r->systems[sys].reliabilityStd * r->systems[sys].reliabilityStd * r->trials;
-		for ( i = 0; i < trials; i++ ) {
+		for ( int i = 0; i < trials; i++ ) {
 			double d;
 			d = happiness[sys][i] - r->systems[sys].meanHappiness;
 			variance += d * d;
@@ -295,7 +319,7 @@ void VoterSim::run( Result* r ) {
 				r->systems[rsys+sys].consensusStdAvg = (strategies[st]->happistdsum[sys] + r->systems[rsys+sys].consensusStdAvg * r->trials) / ttot;
 				strategies[st]->happistdsum[sys] /= trials;
 				variance = r->systems[rsys+sys].reliabilityStd * r->systems[rsys+sys].reliabilityStd * r->trials;
-				for ( i = 0; i < trials; i++ ) {
+				for ( int i = 0; i < trials; i++ ) {
 					double d;
 					d = strategies[st]->happiness[sys][i] - r->systems[rsys+sys].meanHappiness;
 					variance += d * d;

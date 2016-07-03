@@ -103,6 +103,7 @@ VoterSim::VoterSim()
     tweValid( false ), summary( basic ),
     resultDumpHtmlVertical( 0 ), winners( NULL ),
     upToTrials( 0 ), strategies( NULL ), numStrat( 0 ),
+	  currentTrialNumber(0),
 	rlog(NULL),
 	preferenceMode(NSPACE_GAUSSIAN_PREFERENCES),
 	dimensions(3)
@@ -491,7 +492,7 @@ void VoterSim::randomizeVoters() {
 			double* choicePositions = new double[numc*dimensions];
 			VoterArray::randomGaussianChoicePositions(choicePositions, numc, dimensions, 0.5);
 			they.randomizeNSpace(dimensions, choicePositions, NULL, 1.0, 0.5);
-			delete choicePositions;
+			delete [] choicePositions;
 		}
 		case NSPACE_GAUSSIAN_PREFERENCES: {
 			double* choicePositions = new double[numc*dimensions];

@@ -24,6 +24,18 @@ message TrialResult {
 	required float mean_happiness = 7;
 	required float voter_happiness_stddev = 8;
 	required float gini_index = 9;
+
+	// in multi-seat (PR) raw happiness is the sum of outcomes.
+	// clamped-happiness stops at [-1.0 .. 1.0]
+	optional float clamped_happiness_mean = 11;
+	optional float clamped_happiness_stddev = 12;
+	optional float clamped_happiness_gini = 13;
+
+	// counts of voters with clamped happiness in buckets.. [[-1.0 .. -0.9), .. [0.9 .. 1.0]]
+	repeated int32 happiness_deciles = 14;
+
+	// avg(for each voter, what was the rank within their preferences of their favorite choice which got elected)
+	optional float favorite_rank_elected_mean = 15;
 }
 
 message Systems {
@@ -100,4 +112,10 @@ message Result2 {
 	optional int32 system = 7;
 	
 	repeated int32 winners = 8;
+}
+
+message ProportionalResult {
+	optional float mean_happiness = 2;
+	optional float voter_happiness_stddev = 3;
+	optional float gini_index = 4;
 }

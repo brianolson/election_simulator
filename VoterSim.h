@@ -30,6 +30,7 @@ public:
     void runNoPrintcrap( Result* r );
     void run( ResultFile* drf, NameBlock& nb );
     void runFromWorkQueue( ResultFile* drf, NameBlock& nb, WorkSource* q );
+	void oneTrial();
 
 	// assign new random preferences to voters according to preferenceMode
 	void randomizeVoters();
@@ -74,6 +75,7 @@ public:
     Strategy** strategies;
     int numStrat;
 	
+	int currentTrialNumber;
 	ResultLog* rlog;
 	
 	enum PreferenceMode {
@@ -95,6 +97,12 @@ public:
 			default: return "ERROR invalid preference value";
 		}
 	}
+
+	void trialStrategySetup();
+	void trailErrorSetup();
+	bool validSetup();
+	void preTrialOutput();
+	void postTrialOutput();
 };
 
 #endif

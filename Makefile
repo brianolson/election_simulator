@@ -17,11 +17,11 @@ EMOBJS += IteratedNormalizedRatings.o
 EMOBJS += CIVSP.o
 
 VSMALLOBJS := ResultFile.o VoterArray.o VoterSim.o VoterSim_run.o WorkQueue.o voter.o
-VSMALLOBJS += voter_main_sm.o gauss.o NameBlock.o GaussianRandom.o
+VSMALLOBJS += voter_main_sm.o gauss.o NameBlock.o GaussianRandom.o ResultLog.o NopResultLog.o
 VSMALLOBJS += ${EMOBJS}
 
 VPBOBJS := ResultFile.o VoterArray.o VoterSim.o VoterSim_run.o WorkQueue.o voter.o gauss.o
-VPBOBJS += ResultLog.o ProtoResultLog.o trial.pb.o NameBlock.o GaussianRandom.o
+VPBOBJS += ResultLog.o NopResultLog.o ProtoResultLog.o trial.pb.o NameBlock.o GaussianRandom.o
 VPBOBJS += ${EMOBJS}
 
 SGOBJS := ${EMOBJS}
@@ -64,7 +64,7 @@ vsmall:	${VSMALLOBJS}
 vpb:	${VPBOBJS} voter_main.cpp
 	${CXX} -o vpb ${VPBOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf -DHAVE_PROTOBUF voter_main.cpp
 
-PPLOBJS := processProtoResultLog.o ProtoResultLog.o ResultFile.o ResultLog.o trial.pb.o NameBlock.o
+PPLOBJS := processProtoResultLog.o ProtoResultLog.o ResultFile.o ResultLog.o NopResultLog.o trial.pb.o NameBlock.o
 
 processprl:	${PPLOBJS}
 	${CXX} -o processprl ${PPLOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf

@@ -317,7 +317,7 @@ int main( int argc, const char** argv ) {
 			for (int i = 0; i < sim.systemsLength; ++i) {
 				delete resultsOut[i];
 			}
-			delete resultsOut;
+			delete [] resultsOut;
 		} else {
 			assert(nthreads > 1);
 			int countdown = randomTests;

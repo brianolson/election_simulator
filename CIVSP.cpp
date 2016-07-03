@@ -78,10 +78,12 @@ static inline bool valid_f_preference(
  * of voters electing some number of seats. In other words,
  * the 'quota' of the proportional method.
  */
+#if 0 /* unused */
 static inline double f_limit(
 		int numv, int seats, int f, int votersPreferring) {
 	return (votersPreferring * (seats + 1.0)) / numv;
 }
+#endif
 
 /**
  for f = 1..seats, count how many voters have an f-preference for A vs B

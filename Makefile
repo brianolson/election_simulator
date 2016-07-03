@@ -47,7 +47,7 @@ PROTOC := protoc
 include ${UNAME}.make
 -include local.make
 
-all:	spacegraph speedtest vsmall
+all:	spacegraph speedtest vsmall vpb processprl render_mcpb sgpb
 
 # everything protobuf-needing, for bulk sim runs
 pball:	vpb processprl render_mcpb sgpb

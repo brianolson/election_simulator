@@ -277,7 +277,7 @@ void* runRandomTestThread(void* arg) {
 	for (int i = 0; i < it->sim->systemsLength; ++i) {
 		delete resultsOut[i];
 	}
-	delete resultsOut;
+	delete [] resultsOut;
 	return NULL;
 }
 #endif /* HAVE_PROTOBUF */

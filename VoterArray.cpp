@@ -78,7 +78,7 @@ void VoterArray::randomizeNSpace(int dimensions, double* choicePositions, double
 			they[v].setPref(c, approvalDistance - sqrt(rsquared));
 		}
 	}
-	delete dimholder;
+	delete [] dimholder;
 }
 
 // place the voters in N-dimensional space, uniformly distributed within a gaussian distribution.

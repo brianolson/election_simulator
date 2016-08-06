@@ -19,6 +19,10 @@ public:
 		double happiness;
 		double voterHappinessStd;
 		double gini;
+
+		Result() {
+			clear();
+		}
 		inline void clear() {
 			voters = 0;
 			choices = 0;
@@ -31,8 +35,13 @@ public:
 			voterHappinessStd = 0.0;
 			gini = 0.0;
 		}
-		Result() {
-			clear();
+		void set(int voters, int choices, double error, int seats, VoterSim::PreferenceMode mode, int dimensions) {
+			this->voters = voters;
+			this->choices = choices;
+			this->error = error;
+			this->seats = seats;
+			this->mode = mode;
+			this->dimensions = dimensions;
 		}
 	};
 	ResultLog();

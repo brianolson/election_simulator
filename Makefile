@@ -32,7 +32,7 @@ SGOBJS += PlaneSim.o PlaneSimDraw.o XYSource.o ResultAccumulation.o
 SGOBJS += spacegraph_util.o file_template.o
 
 SGSRCS := VoterArray.cpp spacegraph.cpp GaussianRandom.cpp
-SGSRCS += ResultFile.cpp voter.cpp gauss.c
+SGSRCS += ResultFile.cpp voter.cpp gauss.cpp
 SGSRCS += VoterSim.cpp VoterSim_run.o WorkQueue.cpp NameBlock.cpp
 SGSRCS += PlaneSim.cpp PlaneSimDraw.cpp XYSource.cpp ResultAccumulation.cpp
 SGSRCS += spacegraph_util.cpp

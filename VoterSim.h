@@ -103,6 +103,10 @@ public:
 	bool validSetup();
 	void preTrialOutput();
 	void postTrialOutput();
+
+	void preRunOutput();
+	void postRunOutput();
+	void doResultOut(Result* resultOut);
 };
 
 #endif

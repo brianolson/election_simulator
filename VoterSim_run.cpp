@@ -59,6 +59,26 @@ bool VoterSim::validSetup() {
 	return true;
 }
 
+void VoterSim::preRunOutput() {
+	if ( resultDump != NULL ) {
+		for ( int sys = 0; sys < nsys; sys++ ) {
+			fprintf( resultDump, "%s:happiness\t%s:winner\t", systems[sys]->name, systems[sys]->name );
+		}
+		fprintf( resultDump, "\n" );
+	}
+	if ( resultDumpHtml != NULL ) {
+		if ( resultDumpHtmlVertical ) {
+			fprintf( resultDumpHtml, "<table>\n<tr><th>Method</th><th>Happiness</th><th ALIGN=\"center\">Winner</th></tr>\n" );
+		} else {
+			fprintf( resultDumpHtml, "<table>\n<tr>" );
+			for ( int sys = 0; sys < nsys; sys++ ) {
+				fprintf( resultDumpHtml, "<th>%s:happiness</th><th>%s:winner</th>", systems[sys]->name, systems[sys]->name );
+			}
+			fprintf( resultDumpHtml, "</tr>\n" );
+		}
+	}
+}
+
 void VoterSim::preTrialOutput() {
 	if ( printVoters ) {
 		fprintf(text,"voters = ");
@@ -133,6 +153,56 @@ void VoterSim::postTrialOutput() {
 	}
 }
 
+void VoterSim::postRunOutput() {
+	if ( resultDumpHtml != NULL ) {
+		fprintf( resultDumpHtml, "</table>\n" );
+		fclose( resultDumpHtml );
+	}
+}
+
+void VoterSim::doResultOut(Result* resultOut) {
+	if (resultOut == NULL) {
+		return;
+	}
+	unsigned int ttot = trials + resultOut->trials;
+	for ( int sys = 0; sys < nsys; sys++ ) {
+		double variance;
+		resultOut->systems[sys].meanHappiness = (happisum[sys] + resultOut->systems[sys].meanHappiness * resultOut->trials) / ttot;
+		resultOut->systems[sys].consensusStdAvg = (happistdsum[sys] + resultOut->systems[sys].consensusStdAvg * resultOut->trials) / ttot;
+		resultOut->systems[sys].giniWelfare = (ginisum[sys] + resultOut->systems[sys].giniWelfare * resultOut->trials) / ttot;
+		happistdsum[sys] /= trials;
+		variance = resultOut->systems[sys].reliabilityStd * resultOut->systems[sys].reliabilityStd * resultOut->trials;
+		for ( int i = 0; i < trials; i++ ) {
+			double d;
+			d = happiness[sys][i] - resultOut->systems[sys].meanHappiness;
+			variance += d * d;
+		}
+		variance /= ttot;
+		resultOut->systems[sys].reliabilityStd = sqrt( variance );
+	}
+	if ( strategies ) {
+		for ( int st = 0; st < numStrat; st++ ) {
+			int rsys = nsys * (st + 1);
+			for ( int sys = 0; sys < nsys; sys++ ) {
+				double variance;
+				resultOut->systems[rsys+sys].meanHappiness = (strategies[st]->happisum[sys] + resultOut->systems[rsys+sys].meanHappiness * resultOut->trials) / ttot;
+				resultOut->systems[rsys+sys].giniWelfare = (strategies[st]->ginisum[sys] + resultOut->systems[rsys+sys].giniWelfare * resultOut->trials) / ttot;
+				resultOut->systems[rsys+sys].consensusStdAvg = (strategies[st]->happistdsum[sys] + resultOut->systems[rsys+sys].consensusStdAvg * resultOut->trials) / ttot;
+				strategies[st]->happistdsum[sys] /= trials;
+				variance = resultOut->systems[rsys+sys].reliabilityStd * resultOut->systems[rsys+sys].reliabilityStd * resultOut->trials;
+				for ( int i = 0; i < trials; i++ ) {
+					double d;
+					d = strategies[st]->happiness[sys][i] - resultOut->systems[rsys+sys].meanHappiness;
+					variance += d * d;
+				}
+				variance /= ttot;
+				resultOut->systems[rsys+sys].reliabilityStd = sqrt( variance );
+			}
+		}
+	}
+	resultOut->trials = ttot;
+}
+
 void VoterSim::oneTrial() {
 	int retries = 0;
 
@@ -172,12 +242,7 @@ void VoterSim::oneTrial() {
 	}
 
 	ResultLog::Result logEntry;
-	logEntry.voters = numv;
-	logEntry.choices = numc;
-	logEntry.error = (doError ? confusionError : -1.0);
-	logEntry.seats = seats;
-	logEntry.mode = preferenceMode;
-	logEntry.dimensions = dimensions;
+	logEntry.set(numv, numc, (doError ? confusionError : -1.0), seats, preferenceMode, dimensions);
 
 	// Measure results for systems.
 	for ( int osys = 0; osys < nsys; osys++ ) {
@@ -217,7 +282,7 @@ void VoterSim::oneTrial() {
 				}
 			}
 		} else {
-			//fprintf(stderr, "non-nan result for %d\n", osys);
+			fprintf(stderr, "non-nan result for %d\n", osys);
 		}
 	}
 
@@ -235,18 +300,12 @@ void VoterSim::oneTrial() {
 		}
 	}
 
-	// post trial hook?
 	postTrialOutput();
 }
 
-void VoterSim::run( Result* r ) {
-	//int i;
-	int sys;
-	if ( r == NULL ) {
-		return;
-	}
+void VoterSim::run( Result* resultOut ) {
 	assert(rlog != NULL);
-	for ( sys = 0; sys < nsys; sys++ ) {
+	for ( int sys = 0; sys < nsys; sys++ ) {
 		happisum[sys] = 0;
 		ginisum[sys] = 0;
 		happistdsum[sys] = 0;
@@ -256,77 +315,26 @@ void VoterSim::run( Result* r ) {
 		tweValid = true;
 	}
 	if ( strategies ) for ( int st = 0; st < numStrat; st++ ) {
-			for ( sys = 0; sys < nsys; sys++ ) {
+			for ( int sys = 0; sys < nsys; sys++ ) {
 				strategies[st]->happisum[sys] = 0;
 				strategies[st]->ginisum[sys] = 0;
 				strategies[st]->happistdsum[sys] = 0;
 			}
 		}
-	if ( resultDump != NULL ) {
-		for ( sys = 0; sys < nsys; sys++ ) {
-			fprintf( resultDump, "%s:happiness\t%s:winner\t", systems[sys]->name, systems[sys]->name );
-		}
-		fprintf( resultDump, "\n" );
-	}
-	if ( resultDumpHtml != NULL ) {
-		if ( resultDumpHtmlVertical ) {
-			fprintf( resultDumpHtml, "<table>\n<tr><th>Method</th><th>Happiness</th><th ALIGN=\"center\">Winner</th></tr>\n" );
-		} else {
-			fprintf( resultDumpHtml, "<table>\n<tr>" );
-			for ( sys = 0; sys < nsys; sys++ ) {
-				fprintf( resultDumpHtml, "<th>%s:happiness</th><th>%s:winner</th>", systems[sys]->name, systems[sys]->name );
-			}
-			fprintf( resultDumpHtml, "</tr>\n" );
-		}
-	}
+
+	preRunOutput();
+
+	// Run N trial simulations
 	they.build( numv, numc );
-	//int retries = 0;
 	for ( currentTrialNumber = 0; currentTrialNumber < trials; currentTrialNumber++ ) {
-		//trialretry: // there are some ways that setting up a trial can fail and it's easiest to retry here
 		if ( goGently ) return;
 		if ( trials != 1 ) {
 			// if trials is 1, may have loaded voters from elsewhere
 			randomizeVoters();
 		}
 		oneTrial();
-	}  // trials loop
-	if ( resultDumpHtml != NULL ) {
-		fprintf( resultDumpHtml, "</table>\n" );
-		fclose( resultDumpHtml );
 	}
-	unsigned int ttot = trials + r->trials;
-	for ( sys = 0; sys < nsys; sys++ ) {
-		double variance;
-		r->systems[sys].meanHappiness = (happisum[sys] + r->systems[sys].meanHappiness * r->trials) / ttot;
-		r->systems[sys].consensusStdAvg = (happistdsum[sys] + r->systems[sys].consensusStdAvg * r->trials) / ttot;
-		r->systems[sys].giniWelfare = (ginisum[sys] + r->systems[sys].giniWelfare * r->trials) / ttot;
-		happistdsum[sys] /= trials;
-		variance = r->systems[sys].reliabilityStd * r->systems[sys].reliabilityStd * r->trials;
-		for ( int i = 0; i < trials; i++ ) {
-			double d;
-			d = happiness[sys][i] - r->systems[sys].meanHappiness;
-			variance += d * d;
-		}
-		variance /= ttot;
-		r->systems[sys].reliabilityStd = sqrt( variance );
-	}
-	if ( strategies ) for ( int st = 0; st < numStrat; st++ ) {
-			int rsys = nsys * (st + 1);
-			for ( sys = 0; sys < nsys; sys++ ) {
-				double variance;
-				r->systems[rsys+sys].meanHappiness = (strategies[st]->happisum[sys] + r->systems[rsys+sys].meanHappiness * r->trials) / ttot;
-				r->systems[rsys+sys].giniWelfare = (strategies[st]->ginisum[sys] + r->systems[rsys+sys].giniWelfare * r->trials) / ttot;
-				r->systems[rsys+sys].consensusStdAvg = (strategies[st]->happistdsum[sys] + r->systems[rsys+sys].consensusStdAvg * r->trials) / ttot;
-				strategies[st]->happistdsum[sys] /= trials;
-				variance = r->systems[rsys+sys].reliabilityStd * r->systems[rsys+sys].reliabilityStd * r->trials;
-				for ( int i = 0; i < trials; i++ ) {
-					double d;
-					d = strategies[st]->happiness[sys][i] - r->systems[rsys+sys].meanHappiness;
-					variance += d * d;
-				}
-				variance /= ttot;
-				r->systems[rsys+sys].reliabilityStd = sqrt( variance );
-			}
-		}
-	r->trials = ttot;
+
+	postRunOutput();
+	doResultOut(resultOut);
 }

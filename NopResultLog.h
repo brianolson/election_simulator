@@ -7,8 +7,8 @@ class NopResultLog : public ResultLog {
 	public:
 	NopResultLog();
 	virtual ~NopResultLog();
-	virtual bool logResult(const Result& r);
-	virtual bool readResult(Result* r);
+	virtual bool logResult(const TrialResult& r);
+	virtual bool readResult(TrialResult* r);
 };
 
 #endif /* NOP_RESULT_LOG_H */

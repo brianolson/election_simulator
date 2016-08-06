@@ -4,9 +4,9 @@ NopResultLog::NopResultLog() {}
 
 NopResultLog::~NopResultLog() {}
 
-bool NopResultLog::logResult(const Result& r) {
+bool NopResultLog::logResult(const TrialResult& r) {
 	return true;
 }
-bool NopResultLog::readResult(Result* r) {
+bool NopResultLog::readResult(TrialResult* r) {
 	return false;
 }

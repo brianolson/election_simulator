@@ -16,17 +16,13 @@ EMOBJS += VoteForAndAgainst.o Bucklin.o
 EMOBJS += IteratedNormalizedRatings.o
 EMOBJS += CIVSP.o
 
-VSMALLOBJS := ResultFile.o VoterArray.o VoterSim.o VoterSim_run.o WorkQueue.o voter.o
-VSMALLOBJS += voter_main_sm.o gauss.o NameBlock.o GaussianRandom.o ResultLog.o NopResultLog.o
-VSMALLOBJS += ${EMOBJS}
-
 VPBOBJS := ResultFile.o VoterArray.o VoterSim.o VoterSim_run.o WorkQueue.o voter.o gauss.o
 VPBOBJS += ResultLog.o NopResultLog.o ProtoResultLog.o trial.pb.o NameBlock.o GaussianRandom.o
 VPBOBJS += ${EMOBJS}
 
 SGOBJS := ${EMOBJS}
 SGOBJS += VoterArray.o spacegraph.o GaussianRandom.o
-SGOBJS += ResultFile.o voter.o gauss.o
+SGOBJS += ResultFile.o voter.o gauss.o trial.pb.o
 SGOBJS += VoterSim.o VoterSim_run.o WorkQueue.o NameBlock.o
 SGOBJS += PlaneSim.o PlaneSimDraw.o XYSource.o ResultAccumulation.o
 SGOBJS += spacegraph_util.o file_template.o
@@ -47,7 +43,7 @@ PROTOC := protoc
 include ${UNAME}.make
 -include local.make
 
-all:	spacegraph speedtest vsmall vpb processprl render_mcpb sgpb
+all:	spacegraph speedtest vpb processprl render_mcpb sgpb
 
 # everything protobuf-needing, for bulk sim runs
 pball:	vpb processprl render_mcpb sgpb
@@ -57,9 +53,6 @@ voter:	CC=${CXX}
 
 voter_main_sm.o:	voter_main.cpp
 	${CXX} ${CXXFLAGS} voter_main.cpp -c -o voter_main_sm.o
-
-vsmall:	${VSMALLOBJS}
-	${CXX} -o vsmall ${VSMALLOBJS} ${CXXFLAGS} ${LDFLAGS}
 
 vpb:	${VPBOBJS} voter_main.cpp
 	${CXX} -o vpb ${VPBOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf -DHAVE_PROTOBUF voter_main.cpp
@@ -86,7 +79,7 @@ nnsv:   ${NNSVOBJS}
 frob:	$(FROBOB)
 	$(CXX) $(CXXFLAGS) $(FROBOB) $(LDFLAGS) -o $@
 
-spacegraph: LDFLAGS+=-lpng12 -lz
+spacegraph: LDFLAGS+=-lprotobuf -lpng12 -lz
 spacegraph:	${SGOBJS}
 	${CXX} ${CXXFLAGS} ${SGOBJS} ${LDFLAGS} -o spacegraph
 #spacegraph: CC=${CXX}
@@ -142,7 +135,7 @@ headerdoc:
 	gatherheaderdoc doc
 
 clean:
-	rm -f $(OBJS) $(FROBOB) $(TOPLOTOB) $(SGOBJS) ${VPBOBJS} voter.o voter frob nnsv spacegraph vpb vsmall trial.pb.cc trial.pb.h
+	rm -f $(OBJS) $(FROBOB) $(TOPLOTOB) $(SGOBJS) ${VPBOBJS} voter.o voter frob nnsv spacegraph vpb trial.pb.cc trial.pb.h
 
 depend:
 	makedepend -Y *.cpp

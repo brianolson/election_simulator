@@ -30,21 +30,8 @@ public:
 	static ProtoResultLog* openForReading(const char* filename);
 	virtual ~ProtoResultLog();
 	virtual bool useNames(NameBlock* nb);
-#if 0
-	virtual bool logResult(
-		int voters, int choices, double error, int seats, int systemIndex, 
-		VoterSim::PreferenceMode mode, int dimensions,
-		double happiness, double voterHappinessStd, double gini);
-	
-	// return true if a result was read. false implies error or eof.
-	virtual bool readResult(
-		int* voters, int* choices, double* error, int* seats, int* systemIndex,
-		VoterSim::PreferenceMode* mode, int* dimensions,
-		double* happiness, double* voterHappinessStd, double* gini);
-#else
-	virtual bool logResult(const Result& r);
-	virtual bool readResult(Result* r);
-#endif
+	virtual bool logResult(const TrialResult& r);
+	virtual bool readResult(TrialResult* r);
 
 protected:
 	ProtoResultLog(char* fname_, int fd_);

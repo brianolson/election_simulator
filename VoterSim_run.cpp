@@ -241,8 +241,13 @@ void VoterSim::oneTrial() {
 		happiness[sys][currentTrialNumber] = NAN;
 	}
 
-	ResultLog::Result logEntry;
-	logEntry.set(numv, numc, (doError ? confusionError : -1.0), seats, preferenceMode, dimensions);
+	TrialResult logEntry;
+	logEntry.set_voters(numv);
+	logEntry.set_choices(numc);
+	logEntry.set_error(doError ? confusionError : -1.0);
+	logEntry.set_seats(seats);
+	logEntry.set_voter_model(trFromVS(preferenceMode));
+	logEntry.set_dimensions(dimensions);
 
 	// Measure results for systems.
 	for ( int osys = 0; osys < nsys; osys++ ) {
@@ -255,10 +260,10 @@ void VoterSim::oneTrial() {
 			happistdsum[sys] += td;
 			ginisum[sys] += tg;
 
-			logEntry.systemIndex = osys;
-			logEntry.happiness = th;
-			logEntry.voterHappinessStd = td;
-			logEntry.gini = tg;
+			logEntry.set_system_index(osys);
+			logEntry.set_mean_happiness(th);
+			logEntry.set_voter_happiness_stddev(td);
+			logEntry.set_gini_index(tg);
 			bool ok = rlog->logResult(logEntry);
 			if (!ok) { goGently = true; }
 			for ( sys = osys+1; sys < nsys; sys++ ) {
@@ -276,7 +281,7 @@ void VoterSim::oneTrial() {
 					happistdsum[sys] += td;
 					ginisum[sys] += tg;
 
-					logEntry.systemIndex = sys;
+					logEntry.set_system_index(sys);
 					ok = rlog->logResult(logEntry);
 					if (!ok) { goGently = true; }
 				}

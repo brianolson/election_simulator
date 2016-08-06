@@ -3,47 +3,11 @@
 
 #include "VoterSim.h"
 #include "ResultFile.h"
+#include "trial.pb.h"
 
 class ResultLog {
 public:
-	
-	class Result {
-	public:
-		int voters;
-		int choices;
-		double error;
-		int seats;
-		int systemIndex;
-		VoterSim::PreferenceMode mode;
-		int dimensions;
-		double happiness;
-		double voterHappinessStd;
-		double gini;
 
-		Result() {
-			clear();
-		}
-		inline void clear() {
-			voters = 0;
-			choices = 0;
-			error = -1.0;
-			seats = 1;
-			systemIndex = -1;
-			mode = VoterSim::BOGUS_PREFERENCE_MODE;
-			dimensions = -1;
-			happiness = 0.0;
-			voterHappinessStd = 0.0;
-			gini = 0.0;
-		}
-		void set(int voters, int choices, double error, int seats, VoterSim::PreferenceMode mode, int dimensions) {
-			this->voters = voters;
-			this->choices = choices;
-			this->error = error;
-			this->seats = seats;
-			this->mode = mode;
-			this->dimensions = dimensions;
-		}
-	};
 	ResultLog();
 	virtual ~ResultLog();
 
@@ -54,25 +18,11 @@ public:
 
 	// do this for every trial election.
 	// implementations should be thread safe.
-#if 0
-	virtual bool logResult(
-		int voters, int choices, double error, int seats,
-		int systemIndex, VoterSim::PreferenceMode mode, int dimensions,
-		double happiness, double voterHappinessStd, double gini) = 0;
-#else
-	virtual bool logResult(const Result& r) = 0;
-#endif
+	virtual bool logResult(const TrialResult& r) = 0;
 	
 	// return true if a result was read. false implies error or eof.
 	// Not thread safe.
-#if 0
-	virtual bool readResult(
-		int* voters, int* choices, double* error, int* seats,
-		int* systemIndex, VoterSim::PreferenceMode* mode, int* dimensions,
-		double* happiness, double* voterHappinessStd, double* gini) = 0;
-#else
-	virtual bool readResult(Result* r) = 0;
-#endif
+	virtual bool readResult(TrialResult* r) = 0;
 	
 	// Return a copy of names.
 	// caller responsible for delete of it.
@@ -93,5 +43,33 @@ public:
 		return names->names[i];
 	}
 };
+
+static inline TrialResult::Model trFromVS(VoterSim::PreferenceMode m) {
+	switch (m) {
+	case VoterSim::INDEPENDENT_PREFERENCES:
+		return TrialResult::INDEPENDENT_PREFERENCES;
+	case VoterSim::NSPACE_PREFERENCES:
+		return TrialResult::NSPACE_PREFERENCES;
+	case VoterSim::NSPACE_GAUSSIAN_PREFERENCES:
+		return TrialResult::NSPACE_GAUSSIAN_PREFERENCES;
+	default:
+		assert(0);
+	}
+	return (TrialResult::Model)-1;
+}
+
+static inline VoterSim::PreferenceMode vsFromTR(TrialResult::Model m) {
+	switch (m) {
+		case TrialResult::INDEPENDENT_PREFERENCES:
+			return VoterSim::INDEPENDENT_PREFERENCES;
+		case TrialResult::NSPACE_PREFERENCES:
+			return VoterSim::NSPACE_PREFERENCES;
+		case TrialResult::NSPACE_GAUSSIAN_PREFERENCES:
+			return VoterSim::NSPACE_GAUSSIAN_PREFERENCES;
+		default:
+			assert(0);
+	}
+	return VoterSim::BOGUS_PREFERENCE_MODE;
+}
 
 #endif

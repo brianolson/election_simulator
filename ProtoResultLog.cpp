@@ -160,34 +160,6 @@ bool ProtoResultLog::useNames(NameBlock* nb) {
 	}
 }
 
-inline TrialResult::Model trFromVS(VoterSim::PreferenceMode m) {
-	switch (m) {
-	case VoterSim::INDEPENDENT_PREFERENCES:
-		return TrialResult::INDEPENDENT_PREFERENCES;
-	case VoterSim::NSPACE_PREFERENCES:
-		return TrialResult::NSPACE_PREFERENCES;
-	case VoterSim::NSPACE_GAUSSIAN_PREFERENCES:
-		return TrialResult::NSPACE_GAUSSIAN_PREFERENCES;
-	default:
-		assert(0);
-	}
-	return (TrialResult::Model)-1;
-}
-
-inline VoterSim::PreferenceMode vsFromTR(TrialResult::Model m) {
-	switch (m) {
-		case TrialResult::INDEPENDENT_PREFERENCES:
-			return VoterSim::INDEPENDENT_PREFERENCES;
-		case TrialResult::NSPACE_PREFERENCES:
-			return VoterSim::NSPACE_PREFERENCES;
-		case TrialResult::NSPACE_GAUSSIAN_PREFERENCES:
-			return VoterSim::NSPACE_GAUSSIAN_PREFERENCES;
-		default:
-			assert(0);
-	}
-	return VoterSim::BOGUS_PREFERENCE_MODE;
-}
-
 static inline void myperror_(int en, const char* x, const char* file, int line) {
 	char es[256];
 	strerror_r(en, es, sizeof(es));
@@ -196,23 +168,7 @@ static inline void myperror_(int en, const char* x, const char* file, int line) 
 #define myperror(a,b) myperror_(a, b, __FILE__, __LINE__)
 
 
-bool ProtoResultLog::logResult(const Result& x) {
-	TrialResult r;
-	
-	r.set_voters(x.voters);
-	r.set_choices(x.choices);
-	r.set_error(x.error);
-	if (x.seats != 1) {
-		r.set_seats(x.seats);
-	}
-	r.set_system_index(x.systemIndex);
-	r.set_voter_model(trFromVS(x.mode));
-	r.set_dimensions(x.dimensions);
-	
-	r.set_mean_happiness(x.happiness);
-	r.set_voter_happiness_stddev(x.voterHappinessStd);
-	r.set_gini_index(x.gini);
-
+bool ProtoResultLog::logResult(const TrialResult& x) {
 	bool ok = true;
 #if 0
 	fprintf(stderr, "%d\t%d\t%f\t%d\t%d\t%d\t%f\t%f\t%f\n",
@@ -221,8 +177,8 @@ bool ProtoResultLog::logResult(const Result& x) {
 #endif
 	pthread_mutex_lock(&lock);
 	if (cos != NULL) {
-		cos->WriteVarint32(r.ByteSize());
-		ok = r.SerializeToCodedStream(cos);
+		cos->WriteVarint32(x.ByteSize());
+		ok = x.SerializeToCodedStream(cos);
 		if (!ok) {
 			myperror(zcos->GetErrno(), fname);
 		}
@@ -235,27 +191,13 @@ bool ProtoResultLog::logResult(const Result& x) {
 }
 
 // return true if a result was read. false implies error or eof.
-bool ProtoResultLog::readResult(Result* x) {
-	TrialResult r;
+bool ProtoResultLog::readResult(TrialResult* x) {
 	if (cis == NULL) return false;
 	uint32 size;
 	bool ok = cis->ReadVarint32(&size);
 	if (!ok) return ok;
 	CodedInputStream::Limit l = cis->PushLimit(size);
-	ok = r.ParseFromCodedStream(cis);
+	ok = x->ParseFromCodedStream(cis);
 	cis->PopLimit(l);
-	if (!ok) return ok;
-	if (ok) {
-		x->voters = r.voters();
-		x->choices = r.choices();
-		x->error = r.error();
-		x->seats = r.seats();
-		x->systemIndex = r.system_index();
-		x->mode = vsFromTR(r.voter_model());
-		x->dimensions = r.dimensions();
-		x->happiness = r.mean_happiness();
-		x->voterHappinessStd = r.voter_happiness_stddev();
-		x->gini = r.gini_index();
-	}
 	return ok;
 }

@@ -204,12 +204,12 @@ int main(int argc, char** argv) {
 			fprintf(stderr, "name disagreement between \"%s\" and \"%s\"\n", rlogname, fname);
 			exit(1);
 		}
-		ResultLog::Result r;
+		TrialResult r;
 		while (rlog->readResult(&r)) {
 			count++;
-			ResultHolder key(r.voters, r.choices, r.seats, r.error, r.systemIndex, r.mode, r.dimensions);
+			ResultHolder key(r.voters(), r.choices(), r.seats(), r.error(), r.system_index(), vsFromTR(r.voter_model()), r.dimensions());
 			ResultHolder& value = results[key];
-			value.addResult(r.happiness, r.voterHappinessStd, r.gini);
+			value.addResult(r.mean_happiness(), r.voter_happiness_stddev(), r.gini_index());
 		}
 		printf("%s: read %d records in %zu configurations\n", fname, count, results.size());
 	}

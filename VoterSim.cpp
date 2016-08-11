@@ -511,20 +511,106 @@ void VoterSim::randomizeVoters() {
         }
 }
 
-double VoterSim::calculateHappiness(int start, int count, int* winners, double* stddevP, double* giniP) {
+static inline double clampOne(double x) {
+  if (x < -1.0) {
+    return -1.0;
+  }
+  if (x > 1.0) {
+    return 1.0;
+  }
+  return x;
+}
+
+static const int DECILES_BUCKETS = 20;
+
+static void incrementDecile(int* deciles, double value) {
+	int bucket = 0;
+	for (int ilimit = -9; ilimit < 10; ilimit++) {
+		double limit = ilimit * 0.1;
+		if (value < limit) {
+			deciles[bucket]++;
+			return;
+		}
+		limit += 0.1;
+		bucket++;
+		assert(bucket < DECILES_BUCKETS);
+	}
+	deciles[bucket]++;
+}
+
+void VoterSim::calculateHappiness(int start, int count, int* winners, TrialResult* result) {
 	if (seats == 1) {
-		if ((stddevP == NULL) && (giniP == NULL)) {
-			assert(count == numv);
-			return VotingSystem::pickOneHappiness(they, numv, winners[0]);
-		} else {
-			return VotingSystem::pickOneHappiness(they, count, winners[0], stddevP, giniP, start);
-		}
+		double stddev;
+		double gini;
+		double happiness = VotingSystem::pickOneHappiness(they, count, winners[0], &stddev, &gini, start);
+		result->set_mean_happiness(happiness);
+		result->set_gini_index(gini);
+		result->set_voter_happiness_stddev(stddev);
 	} else {
-		if ((stddevP == NULL) && (giniP == NULL)) {
-			assert(count == numv);
-			return multiseatHappiness(they, numv, winners, seats);
-		} else {
-			return multiseatHappiness(they, count, winners, seats, stddevP, giniP, start);
+		double sumHappiness = 0.0;
+		double spreadsum = 0.0;
+		int end;
+		end = start + numv;
+		double* happinesses = new double[end-start];
+		int* happinessDeciles = new int[DECILES_BUCKETS];
+		for (int i = start; i < end; i++) {
+			double hi = 0;
+			for (int s = 0; s < seats; s++) {
+				hi += they[i].getPref(winners[s]);
+			}
+			happinesses[i-start] = hi;
+			sumHappiness += hi;
+			incrementDecile(happinessDeciles, hi);
 		}
+		// calculate gini stuff
+		for (int i = start; i < end; i++) {
+			for ( int j = i + 1; j < end; j++ ) {
+				spreadsum += fabs(happinesses[i] - happinesses[j]);
+			}
+		}
+		// for calculating gini welfare, offset -1..1 happiness to 0..2
+		result->set_gini_index( spreadsum / ( numv * (sumHappiness+numv) ) );
+		double avgHappiness = sumHappiness / numv;
+		result->set_mean_happiness(avgHappiness);
+		double stddev = 0;
+		for (int i = start; i < end; i++) {
+			double d = happinesses[i-start] - avgHappiness;
+			stddev += ( d * d );
+		}
+		stddev = stddev / numv;
+		stddev = sqrt( stddev );
+		result->set_voter_happiness_stddev(stddev);
+
+		for (int i = 0; i < DECILES_BUCKETS; i++) {
+			result->add_happiness_deciles(happinessDeciles[i]);
+		}
+
+		// Now clamp all the happinesses -1..1 and recalculate mean/std/gini
+		sumHappiness = 0.0;
+		for (int i = start; i < end; i++) {
+			double th = clampOne(happinesses[i-start]);
+			happinesses[i-start] = th;
+			sumHappiness += th;
+		}
+		avgHappiness = sumHappiness / numv;
+		spreadsum = 0.0;
+		stddev = 0.0;
+		for (int i = start; i < end; i++) {
+			double d = happinesses[i-start] - avgHappiness;
+			stddev += ( d * d );
+
+			// gini
+			for ( int j = i + 1; j < end; j++ ) {
+				spreadsum += fabs(happinesses[i] - happinesses[j]);
+			}
+		}
+		stddev = stddev / numv;
+		stddev = sqrt( stddev );
+		result->set_clamped_happiness_mean(avgHappiness);
+		result->set_clamped_happiness_stddev(stddev);
+		result->set_clamped_happiness_gini(spreadsum / ( numv * (sumHappiness+numv) ));
+		// TODO: clamped_happiness_{mean,stddev,gini}, happiness_deciles, favorite_rank_elected_mean
+		delete [] happinessDeciles;
+		delete [] happinesses;
 	}
 }

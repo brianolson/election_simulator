@@ -371,7 +371,7 @@ I think that requires sorting the population from poorest to richest.
 
 */
 
-
+#if 0
 static inline double clampOne(double x) {
   if (x < -1.0) {
     return -1.0;
@@ -381,32 +381,36 @@ static inline double clampOne(double x) {
   }
   return x;
 }
+#endif
 static inline double oneMultiseatHappiness(const Voter& it, int* winners, int seats) {
   double hi = 0.0;
   for (int s = 0; s < seats; ++s) {
     hi += it.getPref( winners[s] );
   }
-  return clampOne(hi);
+  return hi;//clampOne(hi);
 }
 
 double multiseatHappiness( const VoterArray& they, int numv, int* winners, int seats, double* stddevP, double* giniP, int start ) {
   double happiness = 0.0;
   double spreadsum = 0.0;
-  int i, end;
+  int end;
   end = start + numv;
-  for ( i = start; i < end; i++ ) {
+  double* rawHapinesses = new double[end-start];
+  for (int i = start; i < end; i++) {
     double hi = oneMultiseatHappiness(they[i], winners, seats);
+	rawHapinesses[i-start] = hi;
     happiness += hi;
+  }
+  for (int i = start; i < end; i++) {
     for ( int j = i + 1; j < end; j++ ) {
-      double hj = oneMultiseatHappiness(they[j], winners, seats);
-      spreadsum += fabs( hi - hj );
+      spreadsum += fabs(rawHapinesses[i] - rawHapinesses[j]);
     }
   }
   // for calculating gini welfare, offset -1..1 happiness to 0..2
   *giniP = ( spreadsum / ( numv * (happiness+numv) ) );
   happiness = happiness / numv;
   double stddev = 0;
-  for ( i = start; i < end; i++ ) {
+  for (int i = start; i < end; i++) {
     double d = oneMultiseatHappiness(they[i], winners, seats) - happiness;
     stddev += ( d * d );
   }
@@ -452,30 +456,6 @@ double VotingSystem::pickOneHappiness( const VoterArray& they, int numv, int win
 	stddev = sqrt( stddev );
 	*stddevP = stddev;
     return happiness;
-}
-double VotingSystem::pickOneHappiness( const VoterArray& they, int numv, int winner, double* stddevP, int start ) {
-    double happiness = 0;
-    int i, end;
-    end = start + numv;
-    for ( i = start; i < end; i++ ) {
-        happiness += they[i].getPref( winner );
-    }
-    happiness = happiness / numv;
-    if ( stddevP != NULL ) {
-	double stddev = 0;
-	for ( i = start; i < end; i++ ) {
-	    double d;
-	    d = they[i].getPref( winner ) - happiness;
-	    stddev += ( d * d );
-	}
-	stddev = stddev / numv;
-	stddev = sqrt( stddev );
-	*stddevP = stddev;
-    }
-    return happiness;
-}
-double VotingSystem::pickOneHappiness( const VoterArray& they, int numv, int winner, double* stddevP ) {
-    return pickOneHappiness( they, numv, winner, stddevP, 0 );
 }
 double VotingSystem::pickOneHappiness( const VoterArray& they, int numv, int winner ) {
     double happiness = 0;

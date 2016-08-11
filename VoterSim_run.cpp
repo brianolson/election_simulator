@@ -252,47 +252,51 @@ void VoterSim::oneTrial() {
 	// Measure results for systems.
 	for ( int osys = 0; osys < nsys; osys++ ) {
 		//fprintf(stderr, "measure sys %d\n", osys);
-		if ( isnan(happiness[osys][currentTrialNumber]) ) {
-			double td, tg, th;
-			th = calculateHappiness( &(winners[osys*numc/*+0*/]), &td, &tg );
-			int sys = osys;
-			happisum[sys] += happiness[sys][currentTrialNumber] = th;
-			happistdsum[sys] += td;
-			ginisum[sys] += tg;
+		if (!isnan(happiness[osys][currentTrialNumber])) {
+			// already assigned a measurement to this below due to duplicate winners, and logged it there too
+			continue;
+		}
 
-			logEntry.set_system_index(osys);
-			logEntry.set_mean_happiness(th);
-			logEntry.set_voter_happiness_stddev(td);
-			logEntry.set_gini_index(tg);
-			bool ok = rlog->logResult(logEntry);
-			if (!ok) { goGently = true; }
-			for ( sys = osys+1; sys < nsys; sys++ ) {
-				// Each later system that has the same result has the same resulting happiness.
-				// Apply the same happiness:std:gini to them.
-				bool samewinners = true;
-				for (int seat = 0; seat < seats; ++seat) {
-					if (winners[sys*numc + seat] != winners[osys*numc + seat]) {
-						samewinners = false;
-						break;
-					}
-				}
-				if ( samewinners ) {
-					happisum[sys] += happiness[sys][currentTrialNumber] = th;
-					happistdsum[sys] += td;
-					ginisum[sys] += tg;
+		//double td, tg, th;
+		calculateHappiness( &(winners[osys*numc/*+0*/]), &logEntry );
+		int sys = osys;
+		happisum[sys] += happiness[sys][currentTrialNumber] = logEntry.mean_happiness();
+		happistdsum[sys] += logEntry.voter_happiness_stddev();
+		ginisum[sys] += logEntry.gini_index();
 
-					logEntry.set_system_index(sys);
-					ok = rlog->logResult(logEntry);
-					if (!ok) { goGently = true; }
+		logEntry.set_system_index(osys);
+		//logEntry.set_mean_happiness(th);
+		//logEntry.set_voter_happiness_stddev(td);
+		//logEntry.set_gini_index(tg);
+		bool ok = rlog->logResult(logEntry);
+		if (!ok) { goGently = true; }
+		for ( sys = osys+1; sys < nsys; sys++ ) {
+			// Each later system that has the same result has the same resulting happiness.
+			// Apply the same happiness:std:gini to them.
+			bool samewinners = true;
+			for (int seat = 0; seat < seats; ++seat) {
+				if (winners[sys*numc + seat] != winners[osys*numc + seat]) {
+					samewinners = false;
+					break;
 				}
 			}
-		} else {
-			fprintf(stderr, "non-nan result for %d\n", osys);
+			if ( samewinners ) {
+				happisum[sys] += happiness[sys][currentTrialNumber] = logEntry.mean_happiness();
+				happistdsum[sys] += logEntry.voter_happiness_stddev();
+				ginisum[sys] += logEntry.gini_index();
+
+				logEntry.set_system_index(sys);
+				ok = rlog->logResult(logEntry);
+				if (!ok) { goGently = true; }
+			}
 		}
 	}
 
 	// measure results per-strategy
 	if ( strategies ) {
+	fprintf(stderr, "TODO: implement per-strategy result logging\n");
+	assert(false);
+#if 0
 		double td, tg;
 		for ( int sys = 0; sys < nsys; sys++ ) {
 			int stpos = 0;
@@ -303,6 +307,7 @@ void VoterSim::oneTrial() {
 				strategies[st]->ginisum[sys] += tg;
 			}
 		}
+#endif
 	}
 
 	postTrialOutput();

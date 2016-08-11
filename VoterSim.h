@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "Voter.h"
 #include "ResultFile.h"
+#include "trial.pb.h"
 
 class Result;
 class NameBlock;
@@ -37,10 +38,10 @@ public:
 
 	// start = offset into they
 	// count = number of they to process from they[start]
-	double calculateHappiness(int start, int count, int* winners, double* stddevP, double* giniP);
-	inline double calculateHappiness(
-			int* winners, double* stddevP, double* giniP) {
-		return calculateHappiness(0, numv, winners, stddevP, giniP);
+	void calculateHappiness(int start, int count, int* winners, TrialResult* result);
+	inline void calculateHappiness(
+			int* winners, TrialResult* result) {
+		calculateHappiness(0, numv, winners, result);
 	}
 
     double** happiness;	// double[nsys][trials]

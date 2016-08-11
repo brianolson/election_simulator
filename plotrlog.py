@@ -217,8 +217,14 @@ def svgSets(out, sets, xlabel=None, ylabel=None):
 		avhighs[sn] = sumy / county
 	setnames.sort(lambda a,b: cmp(avhighs[a], avhighs[b]), reverse=True)
 	#print "plotting sets: " + ", ".join(map(str, setnames))
-	xmult = (xright - xleft) / (maxx - minx)
-	ymult = (ytop - ybottom) / (maxy - miny)
+        if maxx - minx == 0:
+                xmult = 0
+        else:
+                xmult = (xright - xleft) / (maxx - minx)
+        if maxy - miny == 0:
+                ymult = 0
+        else:
+                ymult = (ytop - ybottom) / (maxy - miny)
 	gx = None
 	gy = None
 	out.write("""<g font-size="%d">\n""" % text_height)

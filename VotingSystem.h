@@ -30,8 +30,6 @@ public:
     /*! @function pickOneHappiness
 	 * calculate average happiness of the voters for the winner */
     static double pickOneHappiness( const VoterArray& they, int numv, int winner, double* stddevP, double* giniP, int start );
-    static double pickOneHappiness( const VoterArray& they, int numv, int winner, double* stddevP, int start );
-    static double pickOneHappiness( const VoterArray& they, int numv, int winner, double* stddevP );
     static double pickOneHappiness( const VoterArray& they, int numv, int winner );
 
     virtual ~VotingSystem() = 0;

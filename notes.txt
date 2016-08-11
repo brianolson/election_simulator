@@ -80,7 +80,7 @@ vpb -v 10000 -c 10 -e 0.01 --ngauss --dimensions 2 --rlog /tmp/rlog.pb -n 100 -M
 -o /tmp/sg.png
 
 
-vpb --vsteps 10000 --CSsteps "10,4 8,3" --esteps 0.01 --ngauss --dimensions 2 --rlog /tmp/rlog.pb -n 100 -M debug=/tmp/irnrpdebug -e IRNRP -e STV
+time ./vpb --vsteps 2000 --CSsteps "10,4 9,4 8,3 9,3" --esteps 0.01 --ngauss --dimensions 2 --rlog /tmp/rlog.pb -n 100 -M debug=/tmp/irnrpdebug -e IRNRP -e STV
 
 ./processprl /tmp/rlog.pb
 

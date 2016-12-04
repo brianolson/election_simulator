@@ -109,3 +109,7 @@ http://www.mail-archive.com/election-methods@lists.electorama.com/msg04001.html
 ./processprl Alog.pb.gz
 
 ./plotrlog.py --dosvg rlog.pb.gz.csv
+
+
+http://www.libpng.org/pub/png/libpng.html
+

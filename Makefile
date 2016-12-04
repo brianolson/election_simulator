@@ -40,6 +40,8 @@ UNAME := $(shell uname)
 
 PROTOC := protoc
 
+LINKPNG := -lpng16
+
 include ${UNAME}.make
 -include local.make
 
@@ -66,11 +68,11 @@ RMCPBOBJS := PlaneSimDraw.o MessageLiteWriter.o ResultAccumulation.o
 RMCPBOBJS += GaussianRandom.o trial.pb.o render_mcpb.o file_template.o
 
 render_mcpb:	${RMCPBOBJS}
-	${CXX} -o render_mcpb ${RMCPBOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf -lpng12 -lz
+	${CXX} -o render_mcpb ${RMCPBOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf ${LINKPNG} -lz
 
 
 sgpb:	CXXFLAGS+=-DHAVE_PROTOBUF
-sgpb:	LDFLAGS+=-lprotobuf -lpng12 -lz
+sgpb:	LDFLAGS+=-lprotobuf ${LINKPNG} -lz
 sgpb:	${EMOBJS} ${SGSRCS} trial.pb.o MessageLiteWriter.o file_template.o
 	${CXX} ${CXXFLAGS} ${EMOBJS} trial.pb.o MessageLiteWriter.o file_template.o ${SGSRCS} ${LDFLAGS} -o sgpb 
 
@@ -79,7 +81,7 @@ nnsv:   ${NNSVOBJS}
 frob:	$(FROBOB)
 	$(CXX) $(CXXFLAGS) $(FROBOB) $(LDFLAGS) -o $@
 
-spacegraph: LDFLAGS+=-lprotobuf -lpng12 -lz
+spacegraph: LDFLAGS+=-lprotobuf ${LINKPNG} -lz
 spacegraph:	${SGOBJS}
 	${CXX} ${CXXFLAGS} ${SGOBJS} ${LDFLAGS} -o spacegraph
 #spacegraph: CC=${CXX}
@@ -158,6 +160,8 @@ processProtoResultLog.o:	trial.pb.h
 render_mcpb.o:	trial.pb.h
 spacegraph.o:	trial.pb.h
 spacegraph_util.o:	trial.pb.h
+VoterSim.o:	trial.pb.h
+VoterSim_run.o:	trial.pb.h
 # DO NOT DELETE
 
 AcceptanceVotePickOne.o: Voter.h AcceptanceVotePickOne.h VotingSystem.h

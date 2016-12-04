@@ -376,8 +376,7 @@ static void writeImageDataToPNGFile( const char* outname, unsigned char** rows, 
     png_init_io(png_ptr, fout);
 	
     /* set the zlib compression level */
-    png_set_compression_level(png_ptr,
-							  Z_BEST_COMPRESSION);
+    png_set_compression_level(png_ptr, 9);
 	
     png_set_IHDR(png_ptr, info_ptr, width, height,
 				 /*bit_depth*/8,

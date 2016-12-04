@@ -1,1 +1,1 @@
-LDFLAGS += -lm -lpthread -ldb
+LDFLAGS += -lm -lpthread

@@ -49,7 +49,8 @@ def indexPageTop(xname, setsname, combo_names, combo_values, tpl=index_path_temp
 	return out
 
 def imageCell(svgpath):
-	return '<td><a href="' + urllib.quote(svgpath) + '"><img src="' + urllib.quote(svgpath.replace('svg','png')) + '"></a></td>'
+#	return '<td><a href="' + urllib.quote(svgpath) + '"><img src="' + urllib.quote(svgpath.replace('svg','png')) + '"></a></td>'
+	return '<td><a href="' + urllib.quote(svgpath) + '"><img src="' + urllib.quote(svgpath) + '"></a></td>'
 
 def openWithMakedirs(path, mode):
 	(dir, fname) = os.path.split(path)
@@ -179,7 +180,7 @@ def nmin(*a):
 
 svg_prologue = """<?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000">
 """
 
 svg_colors = [

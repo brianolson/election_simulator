@@ -1,6 +1,8 @@
 #ifndef ARG_HANDLER_H
 #define ARG_HANDLER_H
 
+#include <stdio.h>
+
 /*
  Arg handling macros/functions.
  The following macros and embedded functions make for a nice tight declaration

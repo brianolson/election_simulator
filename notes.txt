@@ -113,3 +113,4 @@ http://www.mail-archive.com/election-methods@lists.electorama.com/msg04001.html
 
 http://www.libpng.org/pub/png/libpng.html
 
+TODO: top-3 Condorcet, how much info do we lose error gain when limiting ballot to 1-2-3 (and all other candidates assumed to tie for 4th)?

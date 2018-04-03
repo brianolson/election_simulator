@@ -45,7 +45,25 @@ def runall():
             print " ".join(cmd)
             sys.exit(1)
 
+def renderall():
+    for name, candarg in candsets:
+        cmd = ['./render_mcpb', '--px=100', '--py=100', '--in={}.pbz'.format(name), '--config={}_config.pb'.format(name), '--out={}_%m.png'.format(name)]
+        retcode = subprocess.call(cmd)
+        if retcode != 0:
+            print "failure!"
+            print " ".join(cmd)
+            sys.exit(1)
+    
 if __name__ == '__main__':
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--render', action='store_true', default=False)
+    args = ap.parse_args()
+
+    if args.render:
+        renderall()
+        sys.exit(0)
+
     while not os.path.exists('stop'):
         runall()
     os.unlink('stop')

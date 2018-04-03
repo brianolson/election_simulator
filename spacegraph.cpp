@@ -7,6 +7,7 @@
 #include "Condorcet.h"
 #include "IRNRP.h"
 #include "STV.h"
+#include "STAR.h"
 
 #if HAVE_PROTOBUF
 #include "google/protobuf/io/coded_stream.h"
@@ -39,6 +40,7 @@ using google::protobuf::io::ZeroCopyOutputStream;
 // This doesn't do anything but make sure these methods get linked in.
 void* linker_tricking() {
 	delete new STV();
+	delete new STARVote();
 	return new IRNRP();
 }
 

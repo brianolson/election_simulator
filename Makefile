@@ -14,7 +14,7 @@ EMOBJS += IRNR.o RandomElection.o STV.o IRNRP.o MaybeDebugLog.o
 EMOBJS += ApprovalNoInfo.o ApprovalWithPoll.o
 EMOBJS += VoteForAndAgainst.o Bucklin.o
 EMOBJS += IteratedNormalizedRatings.o
-EMOBJS += CIVSP.o
+EMOBJS += CIVSP.o STAR.o
 
 VPBOBJS := ResultFile.o VoterArray.o VoterSim.o VoterSim_run.o WorkQueue.o voter.o gauss.o
 VPBOBJS += ResultLog.o NopResultLog.o ProtoResultLog.o trial.pb.o NameBlock.o GaussianRandom.o

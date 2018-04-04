@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 #include "GaussianRandom.h"
@@ -16,6 +17,11 @@ void DoubleRandom::fill(double* dest, int count) {
 	for (int i = 0; i < count; ++i) {
 		dest[i] = get();
 	}
+}
+
+ClibDoubleRandom::ClibDoubleRandom() {
+	// TODO: maybe get a few bytes from /dev/urandom instead of the time as a seed?
+	srandom(time(NULL));
 }
 
 double ClibDoubleRandom::get() {

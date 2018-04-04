@@ -15,6 +15,7 @@ class DoubleRandom {
 
 class ClibDoubleRandom : public DoubleRandom {
  public:
+  ClibDoubleRandom();
   virtual double get();
 };
 

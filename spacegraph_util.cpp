@@ -131,7 +131,7 @@ int readConfigFile(const char** configOutP, PlaneSim& sim, int* nvotersP, int* n
 	if (var == default) { \
 		var = config.config_name(); \
 	} else { \
-		fprintf(stderr, "command line "name" %f incompatible with value %f from config file %s\n", var, config.config_name(), configOut); exit(1); return 1; \
+		fprintf(stderr, "command line " name " %f incompatible with value %f from config file %s\n", var, config.config_name(), configOut); exit(1); return 1; \
 	} \
 }
 			CHECK_CONFIG_VALUE(voter_sigma, sim.voterSigma, 1.0, "voter sigma");
@@ -139,6 +139,7 @@ int readConfigFile(const char** configOutP, PlaneSim& sim, int* nvotersP, int* n
 			CHECK_CONFIG_VALUE(maxx, sim.maxx, 1.0, "maxx");
 			CHECK_CONFIG_VALUE(miny, sim.miny, -1.0, "miny");
 			CHECK_CONFIG_VALUE(maxy, sim.maxy, 1.0, "maxy");
+#undef CHECK_CONFIG_VALUE
 			if (systems == NULL) {
 				numVotingSystems = config.system_names_size();
 				systems = new VotingSystem*[numVotingSystems];

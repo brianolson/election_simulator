@@ -1,16 +1,20 @@
-Mon Dec 18 13:46:58 PST 2006
-
 On Mac (Darwin) or Linux, the following should just work:
 
-make spacegraph
+make
 
-It's called spacegraph because it works in a 2D space of political opinion and graphs the results of elections therein.
+The coolest tool is the `spacegraph` family of tools. It's called spacegraph because it works in a 2D space of political opinion and graphs the results of elections therein.
 
-The `runsg.pl` perl script is used for running a set of image generating tests on various candidate positions and election methods. One handy thing to do is to copy this and the `spacegraph` executable to a new directory, edit the script and run that configuration there.
+A simple way to run things is:
+python runsgpb.py
 
-There are other simulation utilities which can be built from these sources but I haven't worked on them in a while, they might not work and they generally aren't as simple and easy to use as spacegraph. The original simulator finds social utility of election methods for various numbers of choices, numbers of voters and conditions of error. If you're interested in running this it needs the BSD licensed BerkleyDB 4.x from Sleepycat software. Contact me at http://bolson.org/email.html for details.
+THIS WILL RUN FOREVER, or until killed or `touch stop` in the simulator directory. It accumulates simulation data into files which can be turned into images by:
+python runsgpb.py --render
 
------
+---
+
+The other major tool here is `vpb` which runs election simulations and accumulates results into data files which can be processed into charts and graphs of how elections do with different numbers of candidates, numbers of voters, or amount of error. TODO: document vpb better
+
+---
 
 Brian's voting stuff in general is at
 http://bolson.org/voting/

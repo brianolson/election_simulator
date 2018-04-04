@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import os
+import random
 import subprocess
 import sys
 
@@ -23,18 +24,22 @@ candsets = [
 # ./sgpb --candidates=-0.20,0.14,-0.68,0.08,-0.90,0.24,0.82,0.40 -minx -1 -miny -1 -maxx 1 -maxy 1 -Z 1.0 -v 1000 --threads=3 --method IRNR,IRV,Condorcet,Bucklin,Borda,OneVote,Random,Approval --mc-tests 10000 --mc-out=4c.pbz --config-file=4c_config.pb
 
 binary = "./sgpb"
-threads = 4
+#threads = 4
 runcount = 5000
 methods = "IRNR,IRV,Condorcet,Bucklin,Borda,OneVote,Random,Approval,Max,STAR"
+px = 200
+py = 200
 
-
-def runall():
-    basecmd = nicepathlist + [binary,
-            "--minx=-1.0", "--miny=-1.0", "--maxx=1.0", "--maxy=1.0",
-            "-Z=1.0", "-v=1000",
-            "--method=%s" % methods,
-            "--threads=%d" % threads,
-            "--mc-tests=%d" % runcount]
+def runall(threads):
+    basecmd = nicepathlist + [
+        binary,
+        "--minx=-1.0", "--miny=-1.0", "--maxx=1.0", "--maxy=1.0",
+        "-px", str(px), "-py", str(py),
+        "-Z=1.0", "-v=1000",
+        "--method=%s" % methods,
+        "--threads=%d" % threads,
+        "--mc-tests=%d" % runcount]
+    random.shuffle(candsets)
     for name, candarg in candsets:
         cmd = basecmd + [candarg,
             "--mc-out=%s.pbz" % name,
@@ -44,10 +49,12 @@ def runall():
             print "failure!"
             print " ".join(cmd)
             sys.exit(1)
+        if os.path.exists('stop'):
+            return
 
 def renderall():
     for name, candarg in candsets:
-        cmd = ['./render_mcpb', '--px=100', '--py=100', '--in={}.pbz'.format(name), '--config={}_config.pb'.format(name), '--out={}_%m.png'.format(name)]
+        cmd = ['./render_mcpb', '--px={}'.format(px), '--py={}'.format(py), '--in={}.pbz'.format(name), '--config={}_config.pb'.format(name), '--out={}_%m.png'.format(name)]
         retcode = subprocess.call(cmd)
         if retcode != 0:
             print "failure!"
@@ -58,6 +65,7 @@ if __name__ == '__main__':
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument('--render', action='store_true', default=False)
+    ap.add_argument('--threads', default=1, type=int)
     args = ap.parse_args()
 
     if args.render:
@@ -65,5 +73,5 @@ if __name__ == '__main__':
         sys.exit(0)
 
     while not os.path.exists('stop'):
-        runall()
+        runall(args.threads)
     os.unlink('stop')

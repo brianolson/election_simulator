@@ -1,0 +1,11 @@
+*~
+*.o
+vpb
+speedtest
+spacegraph
+sgpb
+render_mcpb
+processprl
+local.make
+trial.pb.cc
+trial.pb.h

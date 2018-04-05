@@ -57,7 +57,7 @@ voter_main_sm.o:	voter_main.cpp
 	${CXX} ${CXXFLAGS} voter_main.cpp -c -o voter_main_sm.o
 
 vpb:	${VPBOBJS} voter_main.cpp
-	${CXX} -o vpb ${VPBOBJS} ${CXXFLAGS} ${LDFLAGS} -lprotobuf -DHAVE_PROTOBUF voter_main.cpp
+	${CXX} -o vpb ${VPBOBJS} voter_main.cpp ${CXXFLAGS} ${LDFLAGS} -lprotobuf -lz -DHAVE_PROTOBUF
 
 PPLOBJS := processProtoResultLog.o ProtoResultLog.o ResultFile.o ResultLog.o NopResultLog.o trial.pb.o NameBlock.o
 

@@ -9,6 +9,8 @@
 #include "VotingSystem.h"
 #include "WorkQueue.h"
 
+using std::isnan;
+
 extern volatile int goGently;
 
 const int retryLimit = 5;

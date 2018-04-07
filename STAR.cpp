@@ -1,10 +1,17 @@
 #include "Voter.h"
 #include "STAR.h"
 
+#include <math.h>
 #include <memory>
 #include <utility>
 
 using std::unique_ptr;
+
+inline double quantize(int quantization, double rating) {
+	// e.g. for quantization=5 map [0..1] to [0,1,2,3,4,5]
+	if (quantization <= 0) return rating;
+	return floor(rating * (quantization + 1.0) * 0.999999999999999);
+}
 
 // https://www.equal.vote/starvoting
 void STARVote::runElection( int* winnerR, const VoterArray& they ) const {
@@ -15,7 +22,7 @@ void STARVote::runElection( int* winnerR, const VoterArray& they ) const {
 	}
 	for (int v = 0; v < they.numv; v++) {
 		for (int c = 0; c < they.numc; c++) {
-			sums[c] += they[v].getPref(c);
+			sums[c] += quantize(quantization, they[v].getPref(c));
 		}
 	}
 
@@ -48,8 +55,8 @@ void STARVote::runElection( int* winnerR, const VoterArray& they ) const {
 	int firstc = 0;
 	int secondc = 0;
 	for (int v = 0; v < they.numv; v++) {
-		double fv = they[v].getPref(firsti);
-		double sv = they[v].getPref(secondi);
+		double fv = quantize(quantization, they[v].getPref(firsti));
+		double sv = quantize(quantization, they[v].getPref(secondi));
 		if (fv > sv) {
 			firstc++;
 		} else if (sv > fv) {

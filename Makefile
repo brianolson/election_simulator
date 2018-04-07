@@ -3,9 +3,9 @@
 #GO2=-g
 GO2=-O2
 #CXXFLAGS=-Wall -g
-CXXFLAGS=-Wall ${GO2} -m64
+CXXFLAGS=-Wall ${GO2} -m64 -std=c++11
 #CXXFLAGS+=-pg -g
-CFLAGS=-Wall ${GO2} -m64
+CFLAGS=-Wall ${GO2} -m64 -std=c99
 #LDFLAGS+=-pg
 #LDFLAGS+=-L/usr/local/lib64
 EMOBJS := AcceptanceVotePickOne.o FuzzyVotePickOne.o InstantRunoffVotePickOne.o

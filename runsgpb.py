@@ -26,10 +26,49 @@ candsets = [
 binary = "./sgpb"
 #threads = 4
 runcount = 5000
-methods = "IRNR,IRV,Condorcet,Bucklin,Borda,OneVote,Random,Approval,Max,STAR"
-px = 200
-py = 200
+methods = "IRNR,IRV,Condorcet,Bucklin,Borda,OneVote,Approval,Max,STAR"
+method_longname_subs = {
+    "IRNR":"IRNR",
+    "IRV":"Instant Runoff Vote",
+    "OneVote":"One Vote",
+    "Approval":"Approval Naive",
+    "Max": "Max Happiness",
+}
+method_longname = {x:x for x in methods.split(',')}
+for k,v in method_longname_subs.items():
+    method_longname[k] = v
+px = 500
+py = 500
+electionsPerPixel = 4
 
+def runRasterToPNG(threads):
+    for name, candarg in candsets:
+        for method in methods.split(','):
+            outname = '{}_{}.png'.format(name, method)
+            if os.path.exists(outname):
+                continue
+            cmd = nicepathlist + [
+                binary,
+                "--minx=-1.0", "--miny=-1.0", "--maxx=1.0", "--maxy=1.0",
+                "-px", str(px), "-py", str(py),
+                "-Z=0.5", "-v=1000",
+                "--method={}".format(method),
+                "--threads={}".format(threads),
+                "-n", str(electionsPerPixel),
+                candarg,
+                "-o", outname
+            ]
+            sys.stderr.write(' '.join(cmd) + '\n')
+            retcode = subprocess.call(cmd)
+            if retcode != 0:
+                print("failure!")
+                print(" ".join(cmd))
+                sys.exit(1)
+            if os.path.exists('stop'):
+                return
+
+# runs uniform random elections in 2d, accumulating data to pb files, which can later be rendered to PNG
+# unless you run a whole lot it won't have perfect coverage and there will be black spots
 def runall(threads):
     basecmd = nicepathlist + [
         binary,
@@ -46,8 +85,8 @@ def runall(threads):
             "--config-file=%s_config.pb" % name]
         retcode = subprocess.call(cmd)
         if retcode != 0:
-            print "failure!"
-            print " ".join(cmd)
+            print("failure!")
+            print(" ".join(cmd))
             sys.exit(1)
         if os.path.exists('stop'):
             return
@@ -57,21 +96,41 @@ def renderall():
         cmd = ['./render_mcpb', '--px={}'.format(px), '--py={}'.format(py), '--in={}.pbz'.format(name), '--config={}_config.pb'.format(name), '--out={}_%m.png'.format(name)]
         retcode = subprocess.call(cmd)
         if retcode != 0:
-            print "failure!"
-            print " ".join(cmd)
+            print("failure!")
+            print(" ".join(cmd))
             sys.exit(1)
-    
+
+def writehtml():
+    import jinja2
+    with open('results_template.html', 'rt') as fin:
+        tpl = jinja2.Template(fin.read())
+    with open('index.html', 'wt') as fout:
+        fout.write(tpl.render(methods=methods.split(','), configs=[x[0] for x in candsets], candsets=candsets, method_longname=method_longname))
+    pass
+
+
 if __name__ == '__main__':
     import argparse
     ap = argparse.ArgumentParser()
-    ap.add_argument('--render', action='store_true', default=False)
+    ap.add_argument('--html', action='store_true', default=False, help='write index.html file to display generated images')
     ap.add_argument('--threads', default=1, type=int)
+    ap.add_argument('--spacerandom', default=False, action='store_true', help='instead of a raster cover of pixel space, run simulator at random points and accumulate to pb files for later render')
+    ap.add_argument('--render', action='store_true', default=False, help='render the results of prior --spacerandom data')
     args = ap.parse_args()
 
     if args.render:
         renderall()
         sys.exit(0)
 
+    if args.html:
+        writehtml()
+        sys.exit(0)
+
     while not os.path.exists('stop'):
-        runall(args.threads)
-    os.unlink('stop')
+        if args.spacerandom:
+            runall(args.threads)
+        else:
+            runRasterToPNG(args.threads)
+            break
+    if os.path.exists('stop'):
+        os.unlink('stop')

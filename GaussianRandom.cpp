@@ -20,8 +20,20 @@ void DoubleRandom::fill(double* dest, int count) {
 }
 
 ClibDoubleRandom::ClibDoubleRandom() {
+#if 1
+	int fd = open("/dev/urandom", O_RDONLY);
+	if (fd < 0) {
+		srandom(time(NULL));
+	} else {
+		unsigned int seed;
+		read(fd, &seed, sizeof(seed));
+		srandom(seed);
+		close(fd);
+	}
+#else
 	// TODO: maybe get a few bytes from /dev/urandom instead of the time as a seed?
 	srandom(time(NULL));
+#endif
 }
 
 double ClibDoubleRandom::get() {

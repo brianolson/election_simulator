@@ -147,7 +147,6 @@ void runRandomTests(const char* pblog_name, int randomTests, int nthreads, Plane
   delete gz_output;
   delete raw_output;
   close(fd);
-  exit(0);
 #else
   perror("not compiled with protobuf support");
   exit(1);
@@ -305,9 +304,14 @@ int main( int argc, const char** argv ) {
   if ( nthreads <= 1 ) {
     sim.gRandom = new GaussianRandom(sim.rootRandom);
   } else {
+#if 1
+    sim.rootRandom = new ClibDoubleRandom();
+    sim.gRandom = new GaussianRandom(sim.rootRandom);
+#else
     sim.rootRandom = new LockingDoubleRandomWrapper(sim.rootRandom);
     sim.gRandom = new GaussianRandom(
         new BufferDoubleRandomWrapper(sim.rootRandom, 512, true));
+#endif
     sims = new PlaneSim[nthreads-1];
     threads = new PlaneSimThread[nthreads];
     int i;
@@ -359,6 +363,7 @@ int main( int argc, const char** argv ) {
 #endif
   if ( randomTests > 0 ) {
     runRandomTests(pblog_name, randomTests, nthreads, sim, threads);
+    return 0;
   } else if ( nthreads <= 1 ) {
     sim.runXYSource( new XYSource(sim.px, sim.py) );
   } else {

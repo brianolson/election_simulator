@@ -66,8 +66,13 @@ void PlaneSim::coBuild( const PlaneSim& it ) {
 	
 	candroot = it.candroot;
 
+#if 1
+    rootRandom = new ClibDoubleRandom();
+    gRandom = new GaussianRandom(rootRandom);
+#else
 	rootRandom = new BufferDoubleRandomWrapper(it.rootRandom, 512, false);
 	gRandom = new GaussianRandom(rootRandom);
+#endif
 }
 
 void PlaneSim::setVotingSystems(VotingSystem** systems_, int numSystems) {
@@ -124,7 +129,7 @@ void PlaneSim::runPixel(int x, int y, double dx, double dy, int* winners) {
 }
 
 void PlaneSim::runXYSource(XYSource* source) {
-	static const int xySize = 200;
+	static const int xySize = 400;
 	int xy[xySize*2];
 	int xyCount;
 	int* winners = new int[they.numc];

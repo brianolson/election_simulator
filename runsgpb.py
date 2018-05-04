@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import os
 import random
@@ -37,26 +37,27 @@ method_longname_subs = {
 method_longname = {x:x for x in methods.split(',')}
 for k,v in method_longname_subs.items():
     method_longname[k] = v
-px = 500
-py = 500
+px = 400
+py = 400
 electionsPerPixel = 4
 
-def runRasterToPNG(threads):
+def runRasterToPNG(threads, outdir='.'):
     for name, candarg in candsets:
         for method in methods.split(','):
             outname = '{}_{}.png'.format(name, method)
-            if os.path.exists(outname):
+            outpath = os.path.join(outdir, outname)
+            if os.path.exists(outpath):
                 continue
             cmd = nicepathlist + [
                 binary,
                 "--minx=-1.0", "--miny=-1.0", "--maxx=1.0", "--maxy=1.0",
                 "-px", str(px), "-py", str(py),
-                "-Z=0.5", "-v=1000",
+                "-Z=0.5", "-v=10000",
                 "--method={}".format(method),
                 "--threads={}".format(threads),
                 "-n", str(electionsPerPixel),
                 candarg,
-                "-o", outname
+                "-o", outpath
             ]
             sys.stderr.write(' '.join(cmd) + '\n')
             retcode = subprocess.call(cmd)
@@ -100,11 +101,11 @@ def renderall():
             print(" ".join(cmd))
             sys.exit(1)
 
-def writehtml():
+def writehtml(outdir):
     import jinja2
     with open('results_template.html', 'rt') as fin:
         tpl = jinja2.Template(fin.read())
-    with open('index.html', 'wt') as fout:
+    with open(os.path.join(outdir,'index.html'), 'wt') as fout:
         fout.write(tpl.render(methods=methods.split(','), configs=[x[0] for x in candsets], candsets=candsets, method_longname=method_longname))
     pass
 
@@ -116,21 +117,29 @@ if __name__ == '__main__':
     ap.add_argument('--threads', default=1, type=int)
     ap.add_argument('--spacerandom', default=False, action='store_true', help='instead of a raster cover of pixel space, run simulator at random points and accumulate to pb files for later render')
     ap.add_argument('--render', action='store_true', default=False, help='render the results of prior --spacerandom data')
+    ap.add_argument('-x', '--px', type=int, default=px, help='x pixels, default={}'.format(px))
+    ap.add_argument('-y', '--py', type=int, default=py, help='y pixels, default={}'.format(py))
+    ap.add_argument('-d', '--outdir', default='.', help='dir to write files')
     args = ap.parse_args()
 
     if args.render:
         renderall()
         sys.exit(0)
 
+    if not os.path.exists(args.outdir):
+        os.makedirs(args.outdir)
     if args.html:
-        writehtml()
+        writehtml(args.outdir)
         sys.exit(0)
+
+    px = args.px
+    py = args.py
 
     while not os.path.exists('stop'):
         if args.spacerandom:
             runall(args.threads)
         else:
-            runRasterToPNG(args.threads)
+            runRasterToPNG(args.threads, args.outdir)
             break
     if os.path.exists('stop'):
         os.unlink('stop')

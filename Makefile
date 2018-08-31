@@ -1,7 +1,7 @@
 #GO2=-O2 -DNDEBUG
 #GO2=-O2 -DNDEBUG -g
-#GO2=-g
-GO2=-O2
+GO2=-g
+#GO2=-O2
 #CXXFLAGS=-Wall -g
 CXXFLAGS=-Wall ${GO2} -m64 -std=c++11
 #CXXFLAGS+=-pg -g
@@ -35,6 +35,14 @@ SGSRCS += spacegraph_util.cpp
 
 STOBJS := VoterArray.o WorkQueue.o voter.o speed_test.o gauss.o
 STOBJS += ${EMOBJS} NameBlock.o GaussianRandom.o
+
+PROBJS := ${EMOBJS}
+PROBJS += VoterArray.o GaussianRandom.o
+PROBJS += ResultFile.o voter.o gauss.o
+PROBJS += WorkQueue.o NameBlock.o
+PROBJS += PlaneSim.o PlaneSimDraw.o XYSource.o ResultAccumulation.o
+PROBJS += proportional.o
+
 
 UNAME := $(shell uname)
 
@@ -85,6 +93,9 @@ spacegraph: LDFLAGS+=-lprotobuf ${LINKPNG} -lz
 spacegraph:	${SGOBJS}
 	${CXX} ${CXXFLAGS} ${SGOBJS} ${LDFLAGS} -o spacegraph
 #spacegraph: CC=${CXX}
+
+proportional: ${PROBJS}
+	${CXX} ${CXXFLAGS} ${PROBJS} ${LDFLAGS} ${LINKPNG} -o $@
 
 speedtest:	${STOBJS}
 	${CXX} ${CXXFLAGS} ${STOBJS} ${LDFLAGS} -o speedtest

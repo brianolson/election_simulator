@@ -1,3 +1,3 @@
-CC = $(CXX)
+#CC = $(CXX)
 CXXFLAGS+=-DHAVE_OPT_RESET=1
-LDFLAGS+=-L/usr/X11/lib
+#LDFLAGS+=-L/usr/X11/lib

@@ -2,6 +2,8 @@
 #define ARG_HANDLER_H
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /*
  Arg handling macros/functions.

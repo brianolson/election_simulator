@@ -115,7 +115,7 @@ void foo(ProportionalConfig* config) {
         new IRNRP(),
         NULL
   };
-  const char* initArgs[] = {NULL};
+  const char* initArgs[] = {"debug=/tmp/pdebug",NULL};
   int* winners = new int[numc];
   for (int i = 0; algs[i] != NULL; i++) {
     VotingSystem* vs = algs[i];
@@ -125,6 +125,11 @@ void foo(ProportionalConfig* config) {
       fprintf(stderr, "error running %s\n", vs->name);
       exit(1);
     }
+    fprintf(stderr, "winners (%d seats):", config->seats);
+    for (int c = 0; c < numc; c++) {
+      fprintf(stderr, " %d", winners[c]);
+    }
+    fprintf(stderr, "\n");
   }
 };
 

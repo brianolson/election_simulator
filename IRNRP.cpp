@@ -28,7 +28,7 @@ void IRNRP::init( const char** envp ) {
   or some specific integer fraction thereof.
 */
 static const double overtallyEpsilon = 1.001;
-
+static const int MAX_ROUNDS_WITHOUT_CHANGE = 20;
 
 void IRNRP::runElection( int* winnerR, const VoterArray& they ) const {
   runMultiSeatElection(winnerR, they, seatsDefault);
@@ -54,7 +54,7 @@ static inline bool absNorm(
     if (active[c]) {
       double p = vote.getPref(c);
       assert(p >= 0.0);
-      tally[c] += p * cweight[c] * vsum;
+      tally[c] += (p * cweight[c] * vsum);
       assert(!isnan(tally[c]));
     }
   }
@@ -157,6 +157,7 @@ bool IRNRP::runMultiSeatElection( int* winnerR, const VoterArray& they, int seat
   bool* active = new bool[numc];
   bool* winning = new bool[numc];
   int roundcounter = 1;
+  int roundsSinceChange = 0;
   int numactive = numc;
 	
   for (int c = 0; c < numc; ++c) {
@@ -178,7 +179,7 @@ bool IRNRP::runMultiSeatElection( int* winnerR, const VoterArray& they, int seat
 		
     // count normalized votes for each candidate
     for ( i = 0; i < numv; i++ ) {
-      //double vsum = 0.0;
+      // Check minimum vote, if less than zero, shift all votes up by that amount.
       double minp = 0.0;
       bool shiftvotes = false;
       for (int c = 0; c < numc; ++c) {
@@ -226,8 +227,11 @@ bool IRNRP::runMultiSeatElection( int* winnerR, const VoterArray& they, int seat
     bool cweightAdjusted = false;
     for (int c = 0; c < numc; ++c) {
       if (tally[c] > quota) {
-        winning[c] = true;
-        numwinners++;
+        if (!winning[c]) {
+          winning[c] = true;
+          numwinners++;
+          roundsSinceChange = 0;
+        }
         if (tally[c] > quotaPlusEpsilon) {
           //fprintf(stderr, "%d tally[%d]=%f > %f. old cweight=%f\n", roundcounter, c, tally[c], quotaPlusEpsilon, cweight[c]);
           cweight[c] *= (quota / tally[c]);
@@ -267,7 +271,7 @@ bool IRNRP::runMultiSeatElection( int* winnerR, const VoterArray& they, int seat
     if (numwinners == seats) {
       break;
     }
-    if (cweightAdjusted) {
+    if (cweightAdjusted && (roundsSinceChange < MAX_ROUNDS_WITHOUT_CHANGE)) {
       // re-run with new weights
     } else {
       // disqualify a loser.
@@ -283,6 +287,7 @@ bool IRNRP::runMultiSeatElection( int* winnerR, const VoterArray& they, int seat
       }
       assert(mini != -1);
       active[mini] = false;
+      roundsSinceChange = 0;
       numactive--;
       if (numactive == seats) {
         // that which remains, wins.
@@ -297,6 +302,7 @@ bool IRNRP::runMultiSeatElection( int* winnerR, const VoterArray& they, int seat
       }
     }
     roundcounter++;
+    roundsSinceChange++;
   }
   if (debug) {
     debug->vlog("</table>\n");

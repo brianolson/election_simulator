@@ -10,20 +10,80 @@
 class ProportionalConfig {
  public:
   int numFactions;
+  // configured unitless ratio: e.g. [60,30,10]; need not sum to 100
   int* factionSizes;
+  // how many voters were apportioned into each faction
+  int* factionPopulations;
+  // given voter populations, how many of each should win?
+  int* idealFactionWinners;
   int numVoters;
   int seats;
   // num choices = numFactions * seats
 
-
+  ProportionalConfig();
+  ~ProportionalConfig();
   void setFactions(VoterArray* they);
   void parseFactions(const char* factionString);
+
+  // TODO: implement
+  int winnerProportionalityError(int* winners);
 };
 
+ProportionalConfig::ProportionalConfig()
+    : numFactions(0),
+      factionSizes(NULL),
+      factionPopulations(NULL),
+      idealFactionWinners(NULL)
+{}
+
+ProportionalConfig::~ProportionalConfig() {
+  if (factionSizes != NULL) {
+    delete [] factionSizes;
+    factionSizes = NULL;
+  }
+  if (factionPopulations != NULL) {
+    delete [] factionPopulations;
+    factionPopulations = NULL;
+  }
+  if (idealFactionWinners != NULL) {
+    delete [] idealFactionWinners;
+    idealFactionWinners = NULL;
+  }
+}
+
+void apportion(int* out, int* populations, int len, int seats) {
+  for (int fi = 0; fi < len; fi++) {
+    out[fi] = 0;
+  }
+  for (int vi = 0; vi < seats; vi++) {
+    // Use the US House apportionment algorithm[1] to allocate next voter to a faction.
+    // [1] https://en.wikipedia.org/wiki/United_States_congressional_apportionment
+    double maxprio = -1.0;
+    int maxfi = -1;
+    for (int fi = 0; fi < len; fi++) {
+      double curCount = out[fi];
+      double priority = double(populations[fi]) / sqrt(curCount * (curCount + 1));
+      if ((maxfi == -1) || (priority > maxprio)) {
+        maxprio = priority;
+        maxfi = fi;
+      }
+    }
+    assert(maxfi >= 0);
+    out[maxfi]++;
+  }
+#if 0
+  fprintf(stderr, "voters allocated:");
+  for (int fi = 0; fi < len; fi++) {
+    fprintf(stderr, " %d", out[fi]);
+  }
+  fprintf(stderr, "\n");
+#endif
+}
+
 void ProportionalConfig::setFactions(VoterArray* they) {
-  int factionCounts[numFactions];
+  factionPopulations = new int[numFactions];
   for (int fi = 0; fi < numFactions; fi++) {
-    factionCounts[fi] = 0;
+    factionPopulations[fi] = 0;
   }
   for (int vi = 0; vi < they->numv; vi++) {
     // Use the US House apportionment algorithm[1] to allocate next voter to a faction.
@@ -31,7 +91,7 @@ void ProportionalConfig::setFactions(VoterArray* they) {
     double maxprio = -1.0;
     int maxfi = -1;
     for (int fi = 0; fi < numFactions; fi++) {
-      double curCount = factionCounts[fi];
+      double curCount = factionPopulations[fi];
       double priority = double(factionSizes[fi]) / sqrt(curCount * (curCount + 1));
       if ((maxfi == -1) || (priority > maxprio)) {
         maxprio = priority;
@@ -39,7 +99,7 @@ void ProportionalConfig::setFactions(VoterArray* they) {
       }
     }
     assert(maxfi >= 0);
-    factionCounts[maxfi]++;
+    factionPopulations[maxfi]++;
 
     // make a voter partisan to faction fi
     Voter& voter = (*they)[vi];
@@ -58,10 +118,13 @@ void ProportionalConfig::setFactions(VoterArray* they) {
 #if 0
   fprintf(stderr, "voters allocated:");
   for (int fi = 0; fi < numFactions; fi++) {
-    fprintf(stderr, " %d", factionCounts[fi]);
+    fprintf(stderr, " %d", factionPopulations[fi]);
   }
   fprintf(stderr, "\n");
 #endif
+
+  idealFactionWinners = new int[numFactions];
+  apportion(idealFactionWinners, factionPopulations, numFactions, seats);
 }
 
 void ProportionalConfig::parseFactions(const char* factionString) {
@@ -101,9 +164,33 @@ void ProportionalConfig::parseFactions(const char* factionString) {
   }
 }
 
+int ProportionalConfig::winnerProportionalityError(int* winners) {
+  int winnersByFaction[numFactions];
+  int errcount = 0;
+  for (int fi = 0; fi < numFactions; fi++) {
+    winnersByFaction[fi] = 0;
+  }
+  for (int wi = 0; wi < seats; wi++) {
+    int f = winners[wi] / seats;
+    winnersByFaction[f]++;
+  }
+  fprintf(stderr, " ideal:");
+  for (int fi = 0; fi < numFactions; fi++) {
+    fprintf(stderr, " %d", idealFactionWinners[fi]);
+  }
+  fprintf(stderr, "\nactual:");
+  for (int fi = 0; fi < numFactions; fi++) {
+    fprintf(stderr, " %d", winnersByFaction[fi]);
+  }
+  fprintf(stderr, "\n");
+  for (int fi = 0; fi < numFactions; fi++) {
+    errcount += abs(idealFactionWinners[fi] - winnersByFaction[fi]);
+  }
+  return errcount;
+}
+
 void foo(ProportionalConfig* config) {
   VoterArray they;
-  //ProportionalConfig* config = NULL;
 
   int numc = config->numFactions * config->seats;
   
@@ -115,7 +202,7 @@ void foo(ProportionalConfig* config) {
         new IRNRP(),
         NULL
   };
-  const char* initArgs[] = {"debug=/tmp/pdebug",NULL};
+  const char* initArgs[] = {NULL}; // "debug=/tmp/pdebug",
   int* winners = new int[numc];
   for (int i = 0; algs[i] != NULL; i++) {
     VotingSystem* vs = algs[i];
@@ -125,12 +212,15 @@ void foo(ProportionalConfig* config) {
       fprintf(stderr, "error running %s\n", vs->name);
       exit(1);
     }
+    int prErr = config->winnerProportionalityError(winners);
+    fprintf(stderr, "%s: proportionality error=%d\n", vs->name, prErr);
     fprintf(stderr, "winners (%d seats):", config->seats);
     for (int c = 0; c < numc; c++) {
       fprintf(stderr, " %d", winners[c]);
     }
     fprintf(stderr, "\n");
   }
+  delete [] winners;
 };
 
 int main( int argc, const char** argv ) {

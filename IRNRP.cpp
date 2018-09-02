@@ -46,7 +46,7 @@ static inline bool absNorm(
     }
   }
   if (vsum <= 0.0) {
-    assert(false);
+    // voter had 0 for all non-disqualified choices
     return false;
   }
   vsum = 1.0 / vsum;
@@ -73,7 +73,7 @@ static inline bool absNormWithShift(
     }
   }
   if (vsum <= 0.0) {
-    assert(false);
+    // voter had 0 for all non-disqualified choices
     return false;
   }
   vsum = 1.0 / vsum;

@@ -55,6 +55,7 @@ public:
 				out = fopen(outname, "a");
 				if (out == NULL) {
 					perror(outname);
+                                        releaseLock();
 					return -1;
 				}
 			}

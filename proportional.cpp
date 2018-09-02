@@ -62,6 +62,7 @@ void apportion(int* out, int* populations, int len, int seats) {
     int maxfi = -1;
     for (int fi = 0; fi < len; fi++) {
       double curCount = out[fi];
+      // TODO: this denominator gives infinite priority to any group with zero seats, which actually _isn't_ fair. Fine for states, not good for PR.
       double priority = double(populations[fi]) / sqrt(curCount * (curCount + 1));
       if ((maxfi == -1) || (priority > maxprio)) {
         maxprio = priority;
@@ -71,10 +72,21 @@ void apportion(int* out, int* populations, int len, int seats) {
     assert(maxfi >= 0);
     out[maxfi]++;
   }
-#if 0
-  fprintf(stderr, "voters allocated:");
+#if 01
+  fprintf(stderr, "voter populations:");
   for (int fi = 0; fi < len; fi++) {
-    fprintf(stderr, " %d", out[fi]);
+    fprintf(stderr, " %8d", populations[fi]);
+  }
+  fprintf(stderr, "\n");
+  fprintf(stderr, " voters allocated:");
+  for (int fi = 0; fi < len; fi++) {
+    fprintf(stderr, " %8d", out[fi]);
+  }
+  fprintf(stderr, "\n");
+  // TODO: what is fair? apportionment algorithm? equalizing voter power?
+  fprintf(stderr, "      voter power:");
+  for (int fi = 0; fi < len; fi++) {
+    fprintf(stderr, " %0.6g", double(out[fi]) / double(populations[fi]));
   }
   fprintf(stderr, "\n");
 #endif
@@ -193,7 +205,7 @@ void foo(ProportionalConfig* config) {
   VoterArray they;
 
   int numc = config->numFactions * config->seats;
-  
+
   they.build(config->numVoters, numc);
   config->setFactions(&they);
 
@@ -229,7 +241,7 @@ int main( int argc, const char** argv ) {
   ProportionalConfig config;
   config.numVoters = 1000;
   config.seats = 5;
-  
+
   while (argi<argc) {
     IntArg("v", &config.numVoters);
     StringArg("f", &factionString);

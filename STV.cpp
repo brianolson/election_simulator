@@ -132,6 +132,7 @@ bool STV::runMultiSeatElection( int* winnerR, const VoterArray& they, int seats 
             roundActive[winner] = true;
           }
         }
+        fprintf(stderr, "STV elect %d\t%g vote\t%g deweight\n", winner, m, deweight);
         winnerR[numwinners] = winner;
         numwinners++;
         if (numwinners == seats) {
@@ -140,6 +141,7 @@ bool STV::runMultiSeatElection( int* winnerR, const VoterArray& they, int seats 
         roundActive[winner] = false;
       } else {
         // disqualify the round loser
+        fprintf(stderr, "STV DQ %d\n", loser);
         electionActive[loser] = false;
         cremain--;
         //fprintf(stderr,"irv dq %d (winner %d)\n",loser,winner);

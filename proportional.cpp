@@ -51,13 +51,13 @@ ProportionalConfig::~ProportionalConfig() {
   }
 }
 
+// US House apportionment algorithm[1] to allocate next voter to a faction.
+// [1] https://en.wikipedia.org/wiki/United_States_congressional_apportionment
 void apportion(int* out, int* populations, int len, int seats) {
   for (int fi = 0; fi < len; fi++) {
     out[fi] = 0;
   }
   for (int vi = 0; vi < seats; vi++) {
-    // Use the US House apportionment algorithm[1] to allocate next voter to a faction.
-    // [1] https://en.wikipedia.org/wiki/United_States_congressional_apportionment
     double maxprio = -1.0;
     int maxfi = -1;
     for (int fi = 0; fi < len; fi++) {
@@ -72,24 +72,103 @@ void apportion(int* out, int* populations, int len, int seats) {
     assert(maxfi >= 0);
     out[maxfi]++;
   }
-#if 01
-  fprintf(stderr, "voter populations:");
-  for (int fi = 0; fi < len; fi++) {
-    fprintf(stderr, " %8d", populations[fi]);
+}
+
+class PRAllocatePopStat {
+ public:
+  int index;
+  int pop;
+  int D;
+  int apportioned;
+  PRAllocatePopStat()
+      : index(0), pop(0), D(0), apportioned(0)
+  {}
+  PRAllocatePopStat(int index, int pop)
+      : index(index), pop(pop), D(0), apportioned(0)
+  {}
+};
+
+// modified from bresenham's algorithm for linear interpolation
+// https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+//
+// Bresenham's algorithm is frequently applied as a computer
+// graphics method for drawing a line of pixels from 0,0 to x,y. In
+// this case 'y' is the population of the most populous set (state,
+// district, proportional constituency, etc), 'x' is the population
+// of some other set. If we had as many seats as there were people,
+// we would step through this algorithm and draw a line all the way
+// to the end. Instead we count how many steps we have taken (seats
+// apportioned) and stop when we hit the seats limit. Because
+// Bresenham's algorithm closely follows the line we have a fair
+// linear interpolation constrained by integer steps.
+void proportionallyAllocate(int* out, int* populations, int len, int seats) {
+  PRAllocatePopStat state[len];
+  for (int i = 0; i < len; i++) {
+    state[i].pop = populations[i];
+    state[i].index = i;
   }
-  fprintf(stderr, "\n");
-  fprintf(stderr, " voters allocated:");
-  for (int fi = 0; fi < len; fi++) {
-    fprintf(stderr, " %8d", out[fi]);
+  PRAllocatePopStat* mostPopulous = &(state[0]);
+  for (int i = 1; i < len; i++) {
+    if (state[i].pop > mostPopulous->pop) {
+      mostPopulous = &(state[i]);
+    }
   }
-  fprintf(stderr, "\n");
-  // TODO: what is fair? apportionment algorithm? equalizing voter power?
-  fprintf(stderr, "      voter power:");
-  for (int fi = 0; fi < len; fi++) {
-    fprintf(stderr, " %0.6g", double(out[fi]) / double(populations[fi]));
+  PRAllocatePopStat* everyoneElse[len-1];
+  int outpos = 0;
+  for (int i = 0; i < len; i++) {
+    if (state[i].index == mostPopulous->index) {
+      continue;
+    }
+    everyoneElse[outpos] = &(state[i]);
+    everyoneElse[outpos]->D = (2 * everyoneElse[outpos]->pop) - mostPopulous->pop;
+    outpos++;
   }
-  fprintf(stderr, "\n");
-#endif
+  assert(outpos == len-1);
+
+  int apportionedSum = 0;
+  while (true) {
+    //fprintf(stderr, "PR apportion to %d (max pop)\n", mostPopulous->index);
+    mostPopulous->apportioned++;
+    apportionedSum++;
+    if (apportionedSum >= seats) {
+      //fprintf(stderr, "done\n");
+      break;
+    }
+    // sort by D to fing which other group is furthest behind the line
+    // and nedes to be caught up by adding to its apportionment.
+    bool notSorted = true;
+    while (notSorted) {
+      notSorted = false;
+      for (int i = 1; i < len - 1; i++) {
+        if (everyoneElse[i-1]->D < everyoneElse[i]->D) {
+          PRAllocatePopStat* t = everyoneElse[i];
+          everyoneElse[i] = everyoneElse[i-1];
+          everyoneElse[i-1] = t;
+          notSorted = true;
+        }
+      }
+    }
+    for (int i = 0; i < len - 1; i++) {
+      //fprintf(stderr, "ee[%d] i=%d pop=%d D=%d a=%d\n", i, everyoneElse[i]->index, everyoneElse[i]->pop, everyoneElse[i]->D, everyoneElse[i]->apportioned);
+      if (everyoneElse[i]->D > 0) {
+        //fprintf(stderr, "PR apportion to %d\n", everyoneElse[i]->index);
+        everyoneElse[i]->apportioned++;
+        apportionedSum++;
+        if (apportionedSum >= seats) {
+          //fprintf(stderr, "done\n");
+          break;
+        }
+        everyoneElse[i]->D -= mostPopulous->pop;
+      }
+      everyoneElse[i]->D += (2 * everyoneElse[i]->pop);
+    }
+    if (apportionedSum >= seats) {
+      break;
+    }
+  }
+  for (int i = 0; i < len; i++) {
+    out[i] = state[i].apportioned;
+  }
 }
 
 void ProportionalConfig::setFactions(VoterArray* they) {
@@ -127,16 +206,29 @@ void ProportionalConfig::setFactions(VoterArray* they) {
       }
     }
   }
-#if 0
-  fprintf(stderr, "voters allocated:");
+
+  idealFactionWinners = new int[numFactions];
+  //apportion(idealFactionWinners, factionPopulations, numFactions, seats);
+  proportionallyAllocate(idealFactionWinners, factionPopulations, numFactions, seats);
+#if 01
+  fprintf(stderr, "voter populations:");
   for (int fi = 0; fi < numFactions; fi++) {
-    fprintf(stderr, " %d", factionPopulations[fi]);
+    fprintf(stderr, " %8d", factionPopulations[fi]);
+  }
+  fprintf(stderr, "\n");
+  fprintf(stderr, " voters allocated:");
+  for (int fi = 0; fi < numFactions; fi++) {
+    fprintf(stderr, " %8d", idealFactionWinners[fi]);
+  }
+  fprintf(stderr, "\n");
+  // TODO: what is fair? apportionment algorithm? equalizing voter power?
+  fprintf(stderr, "      voter power:");
+  for (int fi = 0; fi < numFactions; fi++) {
+    fprintf(stderr, " %8.4g", double(idealFactionWinners[fi]) / double(factionPopulations[fi]));
   }
   fprintf(stderr, "\n");
 #endif
 
-  idealFactionWinners = new int[numFactions];
-  apportion(idealFactionWinners, factionPopulations, numFactions, seats);
 }
 
 void ProportionalConfig::parseFactions(const char* factionString) {
